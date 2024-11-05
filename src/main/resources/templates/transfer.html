@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>양도 계약서</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Membership Transfer</h1>
+    <form onsubmit="event.preventDefault(); transferMembership();">
+        <h2>양도하실 회원님</h2>
+        <div class="form-group">
+            <label for="fromMemberSearch">양도하실 회원 검색:</label>
+            <input type="text" id="fromMemberSearch" class="form-control" placeholder="회원 이름을 입력하세요">
+            <button type="button" class="btn btn-primary mt-2" onclick="searchMember('from')">검색</button>
+            <ul id="fromMemberResults" class="list-group mt-2"></ul>
+            <input type="hidden" id="fromMemberId">
+            <div id="fromMemberDetails">
+                <span id="fromName"></span><br>
+                <span id="fromPhone"></span><br>
+                <span id="fromKakao"></span><br>
+                <p>회원권 시작일: <span id="fromMemstart"></span></p><br>
+                <p>회원권 종료일:<span id="fromMemend"></span></p><br>
+                <p>남은일수: <span id="fromRemainDays"></span></p><br>
+                <!-- 추가된 부분: Locker와 Shirt 정보를 표시할 부분 -->
+                <div id="fromLockerDetails"></div>
+                <div id="fromShirtDetails"></div>
+            </div>
+        </div>
+        <h2>양도받으실 회원님</h2>
+        <div class="form-group">
+            <label for="toMemberSearch">양도받으실 회원 검색:</label>
+            <input type="text" id="toMemberSearch" class="form-control" placeholder="회원 이름을 입력하세요">
+            <button type="button" class="btn btn-primary mt-2" onclick="searchMember('to')">검색</button>
+            <ul id="toMemberResults" class="list-group mt-2"></ul>
+            <input type="hidden" id="toMemberId">
+            <div id="toMemberDetails">
+                <span id="toName"></span><br>
+                <span id="toPhone"></span><br>
+                <span id="toKakao"></span><br>
+                <p>회원권 시작일: <span id="toMemstart"></span></p><br>
+                <p>회원권 종료일:<span id="toMemend"></span></p><br>
+                <p>남은일수: <span id="toRemainDays"></span></p><br>
+                <!-- 추가된 부분: Locker와 Shirt 정보를 표시할 부분 -->
+                <div id="toLockerDetails"></div>
+                <div id="toShirtDetails"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="daysToTransfer">양도할 일수:</label>
+            <input type="number" class="form-control" id="daysToTransfer" required>
+        </div>
+        <div class="form-group">
+            <label for="price" class="form-label">결제 금액: </label>
+            <input type="text" id="price" value="55000" readonly />
+        </div>
+        <button type="submit" class="btn btn-success">회원권 양도하기</button>
+    </form>
+</div>
+
+<script>
+    // 회원 검색 함수
+    function searchMember(type) {
+        const query = type === 'from' ? $('#fromMemberSearch').val() : $('#toMemberSearch').val();
+        const resultContainer = type === 'from' ? '#fromMemberResults' : '#toMemberResults';
+
+        if (!query) {
+            alert('회원 이름을 입력하세요.');
+            return;
+        }
+
+        console.log('Search query:', query);
+
+        $.ajax({
+            url: '/api/members/search',
+            method: 'GET',
+            data: { query: query },
+            success: function(response) {
+                console.log('Search response:', response);
+                $(resultContainer).empty();
+                if (response.length === 0) {
+                    $(resultContainer).append('<li class="list-group-item">No results found</li>');
+                } else {
+                    response.forEach(member => {
+                        $(resultContainer).append(`
+                            <li class="list-group-item" onclick="selectMember(${member.id}, '${member.name}', '${member.phone}', '${member.kakao}', '${member.memstart}', '${member.memend}', ${member.remainDays}, '${member.locker}', ${member.locknum}, '${member.lockstart}', '${member.lockend}', '${member.shirt}', '${member.shirtstart}', '${member.shirtend}', '${type}')">
+                                ${member.name} - ${member.phone}
+                            </li>
+                        `);
+                    });
+                }
+            },
+            error: function(xhr) {
+                console.error('Search error:', xhr.responseText);
+                alert('회원 검색에 실패했습니다. 다시 시도하세요.');
+            }
+        });
+    }
+
+    // 회원 선택 함수
+    function selectMember(id, name, phone, kakao, memstart, memend, remainDays, locker, locknum, lockstart, lockend, shirt, shirtstart, shirtend, type) {
+        if (type === 'from') {
+            $('#fromMemberId').val(id);
+            $('#fromName').text(name);
+            $('#fromPhone').text(phone);
+            $('#fromKakao').text(kakao);
+            $('#fromMemstart').text(memstart);
+            $('#fromMemend').text(memend);
+            $('#fromRemainDays').text(remainDays);
+
+            // Locker 정보 업데이트
+            if (locker && locker !== 'null') {
+                $('#fromLockerDetails').html(`<b>락커:</b> ${locker} (Number: ${locknum}, Start: ${lockstart}, End: ${lockend})`);
+            } else {
+                $('#fromLockerDetails').empty();
+            }
+
+            // Shirt 정보 업데이트
+            if (shirt && shirt !== 'null') {
+                $('#fromShirtDetails').html(`<b>운동복:</b> ${shirt} (Start: ${shirtstart}, End: ${shirtend})`);
+            } else {
+                $('#fromShirtDetails').empty();
+            }
+        } else {
+            $('#toMemberId').val(id);
+            $('#toName').text(name);
+            $('#toPhone').text(phone);
+            $('#toKakao').text(kakao);
+            $('#toMemstart').text(memstart);
+            $('#toMemend').text(memend);
+            $('#toRemainDays').text(remainDays);
+
+            // Locker 정보 업데이트
+            if (locker && locker !== 'null') {
+                $('#toLockerDetails').html(`<b>락커:</b> ${locker} (Number: ${locknum}, Start: ${lockstart}, End: ${lockend})`);
+            } else {
+                $('#toLockerDetails').empty();
+            }
+
+            // Shirt 정보 업데이트
+            if (shirt && shirt !== 'null') {
+                $('#toShirtDetails').html(`<b>운동복:</b> ${shirt} (Start: ${shirtstart}, End: ${shirtend})`);
+            } else {
+                $('#toShirtDetails').empty();
+            }
+        }
+    }
+
+    // 회원권 양도 함수
+    function transferMembership() {
+        const fromMemberId = $('#fromMemberId').val();
+        const toMemberId = $('#toMemberId').val();
+        const daysToTransfer = $('#daysToTransfer').val();
+        const price = document.getElementById('price').value;
+
+        if (!fromMemberId || !toMemberId || !daysToTransfer) {
+            alert("모든 필드를 입력하세요.");
+            return;
+        }
+
+        console.log('Transfer request:', {
+            fromMemberId: fromMemberId,
+            toMemberId: toMemberId,
+            daysToTransfer: daysToTransfer
+        });
+
+        $.ajax({
+            url: '/api/transfers/transfer',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                fromMemberId: fromMemberId,
+                toMemberId: toMemberId,
+                daysToTransfer: daysToTransfer
+                price: price
+            }),
+            success: function(response) {
+                alert('회원권 양도에 성공했습니다.');
+                console.log('Transfer success response:', response);
+            },
+            error: function(xhr) {
+                alert('Error: ' + xhr.responseText);
+                console.error('Transfer error response:', xhr.responseText);
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

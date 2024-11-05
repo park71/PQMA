@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <title>PT 신청 목록</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #007bff;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        button {
+            padding: 6px 12px;
+            font-size: 14px;
+            color: #fff;
+            background-color: #28a745;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .btn-reject {
+            background-color: #dc3545;
+        }
+
+        .btn-reject:hover {
+            background-color: #c82333;
+        }
+
+        .status-approved {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .status-rejected {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+           /* 반응형 테이블 */
+    @media screen and (max-width: 767px) {
+        table {
+            display: block; /* 테이블을 블록 요소로 설정 */
+            overflow-x: auto; /* 수평 스크롤 허용 */
+            white-space: nowrap; /* 내용이 한 줄로 표시되도록 설정 */
+        }
+
+        thead {
+            display: none; /* 헤더를 숨김 */
+        }
+
+        tbody tr {
+            display: block; /* 각 행을 블록 요소로 설정 */
+            margin-bottom: 10px; /* 각 항목 간 간격 추가 */
+            background: #fff; /* 배경색 추가 */
+            border-radius: 8px; /* 둥근 모서리 */
+        }
+
+        td {
+            display: flex; /* 셀을 플렉스 박스로 설정 */
+            justify-content: space-between; /* 항목과 데이터 값 사이의 공간 분배 */
+            padding: 10px;
+            border-bottom: 1px solid #ddd; /* 셀 하단 경계선 */
+        }
+
+        td::before {
+            content: attr(data-label); /* 데이터 라벨 생성 */
+            font-weight: bold; /* 항목 이름 강조 */
+            color: #007bff; /* 항목 이름 색상 변경 */
+            flex: 1; /* 라벨의 너비 설정 */
+        }
+    }
+    </style>
+    </style>
+</head>
+<body>
+<h1>PT 신청 목록</h1>
+<table>
+    <thead>
+    <tr>
+        <th>번호</th>
+        <th>담당 선생님</th>
+        <th>이름</th>
+        <th>성별</th>
+        <th>전화번호</th>
+        <th>생년월일</th>
+        <th>주소</th>
+        <th>카카오톡ID</th>
+        <th>운동목적</th>
+        <th>피티 종류</th>
+        <th>피티 시작일</th>
+        <th>남은 횟수</th>
+        <th>결제 방법</th>
+        <th>신청 시간</th>
+        <th>승인</th>
+        <th>거절</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="ptMem : ${applications}">
+        <td data-label="번호" th:text="${ptMem.id}"></td>
+        <td data-label="담당 선생님" th:text="${ptMem.coach}"></td>
+        <td data-label="이름" th:text="${ptMem.name}"></td>
+        <td data-label="성별" th:text="${ptMem.gender}"></td>
+        <td data-label="전화번호" th:text="${ptMem.phone}"></td>
+        <td data-label="생년월일" th:text="${ptMem.birth}"></td>
+        <td data-label="주소" th:text="${ptMem.address}"></td>
+        <td data-label="카카오톡ID" th:text="${ptMem.kakao}"></td>
+        <td data-label="운동목적" th:text="${ptMem.purpose}"></td>
+        <td data-label="피티 종류" th:text="${ptMem.ptmembership}"></td>
+        <td data-label="피티 시작일" th:text="${ptMem.ptstart}"></td>
+        <td data-label="남은 횟수" th:text="${ptMem.count}"></td>
+        <td data-label="결제 방법" th:text="${ptMem.credit}"></td>
+        <td data-label="신청 시간" th:text="${#temporals.format(ptMem.applicationDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+        <td>
+            <form th:if="${ptMem.status == 'pending'}" th:action="@{/admin/membership-application/{id}/approve(id=${ptMem.id})}" method="post">
+                <button type="submit">승인</button>
+            </form>
+            <span th:if="${ptMem.status == 'approved'}" class="status-approved">승인되었습니다</span>
+        </td>
+        <td>
+            <form th:if="${ptMem.status == 'pending'}" th:action="@{/admin/membership-application/{id}/reject(id=${ptMem.id})}" method="post">
+                <button type="submit" class="btn-reject">거절</button>
+            </form>
+            <span th:if="${ptMem.status == 'rejected'}" class="status-rejected">거절되었습니다</span>
+        </td>
+    </tr>
+    </tbody>
+
+</table>
+</body>
+</html>

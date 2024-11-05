@@ -1,0 +1,102 @@
+        #content {
+            height: 8000px;
+            overflow-y: scroll;
+        }
+        /* 네비게이션 바 스타일 */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            background-color: white;
+            align-items: center;
+            padding-bottom: auto;
+            height: 105px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+        }
+        .sticky {
+            position: fixed;
+            top: 0;
+            width: 100%;
+        }
+
+        .sticky + .content {
+            padding-top: 60px;
+        }
+
+        /* 요소 크기 조정 */
+        .left-section {
+            flex: 1; /* 왼쪽 요소 폭 조정 */
+        }
+
+        .center-section {
+            flex: 2; /* 로고 폭 조정 */
+        }
+
+        .right-section {
+            flex: 1; /* 메뉴바 폭 조정 */
+            text-align: right;
+        }
+
+        .login-button {
+            background-color: purple;
+            color: white;
+            border: none;
+            padding: 10px 10px;
+            border-radius: 10px;
+        }
+
+        .logo {
+          display: flex;
+          padding-left: 370px;
+        }
+
+        .login {
+          display: block;
+          color: white;
+          margin: 0.5rem;
+          font-weight: bold;
+          padding: 0;
+        }
+
+        .menu {
+          width: 500px;
+          overflow: hidden;
+          margin-left: auto;
+          *{padding:0;margin:0}
+           li{list-style:none}
+           a{text-decoration:none;font-size:16px}
+        }
+
+        .menu > li {
+          width: 20%; /*20*5=100%*/
+          float: left;
+          text-align: center;
+          line-height: 50px;
+          background-color: white;
+        }
+
+        .menu a {
+          color: black;
+          display: block;
+          text-align: center;
+          font-weight: bold;
+        }
+
+        .submenu > li {
+          line-height: 50px;
+          background-color: white;
+        }
+
+        .submenu {
+          height: 0; /*ul의 높이를 안보이게 처리*/
+          overflow: hidden;
+        }
+
+        .menu > li:hover {
+          background-color: white;
+          transition-duration: 0.5s;
+        }
+
+        .menu > li:hover .submenu {
+          height: 200px; /*서브메뉴 li한개의 높이 50*5*/
+          transition-duration: 1s;
+        }

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 리스트 페이지</title>
+    <style>
+        .layout {
+            width: 100%;
+            margin: 0 auto;
+            margin-top: 40px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+        .board-item {
+            margin: 20px;
+            width: 300px; /* 아이템 하나의 너비를 설정 */
+            text-align: center; /* 제목을 가운데 정렬 */
+        }
+        .board-item img {
+            width: 100%;
+            height: auto;
+        }
+        .board-item h2 {
+            margin: 10px 0 0 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+
+<form th:action="@{/board/list}" method="get">
+    <input type="text" name="searchKeyword">
+    <button type="submit">검색</button>
+</form>
+
+<div class="layout">
+    <div th:each="board : ${list}" class="board-item">
+        <img th:src="@{|${board.filePath}|}" alt="Board Image">
+        <h2>
+            <a th:text="${board.title}" th:href="@{/board/view(id=${board.id})}"></a>
+        </h2>
+    </div>
+</div>
+
+<div class="pagination"> (페이지 수) 가운데로 옮기기
+    <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
+        <a th:if="${page != nowPage}" th:href="@{/board/list(page=${page - 1}, searchKeyword=${param.searchKeyword})}" th:text="${page}"></a>
+        <strong th:if="${page == nowPage}" th:text="${page}" style="color: red;"></strong>
+    </th:block>
+</div>
+<a href="/adminPage">관리자 페이지로 다시 이동</a>
+<a href="/">홈페이지로 이동</a>
+
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <title>PT 리스트</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            overflow-x: auto;
+            display: block;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+
+                                  min-height: 40px; /* 최소 높이 설정 */
+                                   white-space: normal; /* 줄 바꿈 허용 */
+            word-wrap: break-word; /* 긴 단어 줄 바꿈 */
+
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+                        text-align: left;
+        }
+
+        /* 반응형 디자인 */
+        @media screen and (max-width: 767px) {
+            table {
+                display: block;
+                overflow-x: auto; /* 가로 스크롤 추가 */
+                white-space: nowrap; /* 셀 내용이 줄 바꿈되지 않도록 설정 */
+            }
+
+            th, td {
+                display: block; /* 블록으로 표시하여 세로 스택 형식으로 변환 */
+                width: 100%; /* 각 셀이 100% 너비를 차지하도록 설정 */
+
+
+            }
+
+            tr {
+                margin-bottom: 15px; /* 행 간격 조정 */
+                text-align:left;
+            }
+
+            th {
+                position: absolute; /* 헤더를 고정하여 세로로 쌓아도 읽기 쉽게 함 */
+                left: -9999px; /* 화면 밖으로 이동 */
+                            text-align: left;
+
+            }
+
+            td {
+                text-align: right; /* 셀 내용 오른쪽 정렬 */
+                position: relative;
+                padding-left: 50%; /* 왼쪽에 패딩 추가하여 내용을 오른쪽에 정렬 */
+
+            }
+
+            td::before { /* 셀 앞에 레이블을 추가 */
+                position: absolute;
+                left: 10px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap; /* 텍스트가 줄 바꿈되지 않도록 설정 */
+                font-weight: bold; /* 레이블 두껍게 표시 */
+            }
+
+            td:nth-of-type(1)::before { content: "번호"; }
+            td:nth-of-type(2)::before { content: "담당 선생님"; }
+            td:nth-of-type(3)::before { content: "이름"; }
+            td:nth-of-type(4)::before { content: "성별"; }
+            td:nth-of-type(5)::before { content: "전화번호"; }
+            td:nth-of-type(6)::before { content: "생년월일"; }
+            td:nth-of-type(7)::before { content: "주소"; }
+            td:nth-of-type(8)::before { content: "카카오톡ID"; }
+            td:nth-of-type(9)::before { content: "운동목적"; }
+            td:nth-of-type(10)::before { content: "피티 종류"; }
+            td:nth-of-type(11)::before { content: "피티 시작일"; }
+            td:nth-of-type(12)::before { content: "남은 횟수"; }
+            td:nth-of-type(13)::before { content: "결제 방법"; }
+            td:nth-of-type(14)::before { content: "결제 금액"; }
+            td:nth-of-type(15)::before { content: "횟수 차감버튼"; }
+        }
+    </style>
+</head>
+<body>
+<h1>PT, PM 리스트</h1>
+<form action="/PTinfo" method="get">
+    <label for="searchName">이름으로 검색:</label>
+    <input type="text" id="searchName" name="searchName">
+    <button type="submit">검색</button>
+</form>
+<table>
+    <tr>
+        <th>번호</th>
+        <th>담당 선생님</th>
+        <th>이름</th>
+        <th>성별</th>
+        <th>전화번호</th>
+        <th>생년월일</th>
+        <th>주소</th>
+        <th>카카오톡ID</th>
+        <th>운동목적</th>
+        <th>피티 종류</th>
+        <th>피티 시작일</th>
+        <th>남은 횟수</th>
+        <th>결제 방법</th>
+        <th>결제 금액</th>
+        <th>횟수 차감버튼</th>
+    </tr>
+
+    <tr th:each="ptMem: ${ptContract}" th:if="${ptMem.status == null || ptMem.status == 'approved'}">
+        <td th:text="${ptMem.id}"></td>
+        <td th:text="${ptMem.coach}"></td>
+        <td th:text="${ptMem.name}"></td>
+        <td th:text="${ptMem.gender}"></td>
+        <td th:text="${ptMem.phone}"></td>
+        <td th:text="${ptMem.birth}"></td>
+        <td th:text="${ptMem.address}"></td>
+        <td th:text="${ptMem.kakao}"></td>
+        <td th:text="${ptMem.purpose}"></td>
+        <td th:text="${ptMem.ptmembership}"></td>
+        <td th:text="${ptMem.ptstart}"></td>
+        <td th:text="${ptMem.count}"></td>
+        <td th:text="${ptMem.credit}"></td>
+        <td th:text="${ptMem.price}"></td>
+
+        <td>
+            <form th:action="@{/contract/{id}/decrement(id=${ptMem.id})}" method="post">
+                <button type="submit">1회차감</button>
+            </form>
+        </td>
+        <td>
+            <a th:href="@{/contract/{id}/details(id=${ptMem.id})}">상세보기</a>
+        </td>
+        <td>
+            <a th:href="@{/fixed/{id}/details(id=${ptMem.id})}">수정하기</a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

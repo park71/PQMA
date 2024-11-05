@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../css/header.css" rel="stylesheet">
+    <link href="../css/drop.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css"> <!-- 스타일 시트 연결 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Song+Myung&display=swap" rel="stylesheet">
+    <!-- jQuery 라이브러리 로드 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>프로그램</title>
+
+    <style>
+        #top_btn {
+           position: fixed;
+           bottom: 20px; /* 원하는 위치로 조정 */
+           right: 20px; /* 원하는 위치로 조정 */
+           border: none;
+           padding: 0px;
+           margin: 0px;
+           cursor: pointer;
+           transition: background-color 0.3s;
+           background-size: cover;
+            overflow-x: hidden; /* 수평 스크롤 방지 */
+       }
+
+        /* 기본 스타일 */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            height: 100%;
+            background: url('/img/health22.png') no-repeat center center fixed; /* 배경화면 설정 */
+            background-size: cover;
+        }
+
+
+       /* 고정된 상단 메뉴바 */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: transparent; /* 초기 배경색은 투명 */
+            transition: background-color 0.3s; /* 부드러운 색상 전환 */
+            padding: 8px 20px;
+            height: 70px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .navbar.scrolled {
+            background-color: rgba(0, 0, 0, 0.9); /* 스크롤 시 배경색 */
+        }
+
+        .navbar img {
+            margin-left:70px;
+            height: 50px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+
+
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0 15px;
+            font-weight: bold;
+
+        }
+
+        .nav-links a:hover {
+            color: green;
+        }
+
+        /* 햄버거 메뉴 버튼 */
+        #menuBtn {
+            width: 35px;
+            cursor: pointer;
+            z-index: 1001;
+            margin-right: 70px;
+        }
+
+        /* 사이드 메뉴 스타일 */
+        .menuWrap {
+            position: fixed;
+            top: 0;
+            right: -500px; /* 메뉴 숨기기 */
+            z-index: 1000;
+            width: 320px;
+            height: 100%;
+            padding: 50px 20px;
+            box-sizing: border-box;
+            transition: right 0.3s ease-in-out;
+            background-color: #f0f0f0;
+
+        }
+
+        .menuWrap.on {
+            right: 0; /* 메뉴 열기 */
+        }
+
+        #dimmed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 999;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        /* 메뉴 리스트 스타일 */
+        .menuList {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .listStyle > a {
+            font-size: 20px;
+            color: green;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+        }
+
+        .listStyle ul {
+            list-style-type: none;
+            padding: 0;
+            margin-left: 20px;
+        }
+
+
+        .listStyle ul li a {
+            font-size: 16px;
+            color: #000;
+            text-decoration: none;
+            display: block;
+            padding: 7px 0;
+        }
+
+        .listStyle a:hover {
+            background-color: #f9f9f9;
+        }
+
+        .btnRotate {
+            transform: rotate(-90deg);
+            transition: all 0.3s ease-in-out;
+        }
+
+        #mid_inner {
+            background-color: black;
+            color:white;
+        }
+              /* 중가중간 이미지 컨테이너*/
+        .image-container {
+            display: flex;
+            align-items: center;
+            padding-bottom: 200px;
+            padding-top: 100px;
+        }
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            margin-right: 100px;
+            border-radius: 10px;
+            margin-left: 120px;
+        }
+        .image-container p {
+            font-size: 18px;
+            color: white;
+        }
+        .img {
+            max-width:100%;
+            height: auto;
+            }
+
+            /* 강조된 텍스트 */
+.emphasized-text {
+    font-size: 20px; /* 강조를 위한 더 큰 폰트 크기 */
+    font-weight: bold; /* 텍스트를 굵게 */
+    color: white; /* 강조된 색상 */
+    text-align: center; /* 중앙 정렬 */
+    background-color: transparent; /* 배경색 추가로 강조 */
+    padding: 20px; /* 텍스트 주변 여백 */
+    border-radius: 10px; /* 둥근 모서리 */
+    margin-bottom: 50px; /* 아래쪽 여백 */
+}
+/* 강조된 단어 스타일 */
+.highlighted {
+    font-size: 24px; /* 더 큰 폰트 크기 */
+    font-weight: bold; /* 텍스트를 굵게 */
+    color: white; /* 강조 색상 (원하는 색으로 변경 가능) */
+}
+
+        .intro p{
+            display:flex;
+            align-items: center;
+            font-size: 50px;
+            text-aligns: center;
+        }
+        /* 메뉴바 아래 */
+        .image-box {
+            margin-top:48px;
+            position: relative;
+            text-align: center;
+            background-size: 1800px;
+            background-position: center;
+            max-width: 100%;
+           height: 100vh; /* 전체 화면 높이 */
+           margin-bottom: 30px;
+
+        }
+
+        .over {
+            max-width: 100%;
+            height: auto;
+            background-size: 2000px;
+            background-position: center;
+            z-index:-1;
+
+        }
+         .text {
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 40px;
+            color: white;
+            font-weight: bold;
+            z-index:1;
+
+
+        }
+        .title {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 30px;
+            color: white;
+            z-index:1;
+        }
+        #btn-container {
+            position: absolute;
+            bottom: 302px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index:2;
+
+
+        }
+
+        #so, #sa {
+            padding: 5px 40px;
+            font-size: 25px;
+            font-weight: bold;
+            background-color: transparent;
+                        border-radius:10px;
+            color: white;
+            list-style: none;
+            float: left;
+        }
+        #so > a {
+            color: white;
+        }
+        #sa > a {
+            color: white;
+        }
+
+        #so:hover, #sa:hover, #oh:hover {
+            background-color: green;
+            transition: 0.8s;
+            color: white;
+        }
+
+
+
+        /*푸터*/
+        .footer {
+            justify-content: space-between;
+            align-items: center;
+            background-color: black;
+            padding: 20px;
+            text-align: center;
+            box-shadow:
+        }
+
+        .footer h2 {
+            color: #fff;
+        }
+        .footer p {
+            color: #fff;
+        }
+        .footer .contact-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 70px;
+        }
+
+        .footer .contact-info .column {
+            flex: 1;
+
+        }
+        .footer .contact-info .column h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color:white;
+        }
+        .footer .contact-info .column ul {
+            list-style: none;
+            padding: 0;
+        }
+        .footer .contact-info .column p{
+            margin-bottom: -8px;
+            font-size: 14px;
+
+
+        }
+        .column a {
+            color:white;
+        }
+        .column a:hover {
+            color: green;
+        }
+
+
+        .col {
+            display: flex;
+            align-items: center;
+            padding-bottom: 90px;
+            position: relative;
+        }
+        /* Image Styling */
+        .foot-img {
+            max-width: 100px; /* Set a maximum width for the image */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 10px;
+            margin: 0 auto; /* Center the image */
+            display: block; /* Ensure it behaves like a block element for centering */
+        }
+
+        .col ul {
+            list-style: none;
+            display: block;
+            padding: 10px 0px;
+            margin-right: auto;
+            text-align: left;
+            font-size: 13px;
+            color: white;
+        }
+        .col ul li {
+            margin-bottom: 7px;
+        }
+
+        .footer .social-icons {
+            margin-top: 20px;
+        }
+        .footer .social-icons a {
+            color: #fff;
+            margin-right: 10px;
+        }
+        .top {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .contact-info {
+            border-top: 0.3px solid white;
+            margin-top: -30px;
+            border-bottom: 0.3px solid white;
+        }
+        .join {
+            background-color: black;
+            border-radius: 10px;
+            }
+        .join a {
+            color: white;
+        }
+        .column img {
+            border-radius: 10px;
+        }
+        .social-icons p {
+            font-size: 11px;
+        }
+        a {
+            text-decoration-line: none;
+        }
+                .logo-img {
+            width: 75px;  /* 너비를 150px로 설정 */
+            height: 100px;  /* 높이를 자동으로 조절하여 이미지의 비율을 유지 */
+            object-fit: cover; /* 이미지를 강제로 지정된 크기에 맞춥니다. */
+
+        }
+
+/* 반응형 디자인 - 모바일 디바이스 */
+@media (max-width: 768px) {
+       .navbar {
+        padding: 8px 10px;
+    }
+
+    .navbar img {
+        margin-left: 20px;
+        height: 30px;
+    }
+
+    .nav-links a {
+        padding: 0 10px;
+        font-size: 14px;
+    }
+
+    /* 햄버거 메뉴 아이콘 크기 조정 */
+    #menuBtn {
+        width: 30px;
+        margin-right: 20px;
+    }
+
+    /* 슬라이드 이미지 높이 조정 */
+    .mySlides img {
+        height: 50vh;
+    }
+         .menuWrap {
+           width: 240px; /* 메뉴 너비 줄이기 */
+        padding: 20px 10px; /* 패딩 조정 */
+    }
+
+    .listStyle > a {
+        font-size: 16px; /* 폰트 크기 줄이기 */
+        padding: 8px; /* 패딩 조정 */
+    }
+
+    .listStyle ul li a {
+        font-size: 14px; /* 서브 폰트 크기 줄이기 */
+        padding: 5px 0; /* 서브 패딩 조정 */
+    }
+
+    /* 사이드 메뉴 전체를 위로 올리기 */
+    .menuWrap {
+        top: 20px; /* 메뉴를 위로 올리기 */
+    }
+
+        .text {
+        font-size: 25px;
+        margin-bottom: 20px; /* Reduce margin to bring the buttons closer */
+    }
+
+    .title {
+        font-size: 18px;
+    }
+
+
+   .image-container {
+        display: flex; /* Flexbox 레이아웃 */
+        flex-direction: column; /* 수직으로 쌓기 */
+        align-items: center; /* 아이템을 가운데 정렬 */
+        padding: 10px; /* 수직 패딩 */
+    }
+
+    .image-container img {
+        width: 100%; /* 너비를 100%로 설정 */
+        height: auto; /* 비율 유지 */
+        margin: 0; /* 여백 제거 */
+        border-radius: 10px; /* 둥근 모서리 */
+    }
+
+    .image-container p {
+        font-size: 14px; /* 폰트 크기 조정 */
+        color: white; /* 텍스트 색상 */
+        text-align: center; /* 가운데 정렬 */
+        margin: 5px 0; /* 위아래 여백 */
+    }
+
+    .highlighted {
+        font-size: 16px; /* 강조된 텍스트 크기 조정 */
+        margin: 5px 0; /* 여백 조정 */
+    }
+
+    /* 강조 텍스트 크기 조정 */
+    .emphasized-text {
+        font-size: 18px; /* 강조된 텍스트 크기 조정 */
+        padding: 10px; /* 텍스트 주변 여백 */
+    }
+
+
+    /* 소개 텍스트 크기 조정 */
+    .intro p {
+        font-size: 18px;
+        text-align: center;
+    }
+
+
+
+      #btn-container {
+        display: flex;
+        justify-content: center; /* Aligns buttons to the center */
+        gap: 10px; /* Space between the buttons */
+        bottom: 150px; /* Move the buttons higher */
+        margin-top: 50px;
+    }
+
+    #btn-container > div {
+        display: inline-block; /* Keep buttons in one line */
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+
+    #so, #sa {
+        font-size: 16px;
+        text-align: center;
+        margin: 0; /* Remove margin to bring buttons closer together */
+    }
+
+    #so a, #sa a {
+        display: inline-block;
+    }
+
+
+  .footer {
+            padding: 15px; /* Adjust padding */
+        }
+
+        .footer .contact-info .column .col {
+            flex: 1 0 100%; /* Stack columns on small screens */
+            margin: 5px 0; /* Adjust margin */
+        }
+
+        .footer .contact-info {
+            flex-direction: column; /* Stack items vertically */
+        }
+
+        .footer .social-icons p {
+            font-size: 10px; /* Reduce font size */
+        }
+                .footer .col {
+            text-align:center;
+            }
+
+
+}
+
+/* 반응형 디자인 - 작은 모바일 디바이스 (예: 480px 이하) */
+@media (max-width: 480px) {
+    .navbar {
+        padding: 8px 5px;
+    }
+
+   .navbar img {
+        height: 30px;
+        margin-left: 10px;
+    }
+
+    .nav-links a {
+        padding: 0 5px;
+        font-size: 12px;
+    }
+
+
+    .text {
+        font-size: 24px;
+        margin-bottom: 5px; /* 줄이기 */
+    }
+
+    .title {
+        font-size: 20px;
+    }
+      /* 사이드 메뉴 스타일 조정 */
+    .menuWrap {
+        padding: 30px 15px; /* 패딩 줄이기 */
+        width: 240px; /* 너비 조정 */
+    }
+
+    .listStyle > a {
+        font-size: 16px; /* 폰트 크기 줄이기 */
+        padding: 8px; /* 패딩 줄이기 */
+    }
+
+    .listStyle ul li a {
+        font-size: 14px; /* 하위 메뉴 폰트 크기 줄이기 */
+        padding: 5px 0; /* 패딩 줄이기 */
+    }
+
+    /* 로그인 상태일 때 스타일 조정 */
+    .listStyle th:if="${loggedIn}" {
+        margin-top: 20px; /* 위로 올리기 */
+    }
+
+    #dimmed {
+        top: 50px; /* 배경 dimmed 효과 위로 올리기 */
+    }
+
+
+
+
+    .image-container {
+        flex-direction: column; /* Stack items vertically */
+    }
+
+    .image-container img {
+        width: 100%; /* Set width to 100% for images */
+    }
+
+    .image-container p {
+        font-size: 14px; /* Further reduce font size */
+    }
+
+    .highlighted {
+        font-size: 1.1em; /* Reduce highlighted text size */
+    }
+
+    .intro p {
+        font-size: 25px;
+    }
+
+    .emphasized-text {
+        font-size: 14px;
+    }
+
+
+
+    #btn-container {
+        display: flex;
+        justify-content: center; /* Aligns buttons to the center */
+        gap: 10px; /* Space between the buttons */
+        margin-top: 5px; /* 줄이기 */
+    }
+
+    #btn-container > div {
+        display: inline-block; /* Keep buttons in one line */
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+
+    #so, #sa {
+        font-size: 16px;
+        text-align: center;
+        margin: 0; /* Remove margin to bring buttons closer together */
+    }
+
+    #so a, #sa a {
+        display: inline-block;
+    }
+
+ .footer h2 {
+            font-size: 18px; /* Smaller font size for header */
+        }
+
+        .footer .col .contact-info .column h3 {
+            font-size: 16px; /* Adjust font size */
+        }
+
+        .footer .col .contact-info .column p {
+            font-size: 12px; /* Adjust font size */
+        }
+
+        .footer .social-icons {
+            flex-direction: column; /* Stack social icons */
+        }
+        .footer .col {
+            text-align:center;
+            }
+}
+
+    </style>
+</head>
+<script>
+    window.on-scroll = function() {
+    myFunction();
+    };
+
+    const navbar = document.getElementById('navbar');
+    const sticky = navbar.offsetTop;
+
+    function myFunction() {
+        if (window.pageYOffset >= sticky) {
+            navbar.classList.add('sticky');
+        } else {
+            navbar.classList.remove('sticky');
+        }
+    }
+</script>
+<body>
+<!-- 고정된 상단 메뉴바 -->
+<div class="navbar" id="navbar">
+    <a th:href="@{/}"><img src="/img/ManliLogo3.png" alt="Logo" class="logo-img"></a>
+    <div class="nav-links">
+        <a th:href="@{/introduce}">About</a>
+        <a th:href="@{/promotion}">Promotion</a>
+        <a th:href="@{/program}">Program</a>
+        <a th:href="@{/using}">Notice</a>
+    </div>
+    <!-- 햄버거 메뉴 버튼 -->
+    <img id="menuBtn" src="/img/menuBtn1.png" alt="Menu Button">
+    <!-- 사이드 메뉴 -->
+    <div class="menuWrap" id="menu">
+        <ul class="menuList">
+            <li class="listStyle"><a th:href="@{/introduce}">About</a>
+                <ul class="intro">
+                    <li><a th:href="@{/introduce}">헬스장 소개</a></li>
+                    <li><a th:href="@{/come}">오시는길</a></li>
+                </ul>
+            </li>
+            <li class="listStyle"><a th:href="@{/program}">Program</a>
+                <ul class="pro">
+                    <li><a th:href="@{/PT}">PM 프로그램</a></li>
+                    <li><a th:href="@{/program}">운동 프로그램</a></li>
+                </ul>
+            </li>
+            <li class="listStyle"><a th:href="@{/promotion}">Promotion</a>
+                <ul class="eve"><!--프로모션은 가격표 올려두고 이벤트는 사진업로드-->
+                    <li><a th:href="@{/promotion}">프로모션</a></li>
+                    <li><a th:href="@{/event}">이벤트</a></li>
+                </ul>
+            </li>
+            <li class="listStyle"><a href="#">SNS</a>
+                <ul class="gi">
+                    <li><a href="http://blog.naver.com/knhpallc">네이버 카페</a></li>
+                    <li><a href="http://manligym24.modoo.at">만리 블로그</a></li>
+                    <li><a href="http://instagram.com/manli_gym10002">인스타그램</a></li>
+                    <li><a href="http://daangn.com/kr/business-profiles/793f009185a347c79cb449a884240c20/">당근</a></li>
+                </ul>
+            </li>
+            <li class="listStyle" th:if="${loggedIn}">
+                Welcome.<span th:text="${username}">님!</span>
+                <ul class="info">
+                    <li><a th:href="@{/info}">내 정보</a></li>
+                    <li><a th:href="@{/userdashboard}">내 회원권</a></li>
+                    <li><a th:href="@{/logout}">로그아웃</a></li>
+                </ul>
+            </li>
+            <li class="listStyle" th:if="${!loggedIn}">
+                <a th:href="@{/login}">로그인</a>
+
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    window.addEventListener('scroll', function() {
+        const navbar = document.getElementById('navbar');
+        if (window.scrollY > 10) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const menuWrap = document.querySelector(".menuWrap");
+    const menuBtn = document.querySelector("#menuBtn");
+
+    // 메뉴 버튼 클릭 이벤트
+    menuBtn.addEventListener("click", function (e) {
+      toggleMenu();
+    });
+
+    // 빈 공간 클릭 시 메뉴 닫기
+    document.addEventListener("click", function (e) {
+      if (!menuWrap.contains(e.target) && e.target !== menuBtn) {
+        closeMenu();
+      }
+    });
+
+    function toggleMenu() {
+      if (menuWrap.classList.contains("on")) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    }
+
+    function openMenu() {
+      menuWrap.classList.add("on");
+      menuBtn.src = "/img/menuBtn1.png";
+      menuBtn.classList.add("btnRotate");
+      let div = document.createElement("div");
+      div.id = "dimmed";
+      document.body.append(div);
+
+      // 페이지 스크롤 락, 모바일 이벤트 차단
+      document.querySelector("#dimmed").addEventListener(
+        "scroll touchmove touchend mousewheel",
+        function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        }
+      );
+    }
+
+    function closeMenu() {
+      menuWrap.classList.remove("on");
+      menuBtn.src = "/img/menuBtn1.png";
+      menuBtn.classList.remove("btnRotate");
+      document.querySelector("#dimmed").remove();
+    }
+  });
+</script>
+    <div class="image-box">
+
+        <div class="title">Exercise Components</div>
+        <div class="text">Program</div>
+        <div id="btn-container">
+            <div id="so">
+                <a th:href="@{/program}">운동 프로그램</a>
+            </div>
+            <div id="sa">
+                <a th:href="@{/PT}">PM 프로그램</a>
+            </div>
+        </div>
+    </div>
+    <div>
+        <h3 class="emphasized-text">만리체육관은 헬스 초보자분들을 위한 기초 운동 프로그램이 준비되어 있습니다.</h3>
+        <div class="image-container">
+            <img src="/img/qna.jpeg" class="num1" style="width: 500px; height: 400px;">
+
+            <p> <span class="highlighted"> 상세한 인바디 상담 및 피드백 </span><br><br><br>
+                무료로 진행되는 인바디 상담입니다. <br><br>
+                인바디(InBody)는 체성분 분석을 통해 신체의 근육량, 지방량, 체수분, 기초대사량 등을 측정하는 기기입니다. <br><br>
+                인바디 결과를 바탕으로 상담을 통해 회원님의 현재 신체 상태를 정확히 파악하고, <br><br>
+                이를 바탕으로 개인 맞춤형 운동 및 식단 계획을 함께 수립합니다. <br><br>
+            </p>
+        </div>
+        <div class="image-container">
+            <img src="/img/pt.jpeg" class="num1" style="width: 500px; height: 400px;">
+
+            <p> <span class="highlighted"> 머신 설명 </span><br><br><br>
+                초보자들들을 위한 맞춤 커리큘럼 <br><br>
+            헬스장 등록 후 무엇을 어떻게 운동을 해야할지 고민일 수 있습니다. <br><br>
+            각 운동 기구는 특정 근육 그룹을 타겟으로 하며, <br><br>
+            바른 사용법을 배우는 것이 부상 예방과 운동 효과를 높이는 데 필수적입니다. <br><br>
+            회원님의 운동 목표에 맞는 기구를 선택하는 방법과 기구 사용 시 주의해야 할 점을 알려드립니다.<br><br>
+            </p>
+        </div>
+        <div class="image-container">
+            <img src="/img/explain.jpg" class="num1" style="width: 500px; height: 400px;">
+
+            <p> <span class="highlighted"> 스트레칭 </span><br><br><br>
+                운동 전후에 몸의 유연성을 높이고 부상의 위험을 줄이기 위해 매우 중요합니다. <br><br>
+                운동 전 스트레칭은 몸을 준비시키고, <br><br>
+                운동 후에는 근육의 피로를 풀어주고 회복을 촉진합니다. <br><br>
+                각 회원님의 몸 상태와 운동 유형에 맞는 맞춤형 스트레칭 동작을 설명하고, <br><br>
+                올바른 자세로 스트레칭을 수행할 수 있도록 지도합니다.</p>
+        </div>
+        <div class="image-container">
+            <img src="/img/massa.jpeg" class="num1" style="width: 500px; height: 400px;">
+
+            <p> <span class="highlighted"> 근육 마사지 </span><br><br><br>
+                마사지는 운동 후 근육의 피로를 풀어주고, 회복을 촉진하는 중요한 관리 방법입니다. <br><br>
+                특히, 웨이트와 같은 격렬한 운동 후에 뭉친 근육을 풀어주는 데 도움이 되며, <br><br>
+                혈액순환을 촉진하고 스트레스를 완화시켜 줍니다. <br><br>
+                각 회원님의 상태에 맞춘 맞춤형 마사지를 제공하여,  <br><br>
+                몸의 긴장을 풀어주고 더욱 빠르고 효과적인 근육 회복을 도와줍니다. </p>
+        </div>
+    </div>
+    <img src="/img/up.png" id="top_btn" alt="up"><i class="fa fa-arrow-up" aria-hidden="true"></i><span class="sound_only"></span>
+
+
+<script>
+    $(function() {
+        $("#top_btn").on("click", function() {
+            $("html, body").animate({scrollTop:0}, '500');
+            return false;
+        });
+    });
+</script>
+<div class="footer">
+    <h2>Want to partner with us?</h2>
+    <p>만리체육관은 항상 여러분과 함께입니다.</p>
+    <button class="join"><a th:href="@{/join}">회원가입</a></button>
+    <div class="login-driver"></div>
+    <div class="contact-info">
+        <div class="col">
+            <img src="/img/logo2.jpg" class="foot-img">
+            <ul>
+                <li class="top">CONTECT</li>
+                <li>CEO : 김재흥</li>
+                <li>Email : knhpallc@gamil.com</li>
+                <li>Tell : 02-714-8880</li>
+                <li>Address : 서울특별시 용산구 효창원로 270, 3층  </li>
+            </ul>
+        </div>
+        <div class="column">
+            <h3>OPEN</h3>
+            <p>평일 06:00 - 24:00</p>
+            <p>토요일,공휴일 09:00 - 18:00</p>
+            <p>※일요일, 설, 추석 휴관※</p>
+        </div>
+        <div class="column">
+            <h3><a th:href="@{/using}" style="text-decoration: none">이용 약관</a></h3>
+            <p><a th:href="@{/hwanbul}" style="text-decoration: none">환불 약관</a></p>
+            <p><a th:href="@{/stoppass}" style="text-decoration: none">휴회&양도 약관</a></p>
+            <p><a th:href="@{/PT}" style="text-decoration: none">PM 약관</a></p>
+            <p><a th:href="@{/gaein}" style="text-decoration: none"> 개인정보 수집 동의서 </a></p>
+        </div>
+        <div class="column">
+            <h3>With Us!</h3>
+            <a href="http://blog.naver.com/knhpallc"><img src="/img/cafe.jpg" alt="cafe"></a>
+            <a href="http://manligym24.modoo.at"><img src="/img/blog.jpg" alt="blog"></a>
+            <a href="http://instagram.com/manli_gym10002"><img src="img/insta.jpg" alt="insta"></a>
+            <a href="http://daangn.com/kr/business-profiles/793f009185a347c79cb449a884240c20/"><img src="img/danggun.jpg" alt="danggun"></a>
+        </div>
+    </div>
+    <div class="social-icons">
+        <p> COPY RIGHT ⓒ2024 만리체육관, ALL RIGHT RESERVE</p>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
+        <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-76x76.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon-114x114.png">
+        <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-icon-120x120.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-icon-152x152.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-icon-180x180.png">
+        <link rel="icon" type="image/png" sizes="192x192" href="/img/android-icon-192x192.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+        <link rel="manifest" href="/manifest.json">
+        <meta name="msapplication-TileColor" content="#ffffff">
+        <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
+        <meta name="theme-color" content="#ffffff">
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../css/header.css" rel="stylesheet">
+    <link href="../css/drop.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css"> <!-- 스타일 시트 연결 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Song+Myung&display=swap" rel="stylesheet">
+    <!-- jQuery 라이브러리 로드 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+    <title>PT&PM 약관</title>
+<style>
+    #top_btn {
+           position: fixed;
+           bottom: 20px; /* 원하는 위치로 조정 */
+           right: 20px; /* 원하는 위치로 조정 */
+           border: none;
+           padding: 3px;
+           cursor: pointer;
+           transition: background-color 0.3s;
+          }
+
+           /* 기본 스타일 */
+           body, html {
+               margin: 0;
+               padding: 0;
+               font-family: Arial, sans-serif;
+               height: 100%;
+               background: url('/img/health25.png') no-repeat center center fixed; /* 배경화면 설정 */
+               background-size: cover;
+           }
+
+
+          /* 고정된 상단 메뉴바 */
+           .navbar {
+               display: flex;
+               justify-content: space-between;
+               align-items: center;
+               background-color: transparent; /* 초기 배경색은 투명 */
+               transition: background-color 0.3s; /* 부드러운 색상 전환 */
+               padding: 8px 20px;
+               height: 70px;
+               position: fixed;
+               top: 0;
+               width: 100%;
+               z-index: 1000;
+           }
+
+           .navbar.scrolled {
+               background-color: rgba(0, 0, 0, 0.9); /* 스크롤 시 배경색 */
+           }
+
+           .navbar img {
+               margin-left:70px;
+               height: 50px;
+           }
+
+           .nav-links {
+               display: flex;
+               align-items: center;
+
+
+           }
+
+           .nav-links a {
+               color: white;
+               text-decoration: none;
+               padding: 0 15px;
+               font-weight: bold;
+
+           }
+
+           .nav-links a:hover {
+               color: green;
+           }
+
+           /* 햄버거 메뉴 버튼 */
+           #menuBtn {
+               width: 35px;
+               cursor: pointer;
+               z-index: 1001;
+               margin-right: 70px;
+           }
+
+           /* 사이드 메뉴 스타일 */
+           .menuWrap {
+               position: fixed;
+               top: 0;
+               right: -500px; /* 메뉴 숨기기 */
+               z-index: 1000;
+               width: 320px;
+               height: 100%;
+               padding: 50px 20px;
+               box-sizing: border-box;
+               transition: right 0.3s ease-in-out;
+               background-color: #f0f0f0;
+
+           }
+
+           .menuWrap.on {
+               right: 0; /* 메뉴 열기 */
+           }
+
+           #dimmed {
+               position: fixed;
+               top: 0;
+               left: 0;
+               z-index: 999;
+               width: 100%;
+               height: 100%;
+               background-color: rgba(0, 0, 0, 0.5);
+           }
+
+           /* 메뉴 리스트 스타일 */
+           .menuList {
+               list-style-type: none;
+               padding: 0;
+           }
+
+           .listStyle > a {
+               font-size: 20px;
+               color: green;
+               text-decoration: none;
+               display: block;
+               padding: 10px;
+           }
+
+           .listStyle ul {
+               list-style-type: none;
+               padding: 0;
+               margin-left: 20px;
+           }
+
+
+           .listStyle ul li a {x
+               color: black;
+               text-decoration: none;
+               display: block;
+               padding: 7px 0;
+           }
+
+           .listStyle a:hover {
+               background-color: #f9f9f9;
+           }
+
+           .btnRotate {
+               transform: rotate(-90deg);
+               transition: all 0.3s ease-in-out;
+           }
+
+
+        /* 메뉴바 아래 */
+        .image-box {
+            position: relative;
+            text-align: center;
+            background-size: 1800px;
+            background-position: center;
+            max-width: 100%;
+            height: 100vh; /* 전체 화면 높이 */
+            margin-bottom: 30px;
+               padding-bottom: 10px; /* 버튼 컨테이너를 위해 추가된 아래쪽 패딩 */
+        }
+
+        .over {
+            max-width: 100%;
+            height: auto;
+            background-size: 2000px;
+            background-position: center;
+            z-index: -1;
+        }
+
+        .text {
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 40px;
+            color: white;
+            font-weight: bold;
+            z-index: 1;
+
+        }
+
+
+
+        .title {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 30px;
+            color: white;
+            z-index: 1;
+
+        }
+
+        #btn-container {
+            display: grid;
+
+            grid-template-columns: repeat(3, 1fr); /* 첫 줄에 3개를 배치 */
+            gap: 20px; /* 각 버튼 사이의 간격 */
+            max-width: 800px; /* 컨테이너의 최대 너비 */
+            margin: 0 auto;
+            position: absolute;
+            bottom: 120px; /* 버튼 컨테이너의 아래쪽 여백을 줄여서 위치 조정 */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+        }
+
+        #pt, #stop {
+            border-left:1000px;
+            grid-column: span 1 / span 2; /* 두 번째 줄에서 각 버튼이 두 개의 열을 차지 */
+        }
+
+        #btn-container > div {
+            padding: 10px 40px;
+            font-size: 25px;
+            font-weight: bold;
+            background-color: transparent;
+            border-radius: 10px;
+            color: white;
+            text-align: center;
+            list-style: none;
+        }
+
+        #btn-container > div > a {
+            color: white;
+            text-decoration: none;
+        }
+
+        #btn-container > div:hover {
+            background-color: green;
+            transition: 0.8s;
+            color: white;
+        }
+
+                   /*푸터*/
+           .footer {
+               justify-content: space-between;
+               align-items: center;
+               background-color: black;
+               padding: 20px;
+               text-align: center;
+               box-shadow:
+           }
+
+           .footer h2 {
+               color: #fff;
+           }
+           .footer p {
+               color: #fff;
+           }
+           .footer .contact-info {
+               display: flex;
+               justify-content: space-between;
+               margin-top: 20px;
+               padding-top: 70px;
+           }
+
+           .footer .contact-info .column {
+               flex: 1;
+
+           }
+           .footer .contact-info .column h3 {
+               font-size: 20px;
+               margin-bottom: 10px;
+               color:white;
+           }
+           .footer .contact-info .column ul {
+               list-style: none;
+               padding: 0;
+           }
+           .footer .contact-info .column p{
+               margin-bottom: -8px;
+               font-size: 14px;
+
+
+           }
+           .column a {
+               color:white;
+           }
+           .column a:hover {
+               color: green;
+           }
+
+
+           .col {
+               display: flex;
+               align-items: center;
+               padding-bottom: 90px;
+               position: relative;
+           }
+        /* Image Styling */
+        .foot-img {
+            max-width: 100px; /* Set a maximum width for the image */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 10px;
+            margin: 0 auto; /* Center the image */
+            display: block; /* Ensure it behaves like a block element for centering */
+        }
+
+           .col ul {
+               list-style: none;
+               display: block;
+               padding: 10px 0px;
+               margin-right: auto;
+               text-align: left;
+               font-size: 13px;
+               color: white;
+           }
+           .col ul li {
+               margin-bottom: 7px;
+           }
+
+           .footer .social-icons {
+               margin-top: 20px;
+           }
+           .footer .social-icons a {
+               color: #fff;
+               margin-right: 10px;
+           }
+           .top {
+               font-size: 20px;
+               font-weight: bold;
+           }
+           .contact-info {
+               border-top: 0.3px solid white;
+               margin-top: -30px;
+               border-bottom: 0.3px solid white;
+           }
+           .join {
+               background-color: black;
+               border-radius: 10px;
+               }
+           .join a {
+               color: white;
+           }
+           .column img {
+               border-radius: 10px;
+           }
+           .social-icons p {
+               font-size: 11px;
+           }
+
+             h2 {
+        color: white;
+        }
+        .line {
+        border-bottom: 2px solid white;
+        padding-bottom: 10px;
+        }
+        .start {
+        padding-top: 20px;
+        }
+        .hip h3 {
+            color: white;
+            }
+        .hip p {
+            color: white;
+        }
+        .hip {
+                margin-left: 35px;
+                margin-bottom: 80px;
+        }
+            .logo-img {
+            width: 75px;  /* 너비를 150px로 설정 */
+            height: 100px;  /* 높이를 자동으로 조절하여 이미지의 비율을 유지 */
+            object-fit: cover; /* 이미지를 강제로 지정된 크기에 맞춥니다. */
+
+        }
+
+            /* 모바일 디바이스를 위한 추가 반응형 CSS */
+@media only screen and (max-width: 768px) {
+    /* 컨테이너 크기 및 레이아웃 조정 */
+    .container {
+        padding: 20px;
+        margin: 20px auto;
+        max-width: 100%;
+    }
+
+    /* 전체 레이아웃 크기 조정 */
+    h1 {
+        font-size: 24px;
+    }
+
+    p {
+        font-size: 14px;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="number"] {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    /* 버튼 크기 및 여백 조정 */
+    button {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+
+    /* 메뉴바 크기 및 간격 조정 */
+    .navbar {
+        height: 60px;
+        padding: 5px 10px;
+    }
+
+    .navbar img {
+        height: 40px;
+        margin-left: 20px;
+    }
+
+    .nav-links a {
+        font-size: 14px;
+        padding: 0 10px;
+    }
+
+    /* 햄버거 메뉴 아이콘 크기 조정 */
+    #menuBtn {
+        width: 30px;
+        margin-right: 20px;
+    }
+
+    /* 슬라이드 이미지 높이 조정 */
+    .mySlides img {
+        height: 50vh;
+    }
+         .menuWrap {
+           width: 240px; /* 메뉴 너비 줄이기 */
+        padding: 20px 10px; /* 패딩 조정 */
+    }
+
+    .listStyle > a {
+        font-size: 16px; /* 폰트 크기 줄이기 */
+        padding: 8px; /* 패딩 조정 */
+    }
+
+    .listStyle ul li a {
+        font-size: 14px; /* 서브 폰트 크기 줄이기 */
+        padding: 5px 0; /* 서브 패딩 조정 */
+    }
+
+    /* 사이드 메뉴 전체를 위로 올리기 */
+    .menuWrap {
+        top: 20px; /* 메뉴를 위로 올리기 */
+    }
+
+    /* 버튼 컨테이너 및 버튼 크기 조정 */
+    #btn-container {
+        grid-template-columns: repeat(2, 1fr); /* 작은 화면에서 2개씩 배치 */
+        gap: 10px;
+        bottom: 60px; /* 버튼이 더 높게 위치하도록 조정 */
+    }
+
+    #btn-container > div {
+        padding: 8px 20px;
+        font-size: 18px;
+    }
+
+   .footer {
+            padding: 15px; /* Adjust padding */
+        }
+
+        .footer .contact-info .column .col {
+            flex: 1 0 100%; /* Stack columns on small screens */
+            margin: 5px 0; /* Adjust margin */
+        }
+
+        .footer .contact-info {
+            flex-direction: column; /* Stack items vertically */
+        }
+
+        .footer .social-icons p {
+            font-size: 10px; /* Reduce font size */
+        }
+                .footer .col {
+            text-align:center;
+            }
+
+
+    /* 기타 요소 크기 조정 */
+    .logo-img {
+        width: 60px;
+        height: 80px;
+    }
+}
+
+/* 더 작은 모바일 기기 (폰트 크기 및 여백 조정) */
+@media only screen and (max-width: 480px) {
+    h1 {
+        font-size: 20px;
+    }
+
+    button {
+        font-size: 12px;
+    }
+
+    /* 텍스트와 버튼 레이아웃 조정 */
+    .text {
+        font-size: 24px;
+    }
+
+    .title {
+        font-size: 20px;
+    }
+
+      /* 사이드 메뉴 스타일 조정 */
+    .menuWrap {
+        padding: 30px 15px; /* 패딩 줄이기 */
+        width: 240px; /* 너비 조정 */
+    }
+
+    .listStyle > a {
+        font-size: 16px; /* 폰트 크기 줄이기 */
+        padding: 8px; /* 패딩 줄이기 */
+    }
+
+    .listStyle ul li a {
+        font-size: 14px; /* 하위 메뉴 폰트 크기 줄이기 */
+        padding: 5px 0; /* 패딩 줄이기 */
+    }
+
+    /* 로그인 상태일 때 스타일 조정 */
+    .listStyle th:if="${loggedIn}" {
+        margin-top: 20px; /* 위로 올리기 */
+    }
+
+    #dimmed {
+        top: 50px; /* 배경 dimmed 효과 위로 올리기 */
+    }
+
+    /* 버튼 간격 축소 */
+    #btn-container {
+        grid-template-columns: repeat(1, 1fr); /* 한 줄에 하나씩 */
+        gap: 10px;
+        bottom: 40px;
+    }
+
+    #btn-container > div {
+        font-size: 16px;
+    }
+
+    /* 푸터 텍스트 크기 */
+    .footer h2 {
+        font-size: 14px;
+    }
+}
+
+/* 아이폰 및 안드로이드 전용 레이아웃 조정 */
+@media only screen and (max-width: 425px) {
+    .navbar img {
+        height: 30px;
+        margin-left: 10px;
+    }
+
+    .nav-links a {
+        font-size: 12px;
+        padding: 0 5px;
+    }
+
+    #btn-container > div {
+        padding: 5px 10px;
+        font-size: 14px;
+    }
+
+.footer h2 {
+            font-size: 18px; /* Smaller font size for header */
+        }
+
+        .footer .col .contact-info .column h3 {
+            font-size: 16px; /* Adjust font size */
+        }
+
+        .footer .col .contact-info .column p {
+            font-size: 12px; /* Adjust font size */
+        }
+
+        .footer .social-icons {
+            flex-direction: column; /* Stack social icons */
+        }
+        .footer .col {
+            text-align:center;
+            }
+
+}
+</style>
+</head>
+<body>
+<!-- 고정된 상단 메뉴바 -->
+<div class="navbar" id="navbar">
+    <a th:href="@{/}"><img src="/img/ManliLogo3.png" alt="Logo" class="logo-img"></a>
+    <div class="nav-links">
+        <a th:href="@{/introduce}">About</a>
+        <a th:href="@{/promotion}">Promotion</a>
+        <a th:href="@{/program}">Program</a>
+        <a th:href="@{/using}">Notice</a>
+    </div>
+    <!-- 햄버거 메뉴 버튼 -->
+    <img id="menuBtn" src="/img/menuBtn1.png" alt="Menu Button">
+    <!-- 사이드 메뉴 -->
+    <div class="menuWrap" id="menu">
+        <ul class="menuList">
+            <li class="listStyle"><a th:href="@{/introduce}">About</a>
+                <ul class="intro">
+                    <li><a th:href="@{/introduce}">헬스장 소개</a></li>
+                    <li><a th:href="@{/come}">오시는길</a></li>
+                </ul>
+            </li>
+            <li class="listStyle"><a th:href="@{/program}">Program</a>
+                <ul class="pro">
+                    <li><a th:href="@{/PT}">PM 프로그램</a></li>
+                    <li><a th:href="@{/program}">운동 프로그램</a></li>
+                </ul>
+            </li>
+            <li class="listStyle"><a th:href="@{/promotion}">Promotion</a>
+                <ul class="eve"><!--프로모션은 가격표 올려두고 이벤트는 사진업로드-->
+                    <li><a th:href="@{/promotion}">프로모션</a></li>
+                    <li><a th:href="@{/event}">이벤트</a></li>
+                </ul>
+            </li>
+            <li class="listStyle"><a href="#">SNS</a>
+                <ul class="gi">
+                    <li><a href="http://blog.naver.com/knhpallc">네이버 카페</a></li>
+                    <li><a href="http://manligym24.modoo.at">만리 블로그</a></li>
+                    <li><a href="http://instagram.com/manli_gym10002">인스타그램</a></li>
+                    <li><a href="http://daangn.com/kr/business-profiles/793f009185a347c79cb449a884240c20/">당근</a></li>
+                </ul>
+            </li>
+            <li class="listStyle" th:if="${loggedIn}">
+                Welcome.<span th:text="${username}">님!</span>
+                <ul class="info">
+                    <li><a th:href="@{/info}">내 정보</a></li>
+                    <li><a th:href="@{/userdashboard}">내 회원권</a></li>
+                    <li><a th:href="@{/logout}">로그아웃</a></li>
+                </ul>
+            </li>
+            <li class="listStyle" th:if="${!loggedIn}">
+                <a th:href="@{/login}">로그인</a>
+
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    window.addEventListener('scroll', function() {
+        const navbar = document.getElementById('navbar');
+        if (window.scrollY > 10) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const menuWrap = document.querySelector(".menuWrap");
+    const menuBtn = document.querySelector("#menuBtn");
+
+    // 메뉴 버튼 클릭 이벤트
+    menuBtn.addEventListener("click", function (e) {
+      toggleMenu();
+    });
+
+    // 빈 공간 클릭 시 메뉴 닫기
+    document.addEventListener("click", function (e) {
+      if (!menuWrap.contains(e.target) && e.target !== menuBtn) {
+        closeMenu();
+      }
+    });
+
+    function toggleMenu() {
+      if (menuWrap.classList.contains("on")) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    }
+
+    function openMenu() {
+      menuWrap.classList.add("on");
+      menuBtn.src = "/img/menuBtn1.png";
+      menuBtn.classList.add("btnRotate");
+      let div = document.createElement("div");
+      div.id = "dimmed";
+      document.body.append(div);
+
+      // 페이지 스크롤 락, 모바일 이벤트 차단
+      document.querySelector("#dimmed").addEventListener(
+        "scroll touchmove touchend mousewheel",
+        function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        }
+      );
+    }
+
+    function closeMenu() {
+      menuWrap.classList.remove("on");
+      menuBtn.src = "/img/menuBtn1.png";
+      menuBtn.classList.remove("btnRotate");
+      document.querySelector("#dimmed").remove();
+    }
+  });
+</script>
+<div class="image-box">
+    <div class="title">Personal Training Policy</div>
+    <div class="text">Notice</div>
+    <div id="btn-container">
+        <div id="so">
+            <a th:href="@{/using}">이용 약관</a>
+        </div>
+        <div id="sa">
+            <a th:href="@{/gaein}">개인정보 수집 약관</a>
+        </div>
+        <div id="oh">
+            <a th:href="@{/hwanbul}">환불 약관</a>
+        </div>
+        <div id="pt">
+            <a th:href="@{/PTagree}">PT&PM 약관</a>
+        </div>
+        <div id="stop">
+            <a th:href="@{/stoppass}">휴회&양도 약관</a>
+        </div>
+    </div>
+</div><br><br><br>
+<div class="hip">
+    <h2 class="line">PT&PM 규정</h2><br><br><br>
+
+    <p> 1. PM 강습은 수업료 전액이 지불된 후부터 시작됩니다.</p><br><br>
+    <p>모든 PT 수업은 계약 만료일 또는 만료일 전에 완료 되어야 합니다.</p><br>
+    <p>    (만료일이 지난 상품은 이용이 불가능 합니다.) </p>
+    <p>PM 지침 참고 : 10회 이하 계약일 후 30일, 10회 계약일 후 45일, 20회 계약일 후 70일, 30회 계약일 후 120일, 기간 안에 수강을 완료하지 않은 경우 남은횟수는 소멸 됩니다. </p><br>
+    <p>휴회신청으로 만료일이 지난 경우 양도나 환불이 불가능합니다. (단, 시작일 조율할경우 해당기간만큼 연기 해 드립니다.)</p><br>
+    <p>만료일이 지난 수업은 소멸되며 모든수업은 종료되어 어떠한 경우에도 진행이 불가능 합니다.</p><br><br><br>
+
+    <p>3. 예약된 트레이닝은 24시간전에 미리 취소하지 않을 경우 수업은 자동 소진 됩니다.</p><br><br>
+
+    <p>4. 원래 예정되었던 트레이너가 강습을 할 수 없는 경우 동일한 자격을 갖춘 다른 트레이너로 대체될 수 있습니다. (트레이너 대체 이유로 환불은 불가능 합니다.)</p><br><br>
+
+    <p>5. 계약 후 첫 수업은 7일 이내 진행 되어야 합니다 .</p><br>
+    <p>* 회원님께서는 육체적, 정신적으로 현재 운동을 하실 수 있는 적절한 상태이며, 의학적으로 개인 트레이닝을 받을 수 없는 심각한 문제나 건강/쇠약 및 질병을 가지고 있지 않음을 분명히 밝</p><br>
+    <p>히셨고 사실임을 인정하였습니다.</p><br><br>
+    <p>* 회원님께서는 건강상 또는 의학적인 우려가 있을 경우 개인강습을 받기 전 반드시 전문의와 상담하셔야하며, 전문의 상담결과에 대하여 담당 트레이너에게 필히 전달하여 주셔야 합니</p><br>
+    <p>다. 사전에 전달되지 않은 결과로 인해 발생되는 문제에 대해여 본 체육관에 책임이 없음을 알려드립니다. </p><br><br>
+
+    <p>* PM 강습을 받는 도중 발생할 수 있는 상해에 대하여 회원님의 부주의 또는 다른 사람의 행위로 인한 회원님의 신체 또는 정신적, 경제적 피해에 대하여 본 체육관에서는 책임이 없습니다.</p><br>
+
+    <p>* 회원님의 부주의로 인한 타인의 육체적, 정신적, 경제적 손해에 대해 해당인이 배상을 요구할 경우 본 체육관이 아닌 이해관계자 간의 손해배상청구 및 관련된 일체의 책임을 지셔야 하</p><br>
+    <p>며, 이에 대하여 본 체육관은 어떠한 책임도 없습니다. </p><br><br>
+
+    <p>* 본 체육관에서 공식적으로 지급하는 영양 제품이나 약품 이외에 허가 없이 회원간 또는 직원이 제공하는 영양 제품과 약품의 부작용 및 손해에 대해여 당사에서는 책임이 없음을 알려드립니다.  </p><br><br>
+
+    <p>* 본 약정서에 기재되어 있지 않은 사항에 대해 본 체육관의 책임을 물을 수 없으며, 본 약정서 이외의 어떤한 구두상 또는 서면상 약정도 효력이 없습니다.</p><br><br>
+
+    <p>*회원님께서는 계약전 위의 사항을 숙지, 동의하셨으며, 약정은 유효하게 됩니다. </p><br><br><br><br><br><br>
+</div><br><br><br><br><br><br>
+<img src="/img/up.png" id="top_btn" alt="up"><i class="fa fa-arrow-up" aria-hidden="true"></i><span class="sound_only"></span>
+
+<script>
+    $(function() {
+        $("#top_btn").on("click", function() {
+            $("html, body").animate({scrollTop:0}, '500');
+            return false;
+        });
+    });
+</script>
+<div class="footer">
+    <h2>Want to partner with us?</h2>
+    <p>만리체육관은 항상 여러분과 함께입니다.</p>
+    <button class="join"><a th:href="@{/join}">회원가입</a></button>
+    <div class="login-driver"></div>
+    <div class="contact-info">
+        <div class="col">
+            <img src="/img/logo2.jpg" class="foot-img">
+            <ul>
+                <li class="top">CONTECT</li>
+                <li>CEO : 김재흥</li>
+                <li>Email : knhpallc@gamil.com</li>
+                <li>Tell : 02-714-8880</li>
+                <li>Address : 서울특별시 용산구 효창원로 270, 3층  </li>
+            </ul>
+        </div>
+        <div class="column">
+            <h3>OPEN</h3>
+            <p>평일 06:00 - 24:00</p>
+            <p>토요일,공휴일 09:00 - 18:00</p>
+            <p>※일요일, 설, 추석 휴관※</p>
+        </div>
+        <div class="column">
+            <h3><a th:href="@{/using}" style="text-decoration: none">이용 약관</a></h3>
+            <p><a th:href="@{/hwanbul}" style="text-decoration: none">환불 약관</a></p>
+            <p><a th:href="@{/stoppass}" style="text-decoration: none">휴회&양도 약관</a></p>
+            <p><a th:href="@{/PTagree}" style="text-decoration: none">PM 규정</a></p>
+            <p><a th:href="@{/gaein}" style="text-decoration: none"> 개인정보 수집 약관 </a></p>
+        </div>
+        <div class="column">
+            <h3>With Us!</h3>
+            <a href="http://blog.naver.com/knhpallc"><img src="/img/cafe.jpg" alt="cafe"></a>
+            <a href="http://manligym24.modoo.at"><img src="/img/blog.jpg" alt="blog"></a>
+            <a href="http://instagram.com/manli_gym10002"><img src="/img/insta.jpg" alt="insta"></a>
+            <a href="http://daangn.com/kr/business-profiles/793f009185a347c79cb449a884240c20/"><img src="/img/danggun.jpg" alt="danggun"></a>
+        </div>
+    </div>
+    <div class="social-icons">
+        <p> COPY RIGHT ⓒ2024 만리체육관, ALL RIGHT RESERVE</p>
+    </div>
+</div>
+</body>
+</html>

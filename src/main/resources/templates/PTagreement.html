@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <title>PT 계약서</title>
+    <!-- jquery cnd-->
+    <script
+            src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url("logo.screen.png");
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: 1200px;
+            background-position: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 5px solid #ccc;
+            border-radius: 10px;
+            padding-bottom: 30px;
+        }
+        h1 {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid black;
+            margin-bottom: 50px;
+            color: green;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .sub {
+            display: flex;
+            justify-content: center;
+        }
+        .container a {
+            color: black;
+            text-border: solid;
+        }
+        p {
+            padding-bottom: 15px;
+        }
+        .box {
+            margin-top: 0.3px solid black;
+        }
+        .sub button {
+            background-color: green;
+              color: #fff;
+              border: none;
+              padding: 10px 30px;
+              border-radius: 5px;
+              cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>PT 계약서</h1>
+    <form id="PT_agreement-form" method="post">
+        <p><strong>회원 번호 :</strong></p>
+        <p><strong>담당 선생님 : </strong><input type="text" name="coach" id="coach" placeholder="계약자 이름" required></p>
+        <p><strong>이름: </strong><input type="text" name="name"  id="name" placeholder="회원 이름" required></p>
+        <p><strong>성별: </strong><input type="text"  name="gender" id="gender" placeholder="성별" required></p>
+        <p><strong>전화번호: </strong><input type="text" name="phone" id="phone" placeholder="'-'없이 입력" required></p>
+        <p><strong>생년월일: </strong><input type="date" name="birth"  id="birth" placeholder="생년월일" required></p>
+        <p><strong>주소: </strong><input type="text" name="address" id="address" placeholder="거주지" required></p>
+        <p><strong>카카오톡 ID : </strong></p>
+        <label for="purpose">운동 목적 : </label><select id="purpose" name="purpose">
+        <option value="다이어트">다이어트</option>
+        <option value="벌크업">벌크업</option>
+        <option value="건강">건강</option>
+        <option value="대입 준비">대입 준비</option>
+        <option value="재활">재활</option>
+        <option value="체력강화">체력 강화</option>
+    </select><br><br>
+        <p><strong>PT 종류: </strong><input type="text" name="ptmembership" id="ptmembership" placeholder="피티 종류" required></p>
+        <p><strong>PT 시작일: </strong><input type="date" name="ptstart"  id="ptstart" placeholder="피티 시작일" required></p>
+        <p><strong>남은 횟수 : </strong><input type="text" name="count" id="count" placeholder="남은 횟수"> </p><br>
+        <label for="credit">결제 방법 : </label><select id="credit" name="credit">
+        <option value="카드">카드</option>
+        <option value="계좌이체">계좌이체</option>
+        <option value="현금">현금</option>
+        <option value="제로페이">제로 페이</option>
+        <option value="카카오페이">카카오페이</option>
+    </select><br>
+        <p><strong>결제 금액 : </strong><input type="text" name="price" id="price" placeholder="결제 금액" required><br><br>
+        <div class="box">
+            <input type="checkbox" id="dong4" name="vehicle2" value="Dong" disabled>
+            <label for="dong4" onclick="openPops()">이용 약관</label><br>
+            <input type="checkbox" id="dong1" name="vehicle1" value="Dong" disabled>
+            <label for="dong1" onclick="openPopup()"> 개인정보 수집 동의서</label><br>
+            <input type="checkbox" id="dong2" name="vehicle2" value="Dong" disabled>
+            <label for="dong2" onclick="openPop()">휴회&양도 규정</label><br>
+            <input type="checkbox" id="dong3" name="vehicle2" value="Dong" disabled>
+            <label for="dong3" onclick="openPoppin()"> 환불 규정</label><br>
+            <input type="checkbox" id="dong5" name="vehicle3" value="Dong" disabled>
+            <label for="dong5" onclick="openPopm()"> PT&PM 규정</label><br>
+            <br>
+        </div>
+        <p>[약관 동의 서명란]</p>
+        <canvas id="signature-pad" width="200" height="100" style="border:none;"></canvas>
+        <br>
+        <button type="button" id="clear-signature">서명 지우기</button>
+        <input type="hidden" name="signature" id="signature">
+
+        <div class="sub">
+            <input type="submit" value="작성완료" onclick="saveSignature()">
+        </div>
+    </form>
+</div>
+
+<script>
+    function openPopup() {
+        // 팝업을 띄움 (팝업 창 크기 지정)
+       window.open('/member/gaepop.html', 'popupWindow', 'width=600,height=400');
+    }
+
+    // 팝업에서 체크 확인 후 부모 페이지의 체크박스를 체크하고 활성화하는 함수
+    function confirmCheck() {
+        var checkbox = document.getElementById('dong1');
+        checkbox.disabled = false; // 체크박스 활성화
+        checkbox.checked = true; // 체크박스 체크
+    }
+</script>
+<script>
+    function openPop() {
+        // 팝업을 띄움 (팝업 창 크기 지정)
+        window.open('/member/yangpop.html', 'popupWindow', 'width=600,height=400');
+    }
+
+    // 팝업에서 체크 확인 후 부모 페이지의 체크박스를 체크하고 활성화하는 함수
+    function confirmChecky() {
+        var checkbox = document.getElementById('dong2');
+        checkbox.disabled = false; // 체크박스 활성화
+        checkbox.checked = true; // 체크박스 체크
+    }
+</script>
+<script>
+    function openPoppin() {
+        // 팝업을 띄움 (팝업 창 크기 지정)
+        window.open('/member/hwanpop.html', 'popupWindow', 'width=600,height=400');
+    }
+
+    // 팝업에서 체크 확인 후 부모 페이지의 체크박스를 체크하고 활성화하는 함수
+    function confirmCheckh() {
+        var checkbox = document.getElementById('dong3');
+        checkbox.disabled = false; // 체크박스 활성화
+        checkbox.checked = true; // 체크박스 체크
+    }
+</script>
+<script>
+    function openPops() {
+        // 팝업을 띄움 (팝업 창 크기 지정)
+        window.open('/member/usepop.html', 'popupWindow', 'width=600,height=400');
+    }
+
+    // 팝업에서 체크 확인 후 부모 페이지의 체크박스를 체크하고 활성화하는 함수
+    function confirmChecku() {
+        var checkbox = document.getElementById('dong4');
+        checkbox.disabled = false; // 체크박스 활성화
+        checkbox.checked = true; // 체크박스 체크
+    }
+</script>
+<script>
+    function openPopm() {
+        // 팝업을 띄움 (팝업 창 크기 지정)
+       window.open('/member/pmpop.html', 'popupWindow', 'width=600,height=400');
+    }
+
+    // 팝업에서 체크 확인 후 부모 페이지의 체크박스를 체크하고 활성화하는 함수
+    function confirmCheckp() {
+        var checkbox = document.getElementById('dong5');
+        checkbox.disabled = false; // 체크박스 활성화
+        checkbox.checked = true; // 체크박스 체크
+    }
+</script>
+<script>
+    // Canvas 초기화
+ const canvas = document.getElementById('signature-pad');
+ const ctx = canvas.getContext('2d');
+ let isDrawing = false;
+
+ // 초기 텍스트 그리기
+ function drawPlaceholderText() {
+     ctx.font = '20px Arial'; // 글꼴과 크기 설정
+     ctx.fillStyle = 'gray'; // 텍스트 색상 설정
+     ctx.textAlign = 'center';
+     ctx.textBaseline = 'middle';
+     ctx.fillText('(서명)', canvas.width / 2, canvas.height / 2);
+ }
+
+ // 서명 시작
+ canvas.addEventListener('mousedown', () => {
+     isDrawing = true;
+     ctx.beginPath();
+ });
+
+ // 서명 그리기
+ canvas.addEventListener('mousemove', (event) => {
+     if (isDrawing) {
+         ctx.lineTo(event.offsetX, event.offsetY);
+         ctx.stroke();
+     }
+ });
+
+ // 서명 끝
+ canvas.addEventListener('mouseup', () => {
+     isDrawing = false;
+ });
+
+ // 서명 지우기 기능
+ document.getElementById('clear-signature').addEventListener('click', function() {
+     ctx.clearRect(0, 0, canvas.width, canvas.height);
+     drawPlaceholderText(); // 서명 지우기 후 텍스트 다시 그리기
+ });
+
+ // 서명 저장 기능
+ function saveSignature() {
+     const signatureDataURL = canvas.toDataURL();
+     document.getElementById('signature').value = signatureDataURL;
+ }
+
+ // 페이지 로드 시 텍스트 그리기
+ window.onload = function() {
+     drawPlaceholderText();
+ };
+
+</script>
+</body>
+</html>

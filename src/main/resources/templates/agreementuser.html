@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <title>Agreement2</title>
+    <!-- jQuery CDN -->
+    <script
+            src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+    <style>
+        #top_btn {
+        position: fixed;
+        bottom: 20px; /* 원하는 위치로 조정 */
+        right: 20px; /* 원하는 위치로 조정 */
+        border: none;
+        padding: 3px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+     /* 기본 스타일 */
+     body, html {
+         margin: 0;
+         padding: 0;
+         font-family: Arial, sans-serif;
+         height: 100%;
+         background: url('/img/health.png') no-repeat center center fixed;
+         background-size: cover;
+     }
+
+     /* 컨테이너 스타일 */
+     .containers {
+         background: rgba(255, 255, 255, 0.9);
+         padding: 30px;
+         border-radius: 8px;
+         margin: 50px auto;
+         max-width: 800px;
+         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+         margin-top: 100px;
+
+     }
+
+     /* 제목 스타일 */
+     h1 {
+         color: #333;
+         text-align: center;
+         margin-bottom: 20px;
+     }
+
+     /* 폼 스타일 */
+     form {
+         display: flex;
+         flex-direction: column;
+     }
+
+     /* 폼 항목 스타일 */
+     p {
+         margin-bottom: 15px;
+         font-size: 16px;
+         line-height: 1.5;
+     }
+
+     /* 입력 필드 스타일 */
+     input[type="text"],
+     input[type="date"],
+     input[type="number"],
+     select {
+         width: 100%;
+         border-radius: 4px;
+         border: 1px solid #ccc;
+         padding: 10px;
+         font-size: 16px;
+         margin-top: 5px;
+         box-sizing: border-box; /* 패딩과 테두리가 요소의 전체 너비를 초과하지 않도록 함 */
+     }
+
+     /* 버튼 스타일 */
+     input[type="submit"] {
+         background-color: #007bff;
+         color: #fff;
+         border: none;
+         border-radius: 4px;
+         padding: 10px 20px;
+         font-size: 16px;
+         cursor: pointer;
+         margin-top: 20px;
+         align-self: center;
+         transition: background-color 0.3s ease;
+     }
+
+     input[type="submit"]:hover {
+         background-color: #0056b3;
+     }
+
+     /* 체크박스 스타일 */
+     .box {
+         margin-top: 20px;
+     }
+
+     .box input[type="checkbox"] {
+         margin-right: 10px;
+     }
+
+     .box label {
+         margin-right: 15px;
+         cursor: pointer;
+     }
+
+     /* 강한 텍스트 스타일 */
+     strong {
+         font-weight: bold;
+     }
+
+
+
+    /* 고정된 상단 메뉴바 */
+     .navbar {
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         background-color: transparent; /* 초기 배경색은 투명 */
+         transition: background-color 0.3s; /* 부드러운 색상 전환 */
+         padding: 8px 20px;
+         height: 70px;
+         position: fixed;
+         top: 0;
+         width: 100%;
+         z-index: 1000;
+         margin-bottom: 150px;
+     }
+
+     .navbar.scrolled {
+         background-color: rgba(0, 0, 0, 0.9); /* 스크롤 시 배경색 */
+     }
+
+     .navbar img {
+         margin-left:70px;
+         height: 50px;
+     }
+
+     .nav-links {
+         display: flex;
+         align-items: center;
+     }
+
+     .nav-links a {
+         color: white;
+         text-decoration: none;
+         padding: 0 15px;
+         font-weight: bold;
+     }
+
+     .nav-links a:hover {
+         color: green;
+     }
+
+     /* 햄버거 메뉴 버튼 */
+     #menuBtn {
+         width: 35px;
+         cursor: pointer;
+         z-index: 1001;
+         margin-right: 70px;
+     }
+
+     /* 사이드 메뉴 스타일 */
+     .menuWrap {
+         position: fixed;
+         top: 0;
+         right: -500px; /* 메뉴 숨기기 */
+         z-index: 1000;
+         width: 320px;
+         height: 100%;
+         padding: 50px 20px;
+         box-sizing: border-box;
+         transition: right 0.3s ease-in-out;
+         background-color: #f0f0f0;
+
+     }
+
+     .menuWrap.on {
+         right: 0; /* 메뉴 열기 */
+     }
+
+     #dimmed {
+         position: fixed;
+         top: 0;
+         left: 0;
+         z-index: 999;
+         width: 100%;
+         height: 100%;
+         background-color: rgba(0, 0, 0, 0.5);
+     }
+
+     /* 메뉴 리스트 스타일 */
+     .menuList {
+         list-style-type: none;
+         padding: 0;
+     }
+
+     .listStyle > a {
+         font-size: 20px;
+         color: green;
+         text-decoration: none;
+         display: block;
+         padding: 10px;
+     }
+
+     .listStyle ul {
+         list-style-type: none;
+         padding: 0;
+         margin-left: 20px;
+     }
+
+
+     .listStyle ul li a {
+         font-size: 16px;
+         color: #000;
+         text-decoration: none;
+         display: block;
+         padding: 7px 0;
+     }
+
+     .listStyle a:hover {
+         background-color: #f9f9f9;
+     }
+
+     .btnRotate {
+         transform: rotate(-90deg);
+         transition: all 0.3s ease-in-out;
+     }
+
+
+
+
+     .logo-img {
+         width: 75px;  /* 너비를 150px로 설정 */
+         height: 100px;  /* 높이를 자동으로 조절하여 이미지의 비율을 유지 */
+         object-fit: cover; /* 이미지를 강제로 지정된 크기에 맞춥니다. */
+
+     }
+/* 푸터 */
+     .footer {
+        justify-content: space-between;
+        align-items: center;
+        background-color: black;
+        padding: 20px;
+        text-align: center;
+
+    }
+
+    .footer h2 {
+        color: #fff;
+        font-size:20px;
+
+    }
+    .footer p {
+        color: #fff;
+        font-size:20px;
+    }
+    .footer .contact-info {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+        padding-top: 70px;`
+    }
+
+    .footer .contact-info .column {
+        flex: 1;
+
+    }
+    .footer .contact-info .column h3 {
+        font-size: 20px;
+        margin-bottom: 10px;
+        color:white;
+    }
+    .footer .contact-info .column ul {
+        list-style: none;
+        padding: 0;
+    }
+    .footer .contact-info .column p{
+        margin-bottom: -8px;
+        font-size: 14px;
+    }
+     .column a {
+        color:white;
+    }
+    .column a:hover {
+        color: green;
+    }
+
+
+    .col {
+        display: flex;
+        align-items: center;
+        padding-bottom: 90px;
+        position: relative;
+    }
+     /* Image Styling */
+     .foot-img {
+         max-width: 100px; /* Set a maximum width for the image */
+         height: auto; /* Maintain aspect ratio */
+         border-radius: 10px;
+         margin: 0 auto; /* Center the image */
+         display: block; /* Ensure it behaves like a block element for centering */
+     }
+
+
+    .col ul {
+        list-style: none;
+        display: block;
+        padding: 10px 0px;
+        margin-right: auto;
+        text-align: left;
+        font-size: 13px;
+        color: white;
+    }
+    .col ul li {
+        margin-bottom: 7px;
+    }
+
+    .footer .social-icons {
+        margin-top: 20px;
+    }
+    .footer .social-icons a {
+        color: #fff;
+        margin-right: 10px;
+    }
+    .top {
+        font-size: 20px;
+        font-weight: bold;
+    }
+    .contact-info {
+        border-top: 0.3px solid white;
+        margin-top: -30px;
+        border-bottom: 0.3px solid white;
+    }
+    .join {
+        background-color: black;
+        border-radius: 10px;
+        }
+    .join a {
+        color: white;
+    }
+    .column img {
+        border-radius: 10px;
+    }
+    .social-icons p {
+        font-size: 11px;
+    }
+
+   .form-label {
+         display: block;
+         margin-bottom: 2.5px;
+     }
+
+     .form-input {
+         display: block;
+         margin-bottom: 8.5px;
+         border : 1.3px solid #F0F0F0;
+         background-color:transparent;
+         color:white;
+     }
+     .apply {
+         display: inline-block; /* 인라인 블록으로 설정 */
+         margin-top: 3px;
+         padding: 6px 63px; /* 버튼 내부 여백 */
+         background-color: green; /* 버튼 배경색 (붉은색) */
+         color: white; /* 버튼 텍스트 색상 */
+         text-decoration: none; /* 텍스트 장식 제거 */
+         border-radius: 5px; /* 버튼 모서리 둥글게 */
+         font-weight: bold; /* 텍스트 두껍게 */
+     }
+     #signature-pad {
+    width: 150px; /* 서명 패드의 너비 설정 */
+    height: 100px; /* 서명 패드의 높이 설정 */
+    border: 1px solid black; /* 경계선 스타일 추가 */
+}
+#clear-signature {
+    width: 120px; /* 명확하게 너비를 설정 */
+    padding: 10px 20px; /* 버튼에 적절한 패딩 추가 */
+    margin-top: 5px; /* 상단에 여백 추가 */
+    background-color: gray; /* 버튼 배경색 설정 */
+    color: black; /* 텍스트 색상 설정 */
+    border: none; /* 테두리 제거 */
+    border-radius: 4px; /* 둥근 모서리 */
+    margin-bottom: 25px;
+    cursor: pointer; /* 마우스 오버 시 포인터 표시 */
+    transition: background-color 0.3s ease; /* 호버 시 부드러운 전환 효과 */
+}
+
+#clear-signature:hover {
+    background-color: gray; /* 호버 시 배경색 변경 */
+}
+
+/* 태블릿 및 작은 화면에서의 조정 */
+@media (max-width: 1024px) {
+ .navbar {
+     padding: 8px 15px;
+ }
+
+ .navbar img {
+     margin-left: 40px;
+     height: 40px;
+ }
+
+ #menuBtn {
+     margin-right: 40px;
+     width: 30px;
+ }
+
+ .menuWrap {
+     width: 280px;
+     padding: 40px 15px;
+ }
+
+ .image-box {
+     background-size: cover;
+ }
+
+ .intro p {
+     font-size: 40px;
+ }
+
+ .text {
+     font-size: 30px;
+ }
+
+ .title {
+     font-size: 20px;
+ }
+
+ #btn-container {
+     bottom: 200px;
+ }
+   footer {
+     padding: 15px; /* 패딩 줄이기 */
+     font-size: 14px; /* 폰트 사이즈 조정 */
+ }
+}
+
+@media (max-width: 768px) {
+   .navbar {
+     padding: 8px 10px;
+ }
+
+ .navbar img {
+     margin-left: 20px;
+     height: 30px;
+ }
+
+ .nav-links a {
+     padding: 0 10px;
+     font-size: 14px;
+ }
+
+ #menuBtn {
+     margin-right: 20px;
+     width: 25px;
+ }
+
+ .menuWrap {
+     width: 250px;
+     padding: 30px 10px;
+ }
+
+ .containers {
+     padding: 10px; /* 컨테이너 패딩 줄이기 */
+ }
+
+ .title {
+     font-size: 20px; /* 제목 크기 더 줄이기 */
+ }
+
+ .naeyoung {
+     font-size: 14px; /* 내용 텍스트 크기 조정 */
+ }
+
+.footer {
+         padding: 15px; /* Adjust padding */
+     }
+
+     .footer .contact-info .column .col {
+         flex: 1 0 100%; /* Stack columns on small screens */
+         margin: 5px 0; /* Adjust margin */
+     }
+
+     .footer .contact-info {
+         flex-direction: column; /* Stack items vertically */
+     }
+
+     .footer .social-icons p {
+         font-size: 10px; /* Reduce font size */
+     }
+             .footer .col {
+         text-align:center;
+         }
+
+   h1 {
+     font-size: 28px; /* 제목 크기 조정 */
+ }
+
+ p {
+     font-size: 14px; /* 단락 크기 조정 */
+ }
+
+ input[type="text"],
+ input[type="date"],
+ input[type="number"],
+ select {
+     font-size: 14px; /* 입력 필드 글자 크기 조정 */
+ }
+
+ input[type="submit"] {
+     font-size: 14px; /* 버튼 글자 크기 조정 */
+ }
+
+ .contact-info .column h3 {
+     font-size: 18px; /* 연락처 정보 제목 크기 조정 */
+ }
+
+ .contact-info .column p {
+     font-size: 12px; /* 연락처 정보 단락 크기 조정 */
+ }
+}
+
+@media (max-width: 486px) {
+  .navbar {
+     padding: 8px 10px;
+ }
+
+ .navbar img {
+     margin-left: 10px;
+     height: 30px;
+ }
+
+ .nav-links a {
+     padding: 0 10px;
+     font-size: 14px;
+ }
+
+ #menuBtn {
+     margin-right: 20px;
+     width: 25px;
+ }
+
+ .menuWrap {
+     width: 250px;
+     padding: 30px 10px;
+ }
+
+ .signup-form {
+     width: 95%;
+     padding: 20px;
+ }
+
+ .signup-form h1 {
+     font-size: 20px;
+ }
+
+ .signup-form input,
+ .signup-form select,
+ .signup-form button {
+     height: 40px;
+ }
+  h1 {
+     font-size: 24px; /* 제목 크기 조정 */
+ }
+
+ p {
+     font-size: 12px; /* 단락 크기 조정 */
+ }
+
+ input[type="text"],
+ input[type="date"],
+ input[type="number"],
+ select {
+     font-size: 12px; /* 입력 필드 글자 크기 조정 */
+ }
+
+ input[type="submit"] {
+     font-size: 12px; /* 버튼 글자 크기 조정 */
+ }
+    .contact-info .column h3 {
+     font-size: 16px; /* 연락처 정보 제목 크기 조정 */
+ }
+
+ .contact-info .column p {
+     font-size: 10px; /* 연락처 정보 단락 크기 조정 */
+ }
+
+.footer h2 {
+         font-size: 18px; /* Smaller font size for header */
+     }
+
+     .footer .col .contact-info .column h3 {
+         font-size: 16px; /* Adjust font size */
+     }
+
+     .footer .col .contact-info .column p {
+         font-size: 12px; /* Adjust font size */
+     }
+
+     .footer .social-icons {
+         flex-direction: column; /* Stack social icons */
+     }
+     .footer .col {
+         text-align:center;
+         }
+
+}
+
+ @media (max-width: 400px) {
+    /* For screens smaller than 360px */
+
+    html {
+        font-size: 10px; /* 기본 폰트 크기 설정 */
+    }
+
+    .navbar {
+        padding: 5px 6px; /* 내비게이션 바 패딩 조정 */
+    }
+
+   .navbar img {
+        height: 23px;
+    }
+
+    .nav-links a {
+        padding: 0 5px; /* 링크 패딩 줄이기 */
+        font-size: 10px; /* 링크 폰트 크기 줄이기 */
+    }
+
+    #menuBtn {
+        width: 18px; /* 메뉴 버튼 크기 조정 */
+    }
+
+    .menuWrap {
+        width: 180px; /* 메뉴 폭 줄이기 */
+        padding: 15px 6px; /* 메뉴 패딩 조정 */
+    }
+}
+
+
+
+    </style>
+</head>
+<body>
+
+
+<!-- 고정된 상단 메뉴바 -->
+<div class="navbar" id="navbar">
+    <a th:href="@{/}"><img src="/img/ManliLogo3.png" alt="Logo" class="logo-img"></a>
+    <div class="nav-links">
+        <a th:href="@{/introduce}">About</a>
+        <a th:href="@{/promotion}">Promotion</a>
+        <a th:href="@{/program}">Program</a>
+        <a th:href="@{/using}">Notice</a>
+    </div>
+    <!-- 햄버거 메뉴 버튼 -->
+    <img id="menuBtn" src="/img/menuBtn1.png" alt="Menu Button">
+    <!-- 사이드 메뉴 -->
+    <div class="menuWrap" id="menu">
+        <ul class="menuList">
+            <li class="listStyle"><a th:href="@{/introduce}">About Us</a>
+                <ul class="intro">
+                    <li><a th:href="@{/introduce}">헬스장 소개</a></li>
+                    <li><a th:href="@{/come}">오시는길</a></li>
+                </ul>
+            </li>
+            <li class="listStyle"><a th:href="@{/program}">Program</a>
+                <ul class="pro">
+                    <li><a th:href="@{/PT}">PM 프로그램</a></li>
+                    <li><a th:href="@{/program}">운동 프로그램</a></li>
+                </ul>
+            </li>
+            <li class="listStyle"><a th:href="@{/promotion}">Promotion</a>
+                <ul class="eve"><!--프로모션은 가격표 올려두고 이벤트는 사진업로드-->
+                    <li><a th:href="@{/promotion}">프로모션</a></li>
+                    <li><a th:href="@{/event}">이벤트</a></li>
+                </ul>
+            </li>
+            <li class="listStyle"><a href="#">SNS</a>
+                <ul class="gi">
+                    <li><a href="http://blog.naver.com/knhpallc">네이버 카페</a></li>
+                    <li><a href="http://manligym24.modoo.at">만리 블로그</a></li>
+                    <li><a href="http://instagram.com/manli_gym10002">인스타그램</a></li>
+                    <li><a href="http://daangn.com/kr/business-profiles/793f009185a347c79cb449a884240c20/">당근</a></li>
+                </ul>
+            </li><br>
+            <li class="listStyle" th:if="${loggedIn}">
+                Welcome.<span th:text="${username}">님!</span>
+                <ul class="info">
+                    <li><a th:href="@{/info}">내 정보</a></li>
+                    <li><a th:href="@{/userdashboard}">내 회원권</a></li>
+                    <li><a th:href="@{/logout}">로그아웃</a></li>
+                </ul>
+            </li>
+            <li class="listStyle" th:if="${!loggedIn}">
+                <a th:href="@{/login}">로그인</a>
+
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    window.addEventListener('scroll', function() {
+        const navbar = document.getElementById('navbar');
+        if (window.scrollY > 10) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const menuWrap = document.querySelector(".menuWrap");
+    const menuBtn = document.querySelector("#menuBtn");
+
+    // 메뉴 버튼 클릭 이벤트
+    menuBtn.addEventListener("click", function (e) {
+      toggleMenu();
+    });
+
+    // 빈 공간 클릭 시 메뉴 닫기
+    document.addEventListener("click", function (e) {
+      if (!menuWrap.contains(e.target) && e.target !== menuBtn) {
+        closeMenu();
+      }
+    });
+
+    function toggleMenu() {
+      if (menuWrap.classList.contains("on")) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    }
+
+    function openMenu() {
+      menuWrap.classList.add("on");
+      menuBtn.src = "/img/menuBtn1.png";
+      menuBtn.classList.add("btnRotate");
+      let div = document.createElement("div");
+      div.id = "dimmed";
+      document.body.append(div);
+
+      // 페이지 스크롤 락, 모바일 이벤트 차단
+      document.querySelector("#dimmed").addEventListener(
+        "scroll touchmove touchend mousewheel",
+        function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        }
+      );
+    }
+
+    function closeMenu() {
+      menuWrap.classList.remove("on");
+      menuBtn.src = "/img/menuBtn1.png";
+      menuBtn.classList.remove("btnRotate");
+      document.querySelector("#dimmed").remove();
+    }
+  });
+</script>
+
+
+
+<div class="containers">
+    <h1>회원 계약서</h1>
+    <form th:action="@{/member/apply}" th:object="${member}" method="post">
+        <p><strong>회원 번호 :</strong></p>
+        <p><strong>계약자 이름 : </strong><input type="text" name="coach" id="coach" placeholder="계약자 이름" required></p>
+        <p> 만리체육관으로 입력해주세요 </p>
+        <p><strong>이름: </strong><input type="text" name="name" id="name" placeholder="회원 이름" required></p>
+        <p><strong>성별: </strong><input type="text" name="gender" id="gender" placeholder="성별" required></p>
+        <p><strong>전화번호: </strong><input type="text" name="phone" id="phone" placeholder="'-'없이 입력" required></p>
+        <p><strong>생년월일: </strong><input type="date" name="birth" id="birth" placeholder="생년월일" required></p>
+        <p><strong>주소: </strong><input type="text" name="address" id="address" placeholder="거주지" required></p>
+
+        <label for="purpose">운동 목적 : </label>
+        <select id="purpose" name="purpose">
+            <option value="다이어트">다이어트</option>
+            <option value="벌크업">벌크업</option>
+            <option value="건강">건강</option>
+            <option value="대입 준비">대입 준비</option>
+            <option value="재활">재활</option>
+            <option value="체력강화">체력 강화</option>
+        </select><br><br>
+        <label for="comein">방문 경로 : </label>
+        <select id="comein" name="comein">
+            <option value="지나가다가">지나가다가</option>
+            <option value="지인추천">지인 추천</option>
+            <option value="SNS">SNS</option>
+            <option value="blog">블로그</option>
+            <option value="retry">재등록</option>
+        </select><br><br>
+        <label for="credit">결제 방법 : </label>
+        <select id="credit" name="credit">
+            <option value="카드">카드</option>
+            <option value="계좌이체">계좌이체</option>
+            <option value="현금">현금</option>
+            <option value="제로페이">제로 페이</option>
+            <option value="카카오페이">카카오페이</option>
+        </select><br>
+        <label for="membership">회원권 종류: </label>
+        <select id="membership" name="membership" onchange="calculateTotal()">
+            <option value="일일입장">일일입장</option>
+            <option value="1개월권">1개월권</option>
+            <option value="3개월권">3개월권</option>
+            <option value="6개월권">6개월권</option>
+            <option value="12개월권">12개월권</option>
+            <option value="PM 1개월 4회">PM 1개월 회원권 4회</option>
+            <option value="PM 1개월 8회">PM 1개월 회원권 8회</option>
+            <option value="PM 1개월 10회">PM 1개월 회원권 10회</option>
+        </select><br><br>
+
+        <p><strong>회원권 시작일: </strong><input type="date" name="memstart" id="memstart" placeholder="회원권 시작" required onchange="calculateEndDate()"></p>
+
+        <p><strong>회원권 만료일: </strong><input type="date" name="memend" id="memend" placeholder="회원권 종료일" required readonly></p>
+
+        <!-- 락카 -->
+        <label for="locker">락카 종류 : </label>
+        <select id="locker" name="locker" onchange="calculateTotal()">
+            <option value="사용안함">사용안함</option>
+            <option value="1개월권">1개월권</option>
+            <option value="3개월권">3개월권</option>
+            <option value="6개월권">6개월권</option>
+            <option value="12개월권">12개월권</option>
+        </select>
+
+        <p><strong>락카 번호 : </strong><input type="text" name="locknum" id="locknum" placeholder="락카번호" onkeyup="lockCheck()"></p>
+        <span id="check-result"></span><br>
+        <p><strong>락카 시작일: </strong><input type="date" name="lockstart" id="lockstart" placeholder="락카 시작"></p>
+        <p><strong>락카 만료일: </strong><input type="date" name="lockend" id="lockend" placeholder="락카 종료일" readonly></p>
+
+        <!-- 운동복 -->
+        <label for="shirt">운동복 종류 : </label>
+        <select id="shirt" name="shirt" onchange="calculateTotal()">
+            <option value="사용안함">사용안함</option>
+            <option value="1개월권">1개월권</option>
+            <option value="3개월권">3개월권</option>
+            <option value="6개월권">6개월권</option>
+            <option value="12개월권">12개월권</option>
+        </select>
+        <p><strong>운동복 시작일: </strong><input type="date" name="shirtstart" id="shirtstart" placeholder="운동복 시작"></p>
+        <p><strong>운동복 만료일: </strong><input type="date" name="shirtend" id="shirtend" placeholder="운동복 종료일" readonly></p>
+        <br>
+        <p><strong>결제 금액 : </strong><input type="text" name="price" id="price" placeholder="총 결제 금액" required></p>
+
+        <p>* 일일입장 선택시 11,000원입니다.</p>        <br>
+        <div class="box">
+            <input type="checkbox" id="dong4" name="vehicle2" value="Dong" disabled>
+            <label for="dong4" onclick="openPops()">이용 약관</label><br>
+            <input type="checkbox" id="dong1" name="vehicle1" value="Dong" disabled>
+            <label for="dong1" onclick="openPopup()"> 개인정보 수집 동의서</label><br>
+            <input type="checkbox" id="dong2" name="vehicle2" value="Dong" disabled>
+            <label for="dong2" onclick="openPop()">휴회&양도 규정</label><br>
+            <input type="checkbox" id="dong3" name="vehicle2" value="Dong" disabled>
+            <label for="dong3" onclick="openPoppin()"> 환불 규정</label><br>
+
+        </div>
+        <p>[약관 동의 서명란]</p>
+        <canvas id="signature-pad" width="100" height="100" style="border:none;"></canvas>
+
+        <button type="button" id="clear-signature">서명 초기화</button>
+        <input type="hidden" name="signature" id="signature">
+
+        <div class="sub">
+            <input type="submit" value="회원권 신청"  onclick="saveSignature()">
+        </div>
+    </form>
+
+</div>
+<script>
+    function openPopup() {
+        // 팝업을 띄움 (팝업 창 크기 지정)
+       window.open('/member/gaepop.html', 'popupWindow', 'width=600,height=400');
+    }
+
+    // 팝업에서 체크 확인 후 부모 페이지의 체크박스를 체크하고 활성화하는 함수
+    function confirmCheck() {
+        var checkbox = document.getElementById('dong1');
+        checkbox.disabled = false; // 체크박스 활성화
+        checkbox.checked = true; // 체크박스 체크
+    }
+</script>
+<script>
+    function openPop() {
+        // 팝업을 띄움 (팝업 창 크기 지정)
+        window.open('/member/yangpop.html', 'popupWindow', 'width=600,height=400');
+    }
+
+    // 팝업에서 체크 확인 후 부모 페이지의 체크박스를 체크하고 활성화하는 함수
+    function confirmChecky() {
+        var checkbox = document.getElementById('dong2');
+        checkbox.disabled = false; // 체크박스 활성화
+        checkbox.checked = true; // 체크박스 체크
+    }
+</script>
+<script>
+    function openPoppin() {
+        // 팝업을 띄움 (팝업 창 크기 지정)
+        window.open('/member/hwanpop.html', 'popupWindow', 'width=600,height=400');
+    }
+
+    // 팝업에서 체크 확인 후 부모 페이지의 체크박스를 체크하고 활성화하는 함수
+    function confirmCheckh() {
+        var checkbox = document.getElementById('dong3');
+        checkbox.disabled = false; // 체크박스 활성화
+        checkbox.checked = true; // 체크박스 체크
+    }
+</script>
+<script>
+    function openPops() {
+        // 팝업을 띄움 (팝업 창 크기 지정)
+        window.open('/member/usepop.html', 'popupWindow', 'width=600,height=400');
+    }
+
+    // 팝업에서 체크 확인 후 부모 페이지의 체크박스를 체크하고 활성화하는 함수
+    function confirmChecku() {
+        var checkbox = document.getElementById('dong4');
+        checkbox.disabled = false; // 체크박스 활성화
+        checkbox.checked = true; // 체크박스 체크
+    }
+</script>
+
+
+</body>
+<script th:inline="javascript">
+    const lockCheck = () => {
+        const locker = document.getElementById("locknum").value;
+        const checkResult = document.getElementById("check-result");
+        console.log("입력값: ", locker);
+        const jwtToken = localStorage.getItem('jwtToken'); // 로컬 스토리지에서 JWT 토큰 가져오기
+
+        $.ajax({
+            type: "post",
+            url: "/lock-check",
+            headers: {
+                'Authorization': 'Bearer ' + jwtToken // JWT 토큰을 Authorization 헤더에 추가
+            },
+            data: {
+                "locknum": locker
+            },
+            success: function(res) {
+                console.log("요청성공", res)
+                if (res == "ok") {
+                    console.log("현재 비어있습니다.");
+                    checkResult.style.color = "green";
+                    checkResult.innerHTML = "사용 가능한 락커";
+                } else {
+                    console.log("이미 사용중인 락커");
+                    checkResult.style.color = "red";
+                    checkResult.innerHTML = "이미 사용중인 락커";
+                }
+            },
+            error: function(err){
+                console.log("에러발생", err);
+            }
+        });
+    };
+</script>
+
+<script>
+    // 만료일 계산 함수
+function calculateEndDate(startDateId, durationSelectId, endDateId) {
+  const startDateInput = document.getElementById(startDateId);
+  const durationSelect = document.getElementById(durationSelectId);
+  const endDateInput = document.getElementById(endDateId);
+
+  // 시작일과 선택된 옵션의 값을 가져옵니다.
+  const startDateValue = startDateInput.value;
+  const selectedOption = durationSelect.value;
+
+  if (!startDateValue) {
+      return; // 시작일이 없을 경우 계산하지 않음
+  }
+
+  // 시작일을 날짜 객체로 변환
+  const startDate = new Date(startDateValue);
+  let monthsToAdd = 0;
+
+  // 선택된 기간에 따라 개월 수를 설정합니다.
+  if (selectedOption === '사용안함') {
+      endDateInput.value = ''; // 사용 안 함의 경우 종료일이 비어 있도록 설정
+      return;
+  } else if (selectedOption === '1개월권' || selectedOption === 'PM 1개월 4회' || selectedOption === 'PM 1개월 8회' || selectedOption === 'PM 1개월 10회') {
+      monthsToAdd = 1;
+  } else if (selectedOption === '3개월권') {
+      monthsToAdd = 3;
+  } else if (selectedOption === '6개월권') {
+      monthsToAdd = 6;
+  } else if (selectedOption === '12개월권') {
+      monthsToAdd = 12;
+  } else if (selectedOption === '일일입장') {
+      // 일일입장의 경우 시작일과 만료일이 같음
+      endDateInput.value = startDate.toISOString().split('T')[0];
+      return; // 만료일이 결정되었으므로 함수 종료
+  }
+
+  // 개월 수를 더한 종료일 계산
+  const endDate = new Date(startDate);
+  endDate.setMonth(endDate.getMonth() + monthsToAdd);
+
+  // 마지막 날짜에서 하루를 빼서 만료일을 조정
+  endDate.setDate(endDate.getDate() - 1);
+
+  // 종료일을 YYYY-MM-DD 형식으로 변환 후 입력 필드에 설정
+  endDateInput.value = endDate.toISOString().split('T')[0];
+}
+
+    // 이벤트 리스너 설정
+document.getElementById('membership').addEventListener('change', () => calculateEndDate('memstart', 'membership', 'memend'));
+document.getElementById('locker').addEventListener('change', () => calculateEndDate('lockstart', 'locker', 'lockend'));
+document.getElementById('shirt').addEventListener('change', () => calculateEndDate('shirtstart', 'shirt', 'shirtend'));
+
+// 시작일이 변경될 때마다 만료일을 재계산
+document.getElementById('memstart').addEventListener('change', () => calculateEndDate('memstart', 'membership', 'memend'));
+document.getElementById('lockstart').addEventListener('change', () => calculateEndDate('lockstart', 'locker', 'lockend'));
+document.getElementById('shirtstart').addEventListener('change', () => calculateEndDate('shirtstart', 'shirt', 'shirtend'));
+
+</script>
+<script>
+    function calculateTotal() {
+     const membership = document.getElementById('membership').value;
+     const locker = document.getElementById('locker');
+     const shirt = document.getElementById('shirt');
+
+     let membershipPrice = 0;
+     let lockerPrice = 0;
+     let shirtPrice = 0;
+
+     // 회원권 가격 설정
+     switch (membership) {
+         case '일일입장':
+             membershipPrice = 11000; // 바로 11,000원 적용
+                locker.value = '사용안함'; // 일일입장 시 락커와 운동복 사용안함
+                shirt.value = '사용안함';
+                break;
+         case '1개월권':
+             membershipPrice = 88000;
+             break;
+         case '3개월권':
+             membershipPrice = 220000;
+             break;
+         case '6개월권':
+             membershipPrice = 330000;
+             break;
+         case '12개월권':
+             membershipPrice = 528000;
+             break;
+         case 'PM 1개월 4회':
+             membershipPrice = 260000;
+             locker.value = '1개월권';
+             shirt.value = '1개월권';
+             break;
+         case 'PM 1개월 8회':
+             membershipPrice = 390000;
+             locker.value = '1개월권';
+             shirt.value = '1개월권';
+             break;
+         case 'PM 1개월 10회':
+             membershipPrice = 440000;
+             locker.value = '1개월권';
+             shirt.value = '1개월권';
+             break;
+     }
+
+     // PM 1개월 옵션은 고정된 가격이므로 추가 계산 필요 없음
+     if (membership !== '일일입장' && membership !== 'PM 1개월 4회' && membership !== 'PM 1개월 8회' && membership !== 'PM 1개월 10회') {
+         // 락커 가격 설정
+         switch (locker.value) {
+             case '1개월권':
+                 lockerPrice = 11000;
+                 break;
+             case '3개월권':
+                 lockerPrice = 33000;
+                 break;
+             case '6개월권':
+                 lockerPrice = 66000;
+                 break;
+             case '12개월권':
+                 lockerPrice = 132000;
+                 break;
+         }
+
+         // 운동복 가격 설정
+         switch (shirt.value) {
+             case '1개월권':
+                 shirtPrice = 11000;
+                 break;
+             case '3개월권':
+                 shirtPrice = 33000;
+                 break;
+             case '6개월권':
+                 shirtPrice = 66000;
+                 break;
+             case '12개월권':
+                 shirtPrice = 132000;
+                 break;
+         }
+     }
+
+      // 일일입장일 경우 totalPrice를 11,000원으로 설정
+      if (membership === '일일입장') {
+            totalPrice = 11000;
+      }
+     // 총 결제 금액 계산
+     let totalPrice = membershipPrice + lockerPrice + shirtPrice;
+
+     // 총 결제 금액을 price 필드에 표시
+     document.getElementById('price').value = totalPrice;
+
+
+ }
+
+</script>
+<script>
+    // Canvas 초기화
+ const canvas = document.getElementById('signature-pad');
+ const ctx = canvas.getContext('2d');
+ let isDrawing = false;
+
+ // 초기 텍스트 그리기
+ function drawPlaceholderText() {
+     ctx.font = '20px Arial'; // 글꼴과 크기 설정
+     ctx.fillStyle = 'gray'; // 텍스트 색상 설정
+     ctx.textAlign = 'center';
+     ctx.textBaseline = 'middle';
+     ctx.fillText('(서명)', canvas.width / 2, canvas.height / 2);
+ }
+
+ // 서명 시작
+ canvas.addEventListener('mousedown', () => {
+     isDrawing = true;
+     ctx.beginPath();
+ });
+
+ // 서명 그리기
+ canvas.addEventListener('mousemove', (event) => {
+     if (isDrawing) {
+         ctx.lineTo(event.offsetX, event.offsetY);
+         ctx.stroke();
+     }
+ });
+
+ // 서명 끝
+ canvas.addEventListener('mouseup', () => {
+     isDrawing = false;
+ });
+
+ // 서명 지우기 기능
+ document.getElementById('clear-signature').addEventListener('click', function() {
+     ctx.clearRect(0, 0, canvas.width, canvas.height);
+     drawPlaceholderText(); // 서명 지우기 후 텍스트 다시 그리기
+ });
+
+ // 서명 저장 기능
+ function saveSignature() {
+     const signatureDataURL = canvas.toDataURL();
+     document.getElementById('signature').value = signatureDataURL;
+ }
+
+ // 페이지 로드 시 텍스트 그리기
+ window.onload = function() {
+     drawPlaceholderText();
+ };
+
+</script>
+
+
+
+
+
+
+
+<div class="footer">
+    <h2>Want to together with us?</h2>
+    <p>만리체육관은 항상 여러분과 함께입니다.</p>
+    <button class="join"><a th:href="@{/join}">회원가입</a></button>
+    <div class="login-driver"></div>
+    <div class="contact-info">
+        <div class="col">
+            <img src="/img/logo2.jpg" class="foot-img">
+            <ul>
+                <li class="top">CONTECT</li>
+                <li>CEO : 김재흥</li>
+                <li>Email : knhpallc@gamil.com</li>
+                <li>Tell : 02-714-8880</li>
+                <li>Address : 서울특별시 용산구 효창원로 270, 3층  </li>
+            </ul>
+        </div>
+        <div class="column">
+            <h3>OPEN</h3>
+            <p>평일 06:00 - 24:00</p>
+            <p>토요일,공휴일 09:00 - 18:00</p>
+            <p>※일요일, 설, 추석 휴관※</p>
+        </div>
+        <div class="column">
+            <h3><a th:href="@{/using}" style="text-decoration: none">이용 약관</a></h3>
+            <p><a th:href="@{/hwanbul}" style="text-decoration: none">환불 약관</a></p>
+            <p><a th:href="@{/stoppass}" style="text-decoration: none">휴회&양도 약관</a></p>
+            <p><a th:href="@{/PTagree}" style="text-decoration: none">PM 규정</a></p>
+            <p><a th:href="@{/gaein}" style="text-decoration: none"> 개인정보 수집 약관 </a></p>
+        </div>
+        <div class="column">
+            <h3>With Us!</h3>
+            <a href="http://blog.naver.com/knhpallc"><img src="/img/cafe.jpg" alt="cafe"></a>
+            <a href="http://manligym24.modoo.at"><img src="/img/blog.jpg" alt="blog"></a>
+            <a href="http://instagram.com/manli_gym10002"><img src="/img/insta.jpg" alt="insta"></a>
+            <a href="http://daangn.com/kr/business-profiles/793f009185a347c79cb449a884240c20/"><img src="/img/danggun.jpg" alt="danggun"></a>
+        </div>
+    </div>
+    <div class="social-icons">
+        <p> COPY RIGHT ⓒ2024 만리체육관, ALL RIGHT RESERVE</p>
+    </div>
+</div>
+<img src="/img/up.png" id="top_btn" alt="up"><i class="fa fa-arrow-up" aria-hidden="true"></i><span class="sound_only"></span>
+</html>

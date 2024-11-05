@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <title>상담 신청 목록</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            max-width: 1200px;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        th:first-child, td:first-child {
+            width: 50px;
+        }
+
+        @media (max-width: 768px) {
+            table {
+                width: 100%;
+                font-size: 14px;
+            }
+
+            th, td {
+                padding: 8px;
+            }
+
+            th:first-child, td:first-child {
+                width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+<h1>상담 신청 목록</h1>
+
+<h2>회원 상담 신청 현황</h2>
+<table>
+    <tr>
+        <th>회원번호</th>
+        <th>이름</th>
+        <th>이메일</th>
+        <th>전화번호</th>
+        <th>상담 종류</th>
+        <th>상담 시간</th>
+        <th>특이사항</th>
+    </tr>
+    <tr th:each="consults: ${consult}">
+        <td th:text="${consults.id}"></td>
+        <td th:text="${consults.username}"></td>
+        <td th:text="${consults.email}"></td>
+        <td th:text="${consults.phnum}"></td>
+        <td th:text="${consults.sangdamType}"></td>
+        <td th:text="${consults.sangdamTime}"></td>
+        <td th:text="${consults.notes}"></td>
+    </tr>
+</table>
+
+<h2>비회원 상담 신청 현황</h2>
+<table>
+    <tr>
+        <th>이름</th>
+        <th>성별</th>
+        <th>이메일</th>
+        <th>전화번호</th>
+        <th>운동 경험</th>
+        <th>상담 종류</th>
+        <th>상담 시간</th>
+        <th>특이사항</th>
+    </tr>
+    <tr th:each="becon: ${beconsult}">
+        <td th:text="${becon.username}"></td>
+        <td th:text="${becon.gender}"></td>
+        <td th:text="${becon.mail}"></td>
+        <td th:text="${becon.phonenumber}"></td>
+        <td th:text="${becon.exercise}"></td>
+        <td th:text="${becon.sangType}"></td>
+        <td th:text="${becon.sangTime}"></td>
+        <td th:text="${becon.note}"></td>
+    </tr>
+</table>
+
+</body>
+</html>

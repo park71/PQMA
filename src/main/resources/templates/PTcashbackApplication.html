@@ -1,0 +1,204 @@
+  <!DOCTYPE html>
+  <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <title>PT 환불 신청 목록</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        color: #333;
+      }
+
+      h1 {
+        text-align: center;
+        margin: 20px;
+        color: #007bff;
+      }
+
+      table {
+        width: 90%;
+        margin: 20px auto;
+        border-collapse: collapse;
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      th {
+        background-color: #007bff;
+        color: #fff;
+        font-weight: bold;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      tr:hover {
+        background-color: #f1f1f1;
+      }
+
+      form {
+        display: inline;
+      }
+
+      button {
+        padding: 6px 12px;
+        font-size: 14px;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      button[type="submit"].approve {
+        background-color: #28a745;
+      }
+
+      button[type="submit"].reject {
+        background-color: #dc3545;
+      }
+
+      span {
+        color: #6c757d;
+        font-style: italic;
+      }
+      /* Responsive Table for smaller screens */
+@media screen and (max-width: 768px) {
+  table {
+    width: 100%; /* Full width */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    display: block; /* Make table block to allow overflow */
+  }
+
+  thead {
+    display: none; /* Hide the headers */
+  }
+
+  tr {
+    display: block; /* Make each row block */
+    margin-bottom: 10px; /* Add space between rows */
+  }
+
+  td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+    /* Add border shadow for better visibility */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  td::before {
+    content: attr(data-label); /* Add labels for each row */
+    font-weight: bold;
+    width: 40%; /* Adjust width */
+    text-align: left;
+  }
+
+  td:last-child {
+    border-bottom: 0;
+  }
+
+  button {
+    font-size: 12px; /* Smaller button text */
+  }
+}
+
+/* Very Small Devices */
+@media screen and (max-width: 480px) {
+  td {
+    font-size: 12px; /* Smaller text size */
+  }
+
+  button {
+    font-size: 10px; /* Even smaller button text */
+  }
+}
+    </style>
+  </head>
+  <body>
+  <h1>PT 환불 신청 목록</h1>
+  <table>
+    <thead>
+    <tr>
+      <th>번호</th>
+      <th>담당 선생님</th>
+      <th>이름</th>
+      <th>성별</th>
+      <th>전화번호</th>
+      <th>생년월일</th>
+      <th>주소</th>
+      <th>카카오톡ID</th>
+      <th>운동목적</th>
+      <th>피티 종류</th>
+      <th>피티 시작일</th>
+      <th>남은 횟수</th>
+      <th>결제 방법</th>
+      <th>신청 시간</th>
+      <th>승인</th>
+      <th>거절</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="ptMems: ${applications}">
+      <td th:text="${ptMems.id}"></td>
+      <td th:text="${ptMems.coach}"></td>
+      <td th:text="${ptMems.name}"></td>
+      <td th:text="${ptMems.gender}"></td>
+      <td th:text="${ptMems.phone}"></td>
+      <td th:text="${ptMems.birth}"></td>
+      <td th:text="${ptMems.address}"></td>
+      <td th:text="${ptMems.kakao}"></td>
+      <td th:text="${ptMems.purpose}"></td>
+      <td th:text="${ptMems.ptmembership}"></td>
+      <td th:text="${ptMems.ptstart}"></td>
+      <td th:text="${ptMems.count}"></td>
+      <td th:text="${ptMems.credit}"></td>
+      <td th:text="${#temporals.format(ptMems.applicationDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+      <td>
+        <form th:if="${ptMems.status == 'pending'}" th:action="@{/admin/member-application/{id}/approve(id=${ptMems.id})}" method="post">
+          <input type="hidden" name="refundAmount" th:value="${ptMems.price}" />
+          <input type="hidden" name="newCreditAccount" th:value="${ptMems.credit}" />
+          <button type="submit" class="approve">승인</button>
+        </form>
+        <span th:if="${ptMems.status == 'approved'}">승인되었습니다</span>
+      </td>
+      <td>
+        <form th:if="${ptMems.status == 'pending'}" th:action="@{/admin/member-application/{id}/reject(id=${ptMems.id})}" method="post">
+          <button type="submit" class="reject">거절</button>
+        </form>
+        <span th:if="${ptMems.status == 'rejected'}">거절되었습니다</span>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  </body>
+  </html>

@@ -1,0 +1,57 @@
+/* 네비게이션 바 스타일 */
+ #content {
+            height: 8000px;
+            overflow-y: scroll;
+ }
+.navbar {
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px; /* 여백 조정 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+}
+
+/* 로고 스타일 */
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* 메뉴 스타일 */
+.menu {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.menu-item {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* 메뉴 아이콘 스타일 */
+.menu-icons {
+    display: flex;
+    gap: 10px;
+}
+
+.menu-icons img {
+    width: 20px;
+    height: 20px;
+}
+
+/* 언어 선택 아이콘 스타일 */
+.language-icon {
+    cursor: pointer;
+}
+
+/* 검색 아이콘 스타일 */
+.search-icon {
+    cursor: pointer;
+}
+
+/* 메뉴 확장 아이콘 스타일 */
+.menu-expand-icon {
+    cursor: pointer;
+}

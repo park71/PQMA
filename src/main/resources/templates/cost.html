@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <title>AS/지출</title>
+    <style>
+    body {
+    background-color: #1e1e1e; /* Dark background */
+    color: #f1f1f1; /* Light text color */
+    font-family: Arial, sans-serif;
+    }
+
+    h2 {
+    color: #e0e0e0; /* Slightly lighter for headers */
+    }
+
+    table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    }
+
+    th, td {
+    padding: 10px;
+    border: 1px solid #444; /* Darker borders */
+    }
+
+    th {
+    background-color: #333; /* Darker header background */
+    color: #fff; /* White text for headers */
+    }
+
+td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #555; /* Slightly lighter border */
+    border-radius: 4px;
+    background-color: #2a2a2a; /* Darker input background */
+    color: #f1f1f1; /* Light text color */
+    text-align: center; /* Center-align text inside the input */
+    box-sizing: border-box; /* Prevents overflow by including padding in the width calculation */
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    input[type="date"]:focus,
+    select:focus {
+    border-color: #009688; /* Highlight on focus */
+    }
+
+    button {
+    background-color: #009688; /* Teal button */
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    }
+
+    button:hover {
+    background-color: #00796b; /* Darker teal on hover */
+    }
+</style>
+</head>
+<body>
+<div id="expenditureSection" style="display: none;">
+    <h2>지출</h2>
+    <table id="expenditureTable">
+        <thead>
+        <tr>
+            <th>신청자</th>
+            <th>신청일자</th>
+            <th>구매 품목</th>
+            <th>용량/크기</th>
+            <th>수량</th>
+            <th>구매 일자</th>
+            <th>결제 금액</th>
+            <th>구매명</th>
+            <th>구매 연락처</th>
+            <th>단가</th>
+            <th>물품 금액</th>
+            <th>배송 금액</th>
+            <th>저장하기</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <form id="cost-forms" method="post" th:action="@{/coster}">
+                <input type="hidden" name="status" id="status-hidden" value="지출">
+                <td data-label="신청자">
+                    <input type="text" name="applicant" id="applicant" />
+                </td>
+                <td data-label="신청일자">
+                    <input type="date" name="applicantDate" id="applicantDays" />
+                </td>
+                <td data-label="구매품목">
+                    <input type="text" name="product" id="products" />
+                </td>
+                <td data-label="용량/크기">
+                    <input type="text" name="details" id="detail" />
+                </td>
+                <td data-label="수량">
+                    <input type="number" name="fixed" id="fix"  />
+                </td>
+                <td data-label="구매일자">
+                    <input type="date" name="receiveDate" id="receiveDay" />
+                </td>
+                <td data-label="결제금액">
+                    <input type="number" name="pay" id="pays"  />
+                </td>
+                <td data-label="구매명">
+                    <input type="text" name="shop" id="shops"  />
+                </td>
+                <td data-label="구매연락처">
+                    <input type="text" name="phones" id="phone"  />
+                </td>
+                <td data-label="단가">
+                    <input type="number" name="cost" id="cost"  />
+                </td>
+                <td data-label="물품 금액">
+                    <input type="number" name="payfull" id="pay"  />
+                </td>
+                <td data-label="배송금액">
+                    <input type="number" name="delivery" id="delivery"  />
+                </td>
+                <td data-label="저장하기">
+                    <button type="submit">저장</button>
+                </td>
+            </form>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+
+<div id="asSection" style="display: none;">
+    <h2>AS</h2>
+    <table id="asTable">
+        <thead>
+        <tr>
+            <th>신청자</th>
+            <th>신청 일자</th>
+            <th>기구명</th>
+            <th>고장 이유</th>
+            <th>수리 내용</th>
+            <th>접수 일자</th>
+            <th>결제 금액</th>
+            <th>업체명</th>
+            <th>업체 연락처</th>
+            <th>완료 일자</th>
+            <th>저장하기</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <form id="cost-form" method="post" th:action="@{/coster}">
+                <input type="hidden" name="status" id="statusa-hidden" value="AS">
+            <td data-label="신청자">
+                <input type="text" name="applicant" id="applicants"  />
+            </td>
+            <td data-label="신청일자">
+                <input type="date" name="applicantDate" id="applicantDate" />
+            </td>
+            <td data-label="기구명">
+                <input type="text" name="product" id="product"  />
+            </td>
+            <td data-label="고장 이유">
+                <input type="text" name="details" id="details"  />
+            </td>
+            <td data-label="수리 내용">
+                <input type="text" name="fixed" id="fixed"  />
+            </td>
+            <td data-label="접수 일자">
+                <input type="date" name="receiveDate" id="receiveDate"  />
+            </td>
+            <td data-label="결제 금액">
+                <input type="number" name="pay" id="payfull" />
+            </td>
+            <td data-label="업체명">
+                <input type="text" name="shop" id="shop"/>
+            </td>
+            <td data-label="업체 연락처">
+                <input type="text" name="phones" id="phones"  />
+            </td>
+            <td data-label="완료 일자">
+                <input type="date" name="finished" id="finished"  />
+            </td>
+                <td data-label="저장하기">
+                    <button type="submit">저장</button>
+                </td>
+            </form>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+<td data-label="구분">
+    <select name="status" onchange="updateRowDisplay(this)">
+        <option value="AS">AS</option>
+        <option value="지출">지출</option>
+    </select>
+</td>
+
+
+
+<br><br><br><br><br><br>
+<h2>지출</h2>
+<table>
+    <thead>
+    <tr>
+        <th>신청자</th>
+        <th>신청일자</th>
+        <th>구매 품목</th>
+        <th>용량/크기</th>
+        <th>수량</th>
+        <th>구매 일자</th>
+        <th>결제 금액</th>
+        <th>구매명</th>
+        <th>구매 연락처</th>
+        <th>단가</th>
+        <th>물픔 금액</th>
+        <th>배송 금액</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="cost : ${costList}" th:if="${cost.status == '지출'}">
+        <td data-label="신청자" th:text="${cost.applicant}"></td>
+        <td data-label="신청일자" th:text="${cost.applicantDate}"></td>
+        <td data-label="구매품목" th:text="${cost.product}"></td>
+        <td data-label="용량/크기" th:text="${cost.details}"></td>
+        <td data-label="수량" th:text="${cost.fixed}"></td>
+        <td data-label="구매일자" th:text="${cost.receiveDate}"></td>
+        <td data-label="결제금액" th:text="${cost.pay}"></td>
+        <td data-label="구매명" th:text="${cost.shop}"></td>
+        <td data-label="구매연락처" th:text="${cost.phones}"></td>
+        <td data-label="단가" th:text="${cost.cost}"></td>
+        <td data-label="물품 금액" th:text="${cost.payfull}"></td>
+        <td data-label="배송금액" th:text="${cost.delivery}"></td>
+    </tr>
+    </tbody>
+</table>
+
+
+<h2>AS</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>신청자</th>
+        <th>신청 일자</th>
+        <th>기구명</th>
+        <th>고장 이유</th>
+        <th>수리 내용</th>
+        <th>접수 일자</th>
+        <th>결제 금액</th>
+        <th>업체명</th>
+        <th>업체 연락처</th>
+        <th>완료 일자</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="cost : ${costList}" th:if="${cost.status == 'AS'}">
+        <td data-label="신청자" th:text="${cost.applicant}"></td>
+        <td data-label="신청일자" th:text="${cost.applicantDate}"></td>
+        <td data-label="기구명" th:text="${cost.product}"></td>
+        <td data-label="고장 이유" th:text="${cost.details}"></td>
+        <td data-label="수리 내용" th:text="${cost.fixed}"></td>
+        <td data-label="접수 일자" th:text="${cost.receiveDate}"></td>
+        <td data-label="결제 금액" th:text="${cost.pay}"></td>
+        <td data-label="업체명" th:text="${cost.shop}"></td>
+        <td data-label="업체 연락처" th:text="${cost.phones}"></td>
+        <td data-label="완료 일자" th:text="${cost.finished}"></td>
+    </tr>
+    </tbody>
+</table>
+
+
+
+<script>
+    function updateRowDisplay(selectElement) {
+        const selectedValue = selectElement.value;
+        const expenditureSection = document.getElementById('expenditureSection');
+        const asSection = document.getElementById('asSection');
+
+        if (selectedValue === 'AS') {
+            asSection.style.display = 'block'; // Show AS section
+            expenditureSection.style.display = 'none'; // Hide expenditure section
+        } else if (selectedValue === '지출') {
+            expenditureSection.style.display = 'block'; // Show expenditure section
+            asSection.style.display = 'none'; // Hide AS section
+        }
+    }
+</script>
+
+
+
+
+
+
+
+</body>
+</html>

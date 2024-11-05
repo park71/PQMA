@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <title>홈페이지 회원 목록</title>
+<body>
+<h2>홈페이지 회원 목록</h2>
+<table>
+    <tr>
+        <th>회원번호</th>
+        <th>이름</th>
+        <th>비밀번호</th>
+        <th>성별</th>
+        <th>전화번호</th>
+        <th>주소</th>
+        <th>이메일</th>
+    </tr>
+    <tr th:each="member: ${memberList}">
+        <td th:text="${member.id}"></td>
+        <td th:text="${member.username}"></td>
+        <td th:text="${member.password}"></td>
+        <td th:text="${member.sex}"></td>
+        <td th:text="${member.phnum}"></td>
+        <td th:text="${member.address}"></td>
+        <td th:text="${member.email}"></td>
+        <!--<td>
+             query string /member?id=1
+                rest api /member/1
+            <a th:href="@{|/member/${member.id}|}">조회</a>
+        </td>
+        <td>
+            <a th:href="@{|/member/delete/${member.id}|}">삭제</a>
+        </td> -->
+    </tr>
+</table>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const jwtToken = localStorage.getItem('jwtToken');
+        if (!jwtToken) {
+            window.location.href = '/login'; // 토큰이 없는 경우 로그인 페이지로 이동
+        } else {
+            fetch('/list', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + jwtToken
+                }
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error('인증 실패');
+                } } else {
+                    response.text().then(html => {
+                        document.open();
+                        document.write(html);
+                        document.close();
+                    });
+                }
+            }).catch(error => {
+                console.error('에러:', error);
+                window.location.href = '/login'; // 인증 실패 시 로그인 페이지로 이동
+            });
+        }
+    });
+</script>
+</body>
+</html>

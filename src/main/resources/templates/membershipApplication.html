@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <title>회원권 신청 확인하기</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            overflow-
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+                  background-color: #007bff;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        form {
+            display: inline;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        span {
+            color: green;
+            font-weight: bold;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-buttons form {
+            display: inline;
+        }
+    </style>
+</head>
+<body>
+<h1>회원권 신청 목록</h1>
+<table>
+    <tr>
+        <th>회원번호</th>
+        <th>담당 선생님</th>
+        <th>이름</th>
+        <th>성별</th>
+        <th>전화번호</th>
+        <th>생년월일</th>
+        <th>주소</th>
+        <th>카카오톡ID</th>
+        <th>운동목적</th>
+        <th>방문경로</th>
+        <th>회원권 종류</th>
+        <th>결제수단</th>
+        <th>회원권 시작일</th>
+        <th>회원권 종료일</th>
+        <th>남은 일수</th>
+        <th>락카 종류</th>
+        <th>락카 번호</th>
+        <th>락카 시작일</th>
+        <th>락카 종료일</th>
+        <th>운동복 종류</th>
+        <th>운동복 시작일</th>
+        <th>운동복 종료일</th>
+        <th>결제 금액</th>
+        <th>신청 시간</th>
+        <th>승인</th>
+        <th>거절</th>
+    </tr>
+    <tr th:each="member: ${applications}">
+        <td th:text="${member.id}"></td>
+        <td th:text="${member.coach}"></td>
+        <td th:text="${member.name}"></td>
+        <td th:text="${member.gender}"></td>
+        <td th:text="${member.phone}"></td>
+        <td th:text="${member.birth}"></td>
+        <td th:text="${member.address}"></td>
+        <td th:text="${member.kakao}"></td>
+        <td th:text="${member.purpose}"></td>
+        <td th:text="${member.comein}"></td>
+        <td th:text="${member.membership}"></td>
+        <td th:text="${member.credit}"></td>
+        <td th:text="${member.memstart}"></td>
+        <td th:text="${member.memend}"></td>
+        <td th:text="${member.remainDays}"></td>
+        <td th:text="${member.locker}"></td>
+        <td th:text="${member.locknum}"></td>
+        <td th:text="${member.lockstart}"></td>
+        <td th:text="${member.lockend}"></td>
+        <td th:text="${member.shirt}"></td>
+        <td th:text="${member.shirtstart}"></td>
+        <td th:text="${member.shirtend}"></td>
+        <td th:text="${member.price}"></td>
+        <td th:text="${#temporals.format(member.applicationDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+        <td class="action-buttons">
+            <form th:action="@{/admin/membership-applications/{id}/approve(id=${member.id})}" method="post">
+                <button type="submit">승인</button>
+            </form>
+            <span th:if="${member.status == 'approved'}">승인되었습니다</span>
+        </td>
+        <td class="action-buttons">
+            <form th:if="${member.status == 'pending'}" th:action="@{/admin/membership-applications/{id}/reject(id=${member.id})}" method="post">
+                <button type="submit">거절</button>
+            </form>
+            <span th:if="${member.status == 'rejected'}">거절되었습니다</span>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

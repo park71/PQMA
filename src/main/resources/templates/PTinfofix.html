@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <title>PT 정보 수정하기</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* 반응형 디자인 */
+        @media screen and (max-width: 767px) {
+            form {
+                padding: 15px; /* 패딩을 줄여 화면 공간 확보 */
+            }
+
+            input[type="text"], button {
+                font-size: 14px; /* 작은 화면에서 폰트 크기 줄임 */
+                padding: 8px; /* 패딩 조정 */
+            }
+
+            h1 {
+                font-size: 24px; /* 제목 크기 조정 */
+            }
+        }
+    </style>
+
+</head>
+<body>
+<h1>PT 정보 수정하기</h1>
+<form th:action="@{/edits/{id}(id=${member.id})}" th:object="${member}" method="post">
+    <label for="name">이름:</label>
+    <input type="text" id="name" th:field="*{name}" />
+
+    <label for="coach">담당 선생님:</label>
+    <input type="text" id="coach" th:field="*{coach}" />
+
+    <label for="phone">전화번호:</label>
+    <input type="text" id="phone" th:field="*{phone}" />
+
+    <label for="gender">성별:</label>
+    <input type="text" id="gender" th:field="*{gender}" />
+
+    <label for="purpose">운동목적:</label>
+    <input type="text" id="purpose" th:field="*{purpose}" />
+
+    <label for="ptstart">PT 시작일:</label>
+    <input type="text" id="ptstart" th:field="*{ptstart}" />
+
+    <label for="ptmembership">PT 종류:</label>
+    <input type="text" id="ptmembership" th:field="*{ptmembership}" />
+
+    <label for="count">남은 횟수:</label>
+    <input type="text" id="count" th:field="*{count}" />
+
+    <label for="credit">결제 수단:</label>
+    <input type="text" id="credit" th:field="*{credit}" />
+
+    <label for="price">결제금액:</label>
+    <input type="text" id="price" th:field="*{price}" />
+
+    <button type="submit">수정하기</button>
+</form>
+</body>
+</html>

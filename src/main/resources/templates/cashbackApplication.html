@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원권 환불 신청 현황</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            background-size: cover;
+
+        }
+
+        img {
+            max-width: 100%; /* 이미지가 부모 요소 너비를 넘지 않도록 설정 */
+            height: auto; /* 비율을 유지하면서 높이 조정 */
+        }
+        h2 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        thead th {
+            background-color: #007bff;
+            color: #fff;
+            padding: 12px;
+            text-align: left;
+        }
+
+        tbody td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        button {
+            padding: 6px 12px;
+            font-size: 14px;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button[type="submit"] {
+            background-color: #28a745;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #218838;
+        }
+
+        .reject-button {
+            background-color: #dc3545;
+        }
+
+        .reject-button:hover {
+            background-color: #c82333;
+        }
+
+        .status-approved {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .status-rejected {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        form {
+            display: inline;
+        }
+
+        /* 반응형 스타일 */
+        @media (max-width: 768px) {
+           @media (max-width: 768px) {
+    /* 네비게이션 바 */
+    .navbar img {
+        height: 40px; /* 이미지 크기 줄이기 */
+        margin-left: 20px;
+    }
+
+    /* 반응형 이미지 */
+    .image-container img, .foot-img, .logo-img {
+        width: 100%; /* 이미지가 화면 너비에 맞게 조정 */
+        height: auto; /* 비율 유지 */
+    }
+
+    /* 텍스트 크기 조정 */
+    .text, .title {
+        font-size: 4vw; /* 상대적 크기 */
+    }
+
+    .emphasized-text {
+        font-size: 18px;
+    }
+
+    .highlighted {
+        font-size: 20px;
+    }
+
+    /* 버튼 크기 조정 */
+    #so, #sa {
+        font-size: 18px;
+        padding: 5px 20px;
+    }
+
+    /* 푸터 조정 */
+    .footer {
+        padding: 15px;
+    }
+
+    .footer .contact-info {
+        flex-direction: column; /* 푸터 항목을 세로로 쌓기 */
+    }
+
+    .footer .contact-info .column .col {
+        flex: 1 0 100%; /* 푸터의 열을 스크린에 맞게 정렬 */
+        text-align: center;
+    }
+
+    /* 메뉴 크기 조정 */
+    .menuWrap {
+        width: 250px; /* 메뉴 너비 줄이기 */
+    }
+
+    .listStyle > a {
+        font-size: 18px; /* 메뉴 항목 크기 줄이기 */
+    }
+}
+
+
+        @media (max-width: 480px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+
+            thead {
+                display: none;
+            }
+
+            tbody td {
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
+            }
+
+            tbody td:before {
+                content: attr(data-label);
+                position: absolute;
+                left: 10px;
+                width: 45%;
+                padding-right: 10px;
+                text-align: left;
+                font-weight: bold;
+            }
+
+            tbody td {
+                border-bottom: 1px solid #ddd;
+                padding: 12px;
+            }
+
+            button {
+                padding: 8px;
+                width: 100%;
+                font-size: 14px;
+            }
+
+            .action-buttons {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<h2>회원권 환불 신청 현황</h2>
+<table>
+    <thead>
+    <tr>
+        <th>회원번호</th>
+        <th>담당 선생님</th>
+        <th>이름</th>
+        <th>전화번호</th>
+        <th>회원권 종류</th>
+        <th>회원권 시작일</th>
+        <th>회원권 종료일</th>
+        <th>남은 일수</th>
+        <th>락카 종류</th>
+        <th>락카 번호</th>
+        <th>락카 시작일</th>
+        <th>락카 종료일</th>
+        <th>운동복 종류</th>
+        <th>운동복 시작일</th>
+        <th>운동복 종료일</th>
+        <th>환불 금액</th>
+        <th>계좌 번호</th>
+        <th>신청 시간</th>
+        <th>승인</th>
+        <th>거절</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="refundMem: ${applications}">
+        <td th:text="${refundMem.id}" data-label="회원번호"></td>
+        <td th:text="${refundMem.coach}" data-label="담당 선생님"></td>
+        <td th:text="${refundMem.name}" data-label="이름"></td>
+        <td th:text="${refundMem.phone}" data-label="전화번호"></td>
+        <td th:text="${refundMem.membership}" data-label="회원권 종류"></td>
+        <td th:text="${refundMem.memstart}" data-label="회원권 시작일"></td>
+        <td th:text="${refundMem.memend}" data-label="회원권 종료일"></td>
+        <td th:text="${refundMem.remainDays}" data-label="남은 일수"></td>
+        <td th:text="${refundMem.locker}" data-label="락카 종류"></td>
+        <td th:text="${refundMem.locknum}" data-label="락카 번호"></td>
+        <td th:text="${refundMem.lockstart}" data-label="락카 시작일"></td>
+        <td th:text="${refundMem.lockend}" data-label="락카 종료일"></td>
+        <td th:text="${refundMem.shirt}" data-label="운동복 종류"></td>
+        <td th:text="${refundMem.shirtstart}" data-label="운동복 시작일"></td>
+        <td th:text="${refundMem.shirtend}" data-label="운동복 종료일"></td>
+        <td th:text="${refundMem.price}" data-label="환불 금액"></td>
+        <td th:text="${refundMem.credit}" data-label="계좌 번호"></td>
+        <td th:text="${#temporals.format(refundMem.applicationDate, 'yyyy-MM-dd HH:mm:ss')}" data-label="신청 시간"></td>
+        <td>
+            <form th:if="${refundMem.status == 'pending'}" th:action="@{/admin/memberships-apply/{id}/approve(id=${refundMem.id})}" method="post">
+                <input type="hidden" name="refundAmount" th:value="${refundMem.price}" />
+                <input type="hidden" name="newCreditAccount" th:value="${refundMem.credit}" />
+                <button type="submit">승인</button>
+            </form>
+            <span th:if="${refundMem.status == 'approved'}" class="status-approved">승인되었습니다</span>
+        </td>
+        <td>
+            <form th:if="${refundMem.status == 'pending'}" th:action="@{/admin/membership-apply/{id}/reject(id=${refundMem.id})}" method="post">
+                <button type="submit" class="reject-button">거절</button>
+            </form>
+            <span th:if="${refundMem.status == 'rejected'}" class="status-rejected">거절되었습니다</span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

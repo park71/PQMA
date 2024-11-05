@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>휴회 양식</title>
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            color: #333;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        p {
+            margin: 10px 0;
+            color: #555;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input[type="number"],
+        input[type="text"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #4cae4c;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 24px;
+            }
+
+            form {
+                padding: 15px;
+            }
+
+            button {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+<h1>Pause Membership for <span th:text="${member.name}"></span></h1>
+<form th:action="@{/member/memberList/pause}" th:object="${pauseForm}" method="post">
+    <input type="hidden" th:field="*{name}" th:value="${member.name}"/>
+
+    <p>전화번호 : <span th:text="${member.phone}"></span></p>
+    <input type="hidden" name="phone" th:value="${member.phone}" />
+    <p>회원권 시작일 : <span th:text="${member.memstart}"></span></p>
+    <p>회원권 종료일 : <span th:text="${member.memend}"></span></p>
+    <p>회원권 남은일수 : <span th:text="${member.remainDays}"></span></p>
+    <label for="delayDays">회원권 연기일수:</label>
+    <input type="number" id="delayDays" th:field="*{delayDays}" required/>
+    <br/>
+
+    <p>락카 시작일 : <span th:text="${member.lockstart}"></span></p>
+    <p>락카 종료일 : <span th:text="${member.lockend}"></span></p>
+
+    <label for="delayDaysForLocker">락카 연기일수:</label>
+    <select id="delayDaysForLocker" name="delayDaysForLocker" onchange="calculateLockerCost()">
+        <option value="0">해당없음</option>
+        <option value="7">1주</option>
+        <option value="14">2주</option>
+        <option value="21">3주</option>
+        <option value="28">1달</option>
+        <option value="35">5주</option>
+        <option value="42">6주</option>
+        <option value="49">7주</option>
+        <option value="56">2달</option>
+    </select>
+    <span id="extraCostLabel" style="color: red;"></span>
+
+    <label for="lockprice">락카 연기 비용: </label>
+    <input type="text" id="lockprice" th:field="*{lockprice}" readonly/>
+
+    <label for="credit">결제 방법 : </label>
+    <select id="credit" name="credit">
+        <option value="카드">카드</option>
+        <option value="계좌이체">계좌이체</option>
+        <option value="현금">현금</option>
+        <option value="제로페이">제로 페이</option>
+        <option value="카카오페이">카카오페이</option>
+    </select><br>
+
+    <p>운동복 시작일 : <span th:text="${member.shirtstart}"></span></p>
+    <p>운동복 종료일 : <span th:text="${member.shirtend}"></span></p>
+    <label for="delayDaysForShirt">운동복 연기일수:</label>
+    <input type="number" id="delayDaysForShirt" th:field="*{delayDaysForShirt}" />
+    <br/>
+
+    <label for="reason">연기사유:</label><br>
+    <textarea id="reason" th:field="*{reason}" required></textarea>
+    <br/>
+
+    <button type="submit">연기하기</button>
+</form>
+
+<script type="text/javascript">
+    function calculateLockerCost() {
+        const selectElement = document.getElementById("delayDaysForLocker");
+        const selectedValue = selectElement.value;
+
+        let cost = 0;
+        switch (selectedValue) {
+            case "0":
+                cost = 0;
+                break;
+            case "7": // 1주
+                cost = 2500;
+                break;
+            case "14": // 2주
+                cost = 5000;
+                break;
+            case "21": // 3주
+                cost = 7500;
+                break;
+            case "28": // 1달
+                cost = 10000;
+                break;
+            case "35": // 5주
+                cost = 12500;
+                break;
+            case "42": // 6주
+                cost = 15000;
+                break;
+            case "49": // 7주
+                cost = 17500;
+                break;
+            case "56": // 2달
+                cost = 20000;
+                break;
+            default:
+                cost = 0;
+                break;
+        }
+
+        // 락카 연기 비용을 입력 필드에 표시
+        document.getElementById("lockprice").value = cost;
+
+        // 비용 정보를 라벨에도 표시
+        document.getElementById("extraCostLabel").textContent = `연기 비용: ${cost}원`;
+    }
+</script>
+</body>
+</html>

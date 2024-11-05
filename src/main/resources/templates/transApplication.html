@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <title>양도 신청 목록</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h3 {
+            color: #444;
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%; /* 테이블을 반응형으로 */
+            max-width: 600px; /* 최대 너비 설정 */
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: white;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-right: 5px;
+            font-size: 1em;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .status {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .section-title {
+            margin-top: 40px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #444;
+            text-align: center;
+        }
+
+        .application-container {
+            border: 1px solid #ddd;
+            padding: 20px;
+            background-color: #fff;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            width: 100%; /* 반응형으로 100% 설정 */
+            max-width: 800px; /* 최대 너비 */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* 반응형 처리 추가 */
+        @media (max-width: 768px) {
+            h2 {
+                font-size: 1.5em;
+            }
+            h3 {
+                font-size: 1.1em;
+            }
+            th, td {
+                font-size: 0.9em;
+                padding: 8px;
+            }
+            button {
+                padding: 6px 10px;
+                font-size: 0.9em;
+            }
+            table {
+                width: 100%; /* 작은 화면에서는 전체 너비 사용 */
+                font-size: 0.9em;
+            }
+            .application-container {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 4
+                font-size: 1.2em;
+            }
+            h3 {
+                font-size: 1em;
+            }
+            th, td {
+                font-size: 0.8em;
+                padding: 6px;
+            }
+            button {
+                padding: 5px 8px;
+                font-size: 0.8em;
+            }
+            table {
+                width: 100%;
+                font-size: 0.8em;
+            }
+            .application-container {
+                padding: 10px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+<h2>양도 신청 목록</h2>
+
+<div th:each="transMem : ${transApplication}" class="application-container">
+
+    <h3 class="section-title">양도 하시는 분</h3>
+    <table>
+        <tr>
+            <th>회원번호</th>
+            <td th:text="${transMem.fromMember != null ? transMem.fromMember.id : 'N/A'}"></td>
+        </tr>
+        <tr>
+            <th>이름</th>
+            <td th:text="${transMem.fromMemberName}"></td>
+        </tr>
+        <tr>
+            <th>전화번호</th>
+            <td th:text="${transMem.fromMemberPhone}"></td>
+        </tr>
+        <tr>
+            <th>카카오 ID</th>
+            <td th:text="${transMem.fromMemberKakao}"></td>
+        </tr>
+        <tr>
+            <th>회원권 시작일</th>
+            <td th:text="${transMem.fromMemberMemstart}"></td>
+        </tr>
+        <tr>
+            <th>회원권 종료일</th>
+            <td th:text="${transMem.fromMemberMemend}"></td>
+        </tr>
+        <tr>
+            <th>남은 일수</th>
+            <td th:text="${transMem.fromMemberRemaindays}"></td>
+        </tr>
+        <tr>
+            <th>락카 종류</th>
+            <td th:text="${transMem.fromMemberlocker}"></td>
+        </tr>
+        <tr>
+            <th>락카 번호</th>
+            <td th:text="${transMem.fromMemberlocknum}"></td>
+        </tr>
+        <tr>
+            <th>락카 시작일</th>
+            <td th:text="${transMem.fromMemberlockstart}"></td>
+        </tr>
+        <tr>
+            <th>락카 종료일</th>
+            <td th:text="${transMem.fromMemberlockend}"></td>
+        </tr>
+        <tr>
+            <th>운동복 종류</th>
+            <td th:text="${transMem.fromMembershirt}"></td>
+        </tr>
+        <tr>
+            <th>운동복 시작일</th>
+            <td th:text="${transMem.fromMembershirtstart}"></td>
+        </tr>
+        <tr>
+            <th>운동복 종료일</th>
+            <td th:text="${transMem.fromMembershirtend}"></td>
+        </tr>
+    </table>
+
+    <h3 class="section-title">양도 받으시는 분</h3>
+    <table>
+        <tr>
+            <th>회원번호</th>
+            <td th:text="${transMem.toMember != null ? transMem.toMember.id : 'N/A'}"></td>
+        </tr>
+        <tr>
+            <th>이름</th>
+            <td th:text="${transMem.toMemberName}"></td>
+        </tr>
+        <tr>
+            <th>전화번호</th>
+            <td th:text="${transMem.toMemberPhone}"></td>
+        </tr>
+        <tr>
+            <th>카카오 ID</th>
+            <td th:text="${transMem.toMemberKakao}"></td>
+        </tr>
+        <tr>
+            <th>회원권 시작일</th>
+            <td th:text="${transMem.toMemberMemstart}"></td>
+        </tr>
+        <tr>
+            <th>회원권 종료일</th>
+            <td th:text="${transMem.toMemberMemend}"></td>
+        </tr>
+        <tr>
+            <th>남은 일수</th>
+            <td th:text="${transMem.toMemberRemaindays}"></td>
+        </tr>
+        <tr>
+            <th>락카 종류</th>
+            <td th:text="${transMem.toMemberlocker}"></td>
+        </tr>
+        <tr>
+            <th>락카 번호</th>
+            <td th:text="${transMem.toMemberlocknum}"></td>
+        </tr>
+        <tr>
+            <th>락카 시작일</th>
+            <td th:text="${transMem.toMemberlockstart}"></td>
+        </tr>
+        <tr>
+            <th>락카 종료일</th>
+            <td th:text="${transMem.toMemberlockend}"></td>
+        </tr>
+        <tr>
+            <th>운동복 종류</th>
+            <td th:text="${transMem.toMembershirt}"></td>
+        </tr>
+        <tr>
+            <th>운동복 시작일</th>
+            <td th:text="${transMem.toMembershirtstart}"></td>
+        </tr>
+        <tr>
+            <th>운동복 종료일</th>
+            <td th:text="${transMem.toMembershirtend}"></td>
+        </tr>
+    </table>
+
+    <h3 class="section-title">양도 정보</h3>
+    <table>
+        <tr>
+            <th>양도 일수</th>
+            <td th:text="${transMem.daysToTransfer}"></td>
+        </tr>
+        <tr>
+            <th>결제 방법</th>
+            <td th:text="${transMem.price}"></td>
+        </tr>
+        <tr>
+            <th>신청 시간</th>
+            <td th:text="${transMem.applicationDate}"></td>
+        </tr>
+        <tr>
+            <th>상태</th>
+            <td class="status">
+                <form th:if="${transMem.status == 'pending'}" th:action="@{/admin/membershipa-application/{id}/approve(id=${transMem.id})}" method="post">
+                    <input type="hidden" name="fromMemberId"
+                           th:value="${transMem.fromMember != null ? transMem.fromMember.id : 0}" />
+                    <input type="hidden" name="toMemberId"
+                           th:value="${transMem.toMember != null ? transMem.toMember.id : 0}" />
+                    <input type="hidden" name="daysToTransfer"
+                           th:value="${transMem.daysToTransfer}" />
+
+                    <button type="submit">승인</button>
+                    <button type="submit" th:action="@{/admin/membershipa-application/{id}/reject(id=${transMem.id})}">거절</button>
+                </form>
+                <span th:if="${transMem.status == 'approved'}">승인되었습니다</span>
+                <span th:if="${transMem.status == 'rejected'}">거절되었습니다</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>

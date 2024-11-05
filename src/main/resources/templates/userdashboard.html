@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
+    <meta name="viewport" content="width=device-width, initial-scale=1>">
+    <link href="../css/header.css" rel="stylesheet">
+    <link href="../css/drop.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css"> <!-- 스타일 시트 연결 -->
+    <link rel="stylesheet" type="text/css" media="screen" href="cssscreen.css">
+
+    <link rel="stylesheet" type="text/css" media="print" href="cssprint.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Song+Myung&display=swap" rel="stylesheet">
+    <!-- jQuery 라이브러리 로드 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>회원권 확인</title>
+    <style>
+        .scrollable-table {
+            max-height: 250px; /* 작은 화면에서 높이 조정 */
+            overflow-y: auto; /* 세로 스크롤 가능 */
+            width: 100%; /* 너비를 100%로 설정 */
+            margin: 0; /* 여백 제거 */
+        }
+
+        .scrollable-table table {
+            width: 100%; /* 테이블 너비를 100%로 설정 */
+            border-collapse: collapse; /* 테두리 겹침 방지 */
+        }
+
+        .scrollable-table th,
+        .scrollable-table td {
+            padding: 5px; /* 셀 안쪽 여백 설정 */
+            text-align: left; /* 텍스트 왼쪽 정렬 */
+        }
+        /* 테이블의 전체 너비를 조정하고 요소가 잘리지 않게 처리 */
+        .scrollable-table tbody tr {
+            display: table-row; /* 항목 표시를 유지 */
+        }
+
+        .scrollable-table tbody tr:nth-child(6) ~ tr {
+            display: table-row; /* 6번째 행부터는 표시에 포함 */
+        }
+                        #top_btn {
+                           position: fixed;
+                           bottom: 20px; /* 원하는 위치로 조정 */
+                           right: 20px; /* 원하는 위치로 조정 */
+                           border: none;
+                           padding: 3px;
+                           cursor: pointer;
+                           transition: background-color 0.3s;
+                              }
+
+                               /* 기본 스타일 */
+                               body, html {
+                                   margin: 0;
+                                   padding: 0;
+                                   font-family: Arial, sans-serif;
+                                   height: 100%;
+                                   background: url('/img/health.png') no-repeat center center fixed; /* 배경화면 설정 */
+                                   background-size: cover;
+                                   overflow-x: hidden; /* Hide horizontal overflow */
+                                   width: 100%;
+
+                               }
+                               .container {
+            width: 100%; /* 컨테이너가 전체 너비를 차지하게 설정 */
+            max-width: 100%; /* 최대 너비도 100%로 설정 */
+        }
+
+
+
+                              /* 고정된 상단 메뉴바 */
+                     .navbar {
+                         display: flex;
+                         justify-content: space-between;
+                         align-items: center;
+                         background-color: transparent; /* 초기 배경색은 투명 */
+                         transition: background-color 0.3s; /* 부드러운 색상 전환 */
+                         padding: 8px 20px;
+                         height: 70px;
+                         position: fixed;
+                         top: 0;
+                         width: 100%;
+                         z-index: 1000;
+                         z-index: 1000;
+                          }
+
+                               .navbar.scrolled {
+                                     background-color: black; /* 스크롤 시 배경색 */
+                                 }
+
+
+                               .navbar img {
+                                   margin-left:70px;
+                                   height: 50px;
+                               }
+
+                               .nav-links {
+                                   display: flex;
+                                   align-items: center;
+
+
+                               }
+
+                               .nav-links a {
+                                   color: white;
+                                   text-decoration: none;
+                                   padding: 0 15px;
+                                   font-weight: bold;
+
+                               }
+
+
+                               .nav-links a:hover {
+                                   color: green;
+                               }
+
+                               /* 햄버거 메뉴 버튼 */
+                               #menuBtn {
+                                   width: 35px;
+                                   cursor: pointer;
+                                   z-index: 1001;
+                                   margin-right: 70px;
+                               }
+
+                                .logo-img {
+                                    width: 75px;  /* 너비를 150px로 설정 */
+                                    height: 100px;  /* 높이를 자동으로 조절하여 이미지의 비율을 유지 */
+                                    object-fit: cover; /* 이미지를 강제로 지정된 크기에 맞춥니다. */
+
+                                }
+                               /* 사이드 메뉴 스타일 */
+                               .menuWrap {
+                                   position: fixed;
+                                   top: 0;
+                                   right: -500px; /* 메뉴 숨기기 */
+                                   z-index: 1000;
+                                   width: 320px;
+                                   height: 100%;
+                                   padding: 50px 20px;
+                                   box-sizing: border-box;
+                                   transition: right 0.3s ease-in-out;
+                                   background-color: #f0f0f0;
+
+                               }
+
+                               .menuWrap.on {
+                                   right: 0; /* 메뉴 열기 */
+                               }
+
+                               #dimmed {
+                                   position: fixed;
+                                   top: 0;
+                                   left: 0;
+                                   z-index: 999;
+                                   width: 100%;
+                                   height: 100%;
+                                   background-color: rgba(0, 0, 0, 0.5);
+                               }
+
+                               /* 메뉴 리스트 스타일 */
+                               .menuList {
+                                   list-style-type: none;
+                                   padding: 0;
+                               }
+
+                               .listStyle > a {
+                                   font-size: 20px;
+                                   color: green;
+                                   text-decoration: none;
+                                   display: block;
+                                   padding: 10px;
+                               }
+
+                               .listStyle ul {
+                                   list-style-type: none;
+                                   padding: 0;
+                                   margin-left: 20px;
+                               }
+
+
+                               .listStyle ul li a {
+                                   font-size: 16px;
+                                   color: #000;
+                                   text-decoration: none;
+                                   display: block;
+                                   padding: 7px 0;
+                               }
+
+                               .listStyle a:hover {
+                                   background-color: #f9f9f9;
+                               }
+
+                               .btnRotate {
+                                   transform: rotate(-90deg);
+                                   transition: all 0.3s ease-in-out;
+                               }
+                                /* 전체 컨테이너 스타일 */
+                            .dash {
+                                margin-top: 180px;
+                                margin-left: 40px;
+                                font-family: Arial, sans-serif;
+                                color: #fff;
+                                background-image: url('/mnt/data/image.png'); /* 배경 이미지 */
+                                background-size: cover;
+                                background-position: center;
+                                padding: 20px;
+                            }
+
+                            /* 제목 스타일 */
+                            .dash h1, .dash h2 {
+                                font-size: 24px;
+                                margin-bottom: 20px;
+                                color: white;
+                            }
+
+                            /* 기본 텍스트 스타일 */
+                            .dash p {
+                                font-size: 16px;
+                                line-height: 1.6;
+                                margin-bottom: 20px;
+                                color: #green;
+                                font-bold:weight;
+                            }
+
+                            /* 테이블 스타일 */
+                            .dash table {
+                                width: 100%;
+                                border-collapse: collapse;
+                                margin-bottom: 20px;
+                                background-color: rgba(0, 0, 0, 0.5); /* 테이블 배경 투명도 추가 */
+                            }
+
+                            /* 테이블 헤더 스타일 */
+                            .dash table th {
+                                background-color: #333;
+                                color: #fff;
+                                padding: 10px;
+                                text-align: left;
+                                font-weight: bold;
+                            }
+
+                            /* 테이블 데이터 셀 스타일 */
+                            .dash table td {
+                                padding: 15px;
+                                border: 1px solid #ddd;
+                                text-align: left;
+                            }
+
+                            /* 테이블 행 스타일 */
+                            .dash table tr:nth-child(even) {
+                                background-color: rgba(255, 255, 255, 0.1);
+                            }
+
+                            /* 빈 데이터가 있을 때 */
+                            .dash table tr td[colspan] {
+                                text-align: center;
+                                color: #aaa;
+                            }
+
+                            /* a 태그 스타일 */
+                            /* Flexbox 컨테이너 스타일 */
+                            .dash .button-container {
+                                display: flex;
+                                flex-wrap: wrap; /* 요소가 한 줄에 다 들어가지 않을 때 다음 줄로 넘김 */
+                                gap: 10px; /* 요소 간격 */
+                                justify-content: flex-start; /* 왼쪽 정렬 */
+                                margin-top: 20px;
+                            }
+
+                            /* a 태그 스타일 (회원권 신청 및 PT 신청) */
+                            .dash a {
+                                padding: 8px 16px; /* 크기 줄이기 */
+                                font-size: 14px; /* 텍스트 크기 줄이기 */
+                                font-weight: bold;
+                                color: #fff;
+                                background-color: #7f8c8d; /* 탁한 회색 */
+                                border: 1px solid #7f8c8d; /* 테두리 크기 줄이기 */
+                                border-radius: 15px; /* 둥근 모서리 크기 줄이기 */
+                                text-decoration: none;
+                                box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 크기 줄이기 */
+                                transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+                            }
+
+                            .dash a:hover {
+                                background-color: #95a5a6; /* 호버 시 더 밝은 회색 */
+                                color: #eaf2f8; /* 호버 시 텍스트 색상 변경 */
+                                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 강화 */
+                                border-color: #95a5a6; /* 호버 시 테두리 색상 변경 */
+                            }
+
+                            /* 버튼 스타일 (기타 버튼들) */
+                            .dash button {
+                                padding: 8px 16px; /* 크기 줄이기 */
+                                font-size: 14px; /* 텍스트 크기 줄이기 */
+                                font-weight: bold;
+                                color: #fff;
+                                background-color: #5d6d7e; /* 더 탁한 회색 */
+                                border: 1px solid #5d6d7e; /* 테두리 크기 줄이기 */
+                                border-radius: 15px; /* 둥근 모서리 크기 줄이기 */
+                                cursor: pointer;
+                                box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 크기 줄이기 */
+                                transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+                            }
+
+                            .dash button:hover {
+                                background-color: #34495e; /* 호버 시 어두운 회색 */
+                                color: #eafaf1; /* 호버 시 텍스트 색상 변경 */
+                                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 강화 */
+                                border-color: #34495e; /* 호버 시 테두리 색상 변경 */
+                            }
+
+
+
+
+
+                    /* 푸터 */
+                        .footer {
+                           justify-content: space-between;
+                           align-items: center;
+                           background-color: black;
+                           padding: 20px;
+                           text-align: center;
+
+                       }
+
+                       .footer h2 {
+                           color: #fff;
+                           font-size:20px;
+
+                       }
+                       .footer p {
+                           color: #fff;
+                           font-size:20px;
+                       }
+                       .footer .contact-info {
+                           display: flex;
+                           justify-content: space-between;
+                           margin-top: 20px;
+                           padding-top: 70px;`
+                       }
+
+                       .footer .contact-info .column {
+                           flex: 1;
+
+                       }
+                       .footer .contact-info .column h3 {
+                           font-size: 20px;
+                           margin-bottom: 10px;
+                           color:white;
+                       }
+                       .footer .contact-info .column ul {
+                           list-style: none;
+                           padding: 0;
+                       }
+                       .footer .contact-info .column p{
+                           margin-bottom: -8px;
+                           font-size: 14px;
+                       }
+                        .column a {
+                           color:white;
+                       }
+                       .column a:hover {
+                           color: green;
+                       }
+
+
+                       .col {
+                           display: flex;
+                           align-items: center;
+                           padding-bottom: 90px;
+                           position: relative;
+                       }
+                        /* Image Styling */
+                        .foot-img {
+                            max-width: 100px; /* Set a maximum width for the image */
+                            height: auto; /* Maintain aspect ratio */
+                            border-radius: 10px;
+                            margin: 0 auto; /* Center the image */
+                            display: block; /* Ensure it behaves like a block element for centering */
+                        }
+
+
+                       .col ul {
+                           list-style: none;
+                           display: block;
+                           padding: 10px 0px;
+                           margin-right: auto;
+                           text-align: left;
+                           font-size: 13px;
+                           color: white;
+                       }
+                       .col ul li {
+                           margin-bottom: 7px;
+                       }
+
+                       .footer .social-icons {
+                           margin-top: 20px;
+                       }
+                       .footer .social-icons a {
+                           color: #fff;
+                           margin-right: 10px;
+                       }
+                       .top {
+                           font-size: 20px;
+                           font-weight: bold;
+                       }
+                       .contact-info {
+                           border-top: 0.3px solid white;
+                           margin-top: -30px;
+                           border-bottom: 0.3px solid white;
+                       }
+                       .join {
+                           background-color: black;
+                           border-radius: 10px;
+                           }
+                       .join a {
+                           color: white;
+                       }
+                       .column img {
+                           border-radius: 10px;
+                       }
+                       .social-icons p {
+                           font-size: 11px;
+                       }
+
+
+                /* 모바일 화면 대응 */
+                @media screen and (max-width: 767px) {
+                     /* For tablets and smaller screens */
+
+                       html {
+                        font-size: 14px; /* 태블릿 화면 크기에서의 기본 폰트 크기 */
+                    }
+                      .navbar {
+                        padding: 8px 10px;
+                    }
+
+                    .navbar img {
+                        margin-left: 20px;
+                        height: 30px;
+                    }
+
+                    .nav-links a {
+                        padding: 0 10px;
+                        font-size: 14px;
+                    }
+
+                    #menuBtn {
+                        margin-right: 20px;
+                        width: 25px;
+                    }
+
+                    .menuWrap {
+                        width: 250px;
+                        padding: 30px 10px;
+                    }
+
+                     .dash h1, .dash h2 {
+                        font-size: 20px; /* Adjust heading sizes for mobile */
+                    }
+                    .dash p {
+                        font-size: 14px; /* Smaller text for mobile */
+                    }
+                    .dash table {
+                        font-size: 12px; /* Adjust table font size */
+                    }
+
+
+                     .dash button {
+                        padding: 4px 8px; /* 패딩 추가 줄이기 */
+                        font-size: 10px; /* 텍스트 크기 추가 줄이기 */
+                    }
+                    .dash a {
+                        padding: 4px 8px; /* 패딩 추가 줄이기 */
+                        font-size: 10px; /* 텍스트 크기 추가 줄이기 */
+                        }
+
+
+                        .dash a:hover, .dash button:hover {
+                            background-color: darkgreen; /* Darker on hover */
+                        }
+
+                        /* Fix for missing colors */
+                        .dash p {
+                                font-size: 16px;
+                                margin-bottom: 20px;
+                        }
+                        .footer {
+                                    padding: 15px; /* Adjust padding */
+                                }
+
+                                .footer .contact-info .column .col {
+                                    flex: 1 0 100%; /* Stack columns on small screens */
+                                    margin: 5px 0; /* Adjust margin */
+                                }
+
+                                .footer .contact-info {
+                                    flex-direction: column; /* Stack items vertically */
+                                }
+
+                                .footer .social-icons p {
+                                    font-size: 10px; /* Reduce font size */
+                                }
+                                        .footer .col {
+                                    text-align:center;
+                                    }
+
+                }
+
+                 스타일 설정 - 486px */
+                @media (max-width: 486px) {
+                 /* For screens smaller than 486px */
+
+                    html {
+                        font-size: 12px; /* 작은 화면 크기에서의 기본 폰트 크기 */
+                    }
+
+                    .navbar {
+                        padding: 5px 8px;
+                    }
+
+                   .navbar img {
+                        height: 30px;
+                        margin-left: 10px;
+                    }
+
+                    .nav-links a {
+                        padding: 0 8px;
+                        font-size: 12px; /* 더 작은 폰트 크기 */
+                    }
+
+                    #menuBtn {
+                        margin-right: 15px;
+                        width: 20px;
+                    }
+
+                    .menuWrap {
+                        width: 200px;
+                        padding: 20px 8px;
+                    }
+                    .footer {
+                        padding: 10px; /* 더 작은 패딩 */
+                    }
+
+                    .footer .contact-info .column .col {
+                        flex: 1 0 100%; /* 항목을 수직으로 쌓기 */
+                        margin: 4px 0;
+                    }
+
+                    .footer .contact-info {
+                        flex-direction: column; /* 항목 수직 정렬 */
+                    }
+
+                    .footer .social-icons p {
+                        font-size: 8px; /* 더 작은 폰트 크기 */
+                    }
+
+                    .footer .col {
+                        text-align: center;
+                    }
+
+                    .footer h2 {
+                        font-size: 16px; /* 더 작은 헤더 폰트 크기 */
+                    }
+
+                    .footer .col .contact-info .column h3 {
+                        font-size: 14px; /* 더 작은 폰트 크기 */
+                    }
+
+                    .footer .col .contact-info .column p {
+                        font-size: 10px; /* 더 작은 폰트 크기 */
+                    }
+
+                    .footer .social-icons {
+                        flex-direction: column; /* 소셜 아이콘 수직 정렬 */
+                    }
+
+                    .dash {
+
+                        padding: 10px; /* 패딩 줄이기 */
+                        overflow-x: auto; /* 수평 스크롤 추가 */
+                    }
+
+                    .dash h1 {
+                        font-size: 20px; /* 제목 크기 줄이기 */
+                    }
+
+                    .dash h2 {
+                        font-size: 18px; /* 서브 제목 크기 줄이기 */
+                    }
+
+                    .dash p {
+                        font-size: 14px; /* 본문 글씨 크기 줄이기 */
+                    }
+
+                    .dash table,
+                    .dash table thead,
+                    .dash table tbody,
+                    .dash table th,
+                    .dash table td,
+                    .dash table tr {
+                        display: block; /* 테이블 요소들을 블록 요소로 변환 */
+                        width: 100%; /* 각 요소가 전체 너비 차지 */
+                        font-size: 10px; /* 테이블 글씨 크기 줄이기 */
+
+
+                    }
+
+                    /* 테이블 헤더 숨기기 */
+                    .dash table thead {
+                        display: none;
+                    }
+
+                    /* 테이블의 각 행에 대한 스타일 */
+                    .dash table tr {
+                        margin-bottom: 10px; /* 각 행 간의 간격 추가 */
+                        border-bottom: 2px solid #ddd;
+                    }
+
+                    /* 각 셀에 라벨 추가 (열 제목 표시) */
+                    .dash table td {
+                        position: relative;
+                        padding-left: 50%; /* 라벨을 위한 공간 확보 */
+                    }
+
+                    /* 각 셀에 이전 열 제목을 추가 */
+                    .dash table td::before {
+                        content: attr(data-label); /* 해당 셀의 라벨 추가 */
+                        position: absolute;
+                        left: 10px;
+                        top: 0;
+                        white-space: nowrap;
+                        font-weight: bold;
+                    }
+
+
+
+                   .dash button  {
+                        padding: 5px; /* 패딩 줄이기 */
+                        word-wrap: break-word; /* 긴 단어가 잘리도록 설정 */
+                        font-size: 10px; /* 텍스트 크기 추가 줄이기 */
+                   }
+                   .dash a {
+                            padding: 5px; /* 패딩 줄이기 */
+                        word-wrap: break-word; /* 긴 단어가 잘리도록 설정 */
+                        font-size: 10px; /* 텍스트 크기 추가 줄이기 */
+                        }
+                }
+
+
+                @media (max-width: 390px) {
+                    /* For screens smaller than 400px */
+
+                    html {
+                        font-size: 12px; /* 기본 폰트 크기 설정 */
+                    }
+
+                    .h2 {
+                        color: green;
+                        }
+                    .navbar {
+                        padding: 8px 10px; /* 내비게이션 바 패딩 조정 */
+                    }
+
+                    .navbar img {
+                        height: 25px;
+                    }
+
+                    .nav-links a {
+                        padding: 0 8px; /* 링크 패딩 줄이기 */
+                        font-size: 11px; /* 링크 폰트 크기 줄이기 */
+                    }
+
+                    #menuBtn {
+                        width: 22px; /* 메뉴 버튼 크기 조정 */
+                    }
+
+                    .menuWrap {
+                        width: 200px; /* 메뉴 폭 조정 */
+                        padding: 18px 10px; /* 메뉴 패딩 조정 */
+                    }
+
+                    .dash {
+                        padding: 8px; /* 패딩 조정 */
+                    }
+
+                    .dash h1 {
+                        font-size: 20px; /* 제목 크기 조정 */
+                    }
+
+                    .dash h2 {
+                        font-size: 18px; /* 서브 제목 크기 조정 */
+                    }
+
+                    .dash p {
+                        font-size: 13px; /* 본문 글씨 크기 조정 */
+                    }
+
+                    .dash table {
+                        width: 100%; /* 테이블 전체 너비 설정 */
+                        border-collapse: collapse; /* 테두리 겹침 방지 */
+                    }
+
+                    .dash table,
+                    .dash table thead,
+                    .dash table tbody,
+                    .dash table th,
+                    .dash table td,
+                    .dash table tr {
+                        display: block; /* 모든 요소를 블록으로 설정 */
+                        width: 100%; /* 각 요소가 전체 너비 차지 */
+                    }
+
+                    .dash table thead {
+                        display: none;
+                    }
+
+                    .dash table tr {
+                        margin-bottom: 8px; /* 각 행 간의 간격 추가 */
+                        border-bottom: 1.5px solid #ddd; /* 각 행에 하단 경계 추가 */
+                    }
+
+                    .dash table td {
+                        display: flex; /* Flexbox 사용 */
+                        justify-content: space-between; /* 양쪽 정렬 */
+                        padding: 8px; /* 패딩 추가 */
+
+                    }
+
+                    .dash table td:nth-child(odd) {
+                        text-align: left; /* 왼쪽 내용 정렬 */
+                        font-weight: bold; /* 왼쪽 셀의 텍스트를 굵게 표시 */
+                    }
+
+                    .dash table td:nth-child(even) {
+                        text-align: right; /* 오른쪽 내용 정렬 */
+                        margin-right: 10px;
+                    }
+
+                    .dash table th {
+                            font-weight: bold; /* 헤더는 두껍게 */
+                            background-color: rgba(255, 255, 255, 0.1); /* 헤더 배경 색상 추가 (선택 사항) */
+                        }
+
+                        .dash table td {
+                            background-color: rgba(255, 255, 255, 0.1); /* 데이터 셀 배경 색상 추가 (선택 사항) */
+                        }
+                    .dash table td::before {
+                        content: attr(data-label); /* 해당 셀의 라벨 추가 */
+                        display: block; /* 블록으로 표시 */
+                        font-weight: bold; /* 라벨을 굵게 표시 */
+                        margin-bottom: 5px; /* 라벨과 내용 사이의 간격 */
+
+                    }
+                     .dash table tr:nth-child(even) td {
+                        background-color: rgba(255, 255, 255, 0.05); /* 짝수 행 배경 색상 추가 */
+                    }
+
+                    .dash button {
+                        padding: 4px 8px; /* 패딩 조정 */
+                        font-size: 10px; /* 텍스트 크기 조정 */
+                    }
+
+                    .dash a {
+                        padding: 4px 8px; /* 패딩 조정 */
+                        font-size: 10px; /* 텍스트 크기 조정 */
+                    }
+
+                       .scrollable-table {
+                max-height: 150px; /* 작은 화면에서 높이를 줄임 */
+                overflow-y: auto; /* 여전히 스크롤 가능하게 설정 */
+                width:100%;
+            }
+
+            .scrollable-table th,
+            .scrollable-table td {
+                font-size: 12px; /* 작은 화면에서 글자 크기 축소 */
+                padding: 5px; /* 셀 안쪽 여백 줄이기 */
+
+                        /* 테이블의 전체 너비를 조정하고 요소가 잘리지 않게 처리 */
+            .scrollable-table tbody  {
+                width:100%;
+                }
+
+        }
+
+
+
+                        /* 스타일 설정 - 340px */
+                @media (max-width: 340px) {
+
+                /* For screens smaller than 360px */
+
+                    html {
+                        font-size: 10px; /* 기본 폰트 크기 설정 */
+                    }
+
+                    .navbar {
+                        padding: 5px 6px; /* 내비게이션 바 패딩 조정 */
+                    }
+
+                   .navbar img {
+                        height: 23px;
+                    }
+
+                    .nav-links a {
+                        padding: 0 5px; /* 링크 패딩 줄이기 */
+                        font-size: 10px; /* 링크 폰트 크기 줄이기 */
+                    }
+
+                    #menuBtn {
+                        width: 18px; /* 메뉴 버튼 크기 조정 */
+                    }
+
+                    .menuWrap {
+                        width: 180px; /* 메뉴 폭 줄이기 */
+                        padding: 15px 6px; /* 메뉴 패딩 조정 */
+                    }
+                    .dash {
+
+                        padding: 5px; /* 패딩 더 줄이기 */
+                    }
+
+                    .dash h1 {
+                        font-size: 18px; /* 제목 크기 추가 줄이기 */
+                    }
+
+                    .dash h2 {
+                        font-size: 16px; /* 서브 제목 크기 추가 줄이기 */
+                    }
+
+                    .dash p {
+                        font-size: 12px; /* 본문 글씨 크기 추가 줄이기 */
+                    }
+                     .table-container {
+                        width: 100%; /* 부모 컨테이너 너비를 100%로 설정 */
+                        padding: 0; /* 테이블 주변의 여백을 제거 */
+                        margin: 0; /* 테이블 주변의 여백을 제거 */
+                    }
+                    .table {
+                          border-collapse: collapse; /* 테두리 간의 간격을 없앰 */
+                          width:100%;
+                          }
+                          th, td {
+                        width: 50%; /* 각 셀의 너비를 조정 */
+                        padding: 8px; /* 셀 안쪽 여백 조정 */
+                        text-align: left; /* 텍스트 정렬 설정 */
+                        box-sizing: border-box; /* 셀의 크기를 정확하게 계산 */
+                    }
+
+
+
+                      .dash table,
+                    .dash table thead,
+                    .dash table tbody,
+                    .dash table th,
+                    .dash table td,
+                    .dash table tr {
+                        display: block;
+                        width: 100%;
+
+                    }
+
+                    .dash table thead {
+                        display: none;
+                    }
+
+                    .dash table tr {
+                        margin-bottom: 10px;
+
+                    }
+
+                    .dash table td {
+                        display: flex;
+                        justify-content: space-between;
+                        padding: 8px;
+                        border-bottom: 1px solid #ddd;
+                    }
+
+                    .dash table td::before {
+                        content: attr(data-label); /* 각 셀에 라벨 추가 */
+                        font-weight: bold;
+                        width: 40%;
+                        padding-right: 10px;
+                        text-align: left;
+                    }
+
+                    .dash table td {
+                        width: 60%;
+                        text-align: right;
+                    }
+
+                     .dash button {
+                        padding: 3px 6px; /* 패딩 최대 줄이기 */
+                        font-size: 9px; /* 텍스트 크기 최대 줄이기 */
+                    }
+                    .dash a {
+                        padding: 3px 6px; /* 패딩 최대 줄이기 */
+                        font-size: 9px; /* 텍스트 크기 최대 줄이기 */
+                        }
+
+                }
+
+    </style>
+
+</head>
+<body>
+<!-- 고정된 상단 메뉴바 -->
+<div class="navbar" id="navbar">
+    <a th:href="@{/}"><img src="/img/ManliLogo3.png" alt="Logo" class="logo-img"></a>
+    <div class="nav-links">
+        <a th:href="@{/introduce}">About</a>
+        <a th:href="@{/promotion}">Promotion</a>
+        <a th:href="@{/program}">Program</a>
+        <a th:href="@{/using}">Notice</a>
+    </div>
+    <!-- 햄버거 메뉴 버튼 -->
+    <img id="menuBtn" src="/img/menuBtn1.png" alt="Menu Button">
+    <!-- 사이드 메뉴 -->
+    <div class="menuWrap" id="menu">
+        <ul class="menuList">
+            <li class="listStyle"><a th:href="@{/introduce}">About</a>
+                <ul class="intro">
+                    <li><a th:href="@{/introduce}">헬스장 소개</a></li>
+                    <li><a th:href="@{/come}">오시는길</a></li>
+                </ul>
+            </li>
+            <li class="listStyle"><a th:href="@{/program}">Program</a>
+                <ul class="pro">
+                    <li><a th:href="@{/PT}">PM 프로그램</a></li>
+                    <li><a th:href="@{/program}">운동 프로그램</a></li>
+                </ul>
+            </li>
+            <li class="listStyle"><a th:href="@{/promotion}">Promotion</a>
+                <ul class="eve"><!--프로모션은 가격표 올려두고 이벤트는 사진업로드-->
+                    <li><a th:href="@{/promotion}">프로모션</a></li>
+                    <li><a th:href="@{/event}">이벤트</a></li>
+                </ul>
+            </li>
+            <li class="listStyle"><a href="#">SNS</a>
+                <ul class="gi">
+                    <li><a href="http://blog.naver.com/knhpallc">네이버 카페</a></li>
+                    <li><a href="http://manligym24.modoo.at">만리 블로그</a></li>
+                    <li><a href="http://instagram.com/manli_gym10002">인스타그램</a></li>
+                    <li><a href="http://daangn.com/kr/business-profiles/793f009185a347c79cb449a884240c20/">당근</a></li>
+                </ul>
+            </li>
+            <li class="listStyle" th:if="${loggedIn}">
+                Welcome.<span th:text="${username}">님!</span>
+                <ul class="info">
+                    <li><a th:href="@{/info}">내 정보</a></li>
+                    <li><a th:href="@{/userdashboard}">내 회원권</a></li>
+                    <li><a th:href="@{/logout}">로그아웃</a></li>
+                </ul>
+            </li>
+            <li class="listStyle" th:if="${!loggedIn}">
+                <a th:href="@{/login}">로그인</a>
+
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    window.addEventListener('scroll', function() {
+        const navbar = document.getElementById('navbar');
+        if (window.scrollY > 10) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const menuWrap = document.querySelector(".menuWrap");
+    const menuBtn = document.querySelector("#menuBtn");
+
+    // 메뉴 버튼 클릭 이벤트
+    menuBtn.addEventListener("click", function (e) {
+      toggleMenu();
+    });
+
+    // 빈 공간 클릭 시 메뉴 닫기
+    document.addEventListener("click", function (e) {
+      if (!menuWrap.contains(e.target) && e.target !== menuBtn) {
+        closeMenu();
+      }
+    });
+
+    function toggleMenu() {
+      if (menuWrap.classList.contains("on")) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    }
+
+    function openMenu() {
+      menuWrap.classList.add("on");
+      menuBtn.src = "/img/menuBtn1.png";
+      menuBtn.classList.add("btnRotate");
+      let div = document.createElement("div");
+      div.id = "dimmed";
+      document.body.append(div);
+
+      // 페이지 스크롤 락, 모바일 이벤트 차단
+      document.querySelector("#dimmed").addEventListener(
+        "scroll touchmove touchend mousewheel",
+        function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        }
+      );
+    }
+
+    function closeMenu() {
+      menuWrap.classList.remove("on");
+      menuBtn.src = "/img/menuBtn1.png";
+      menuBtn.classList.remove("btnRotate");
+      document.querySelector("#dimmed").remove();
+    }
+  });
+</script>
+
+<div class="dash">
+    <h1>내 회원권 확인하기</h1>
+    <p><span th:if="${user != null}" th:text="${username}"></span>님! 현재 회원권입니다.</p>
+    <h3>입장 QR 코드</h3>
+
+    <!-- member.phone 값이 있을 때 QR 코드 이미지를 표시하고, 없을 때 "QR 코드 없음" 표시 -->
+    <span th:if="${member != null}">
+    <img th:src="@{'/qrcode/' + ${member.phone} + '.png'}" alt="QR Code" style="width: 120px; height: 120px;" />
+</span>
+    <span th:if="${member == null}">
+    QR 코드 없음
+</span>
+
+
+    <h2>회원권</h2>
+
+    <table>
+        <thead>
+        <tr>
+            <th>회원권 종류</th>
+            <th>회원권 시작일</th>
+            <th>회원권 종료일</th>
+            <th>계약자</th>
+            <th>전화번호</th>
+            <th>주소</th>
+            <th>성별</th>
+            <th>운동복 종류</th>
+            <th>운동복 시작일</th>
+            <th>운동복 종료일</th>
+            <th>결제 방법</th>
+            <th>결제 금액</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="membership : ${memberships}" th:if="${member.status == null || member.status == 'approved'}">
+            <td data-label="회원권 종류" th:text="${membership.membership}"></td>
+            <td data-label="회원권 시작일" th:text="${membership.memstart}"></td>
+            <td data-label="회원권 종료일" th:text="${membership.memend}"></td>
+            <td data-label="계약자" th:text="${membership.coach}"></td>
+            <td data-label="전화번호" th:text="${membership.phone}"></td>
+            <td data-label="주소" th:text="${membership.address}"></td>
+            <td data-label="성별" th:text="${membership.gender}"></td>
+            <td data-label="운동복 종류" th:text="${membership.shirt}"></td>
+            <td data-label="운동복 시작일" th:text="${membership.shirtstart}"></td>
+            <td data-label="운동복 종료일" th:text="${membership.shirtend}"></td>
+            <td data-label="결제 방법" th:text="${membership.credit}"></td>
+            <td data-label="결제 금액" th:text="${membership.price}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <div th:if="${memberships == null || memberships.isEmpty()}">
+        <p>회원권이 아직 없습니다.</p>
+    </div>
+    <h2>락커</h2>
+    <!-- 락커 정보 -->
+    <table>
+        <thead>
+        <tr>
+            <th>락커 종류</th>
+            <th>락커 번호</th>
+            <th>락커 비밀번호</th>
+            <th>락커 시작일</th>
+            <th>락커 종료일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- 락커 정보가 있을 때만 표시 -->
+        <tr th:each="locker : ${lockers}">
+            <td data-label="락커 종류" th:text="${locker.locker}"></td>
+            <td data-label="락커 번호" th:text="${locker.locknum}"></td>
+            <td data-label="락커 비밀번호" th:text="${locker.lockpass}"></td>
+            <td data-label="락커 시작일" th:text="${locker.lockstart}"></td>
+            <td data-label="락커 종료일" th:text="${locker.lockend}"></td>
+        </tr>
+        <!-- 락커 정보가 없을 때 메시지 표시 -->
+        <tr th:if="${lockers == null}">
+            <td colspan="5">락커를 사용하지 않고 있습니다.</td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="scrollable-table">
+    <h2>출입 기록</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>출입 시간</th>
+            <th>회원명</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- 출입 기록이 있는 경우 목록을 출력 -->
+        <tr th:each="entry : ${entryRecords}">
+            <td data-label="출입 시간" th:text="${entry.formattedEntryTime}"></td>
+            <td data-label="회원명" th:text="${entry.name}"></td>
+        </tr>
+
+        <!-- 출입 기록이 없을 경우 메시지를 출력 -->
+        <tr th:if="${#lists.isEmpty(entryRecords)}">
+            <td colspan="2" style="text-align: center;">출입기록이 없습니다.</td>
+        </tr>
+        </tbody>
+
+    </table>
+    </div>
+    <h2>PT</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>담당 선생님</th>
+                <th>피티종류</th>
+                <th>피티 시작일</th>
+                <th>남은 횟수</th>
+                <th>결제 방법</th>
+                <th>횟수 차감</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="ptMem: ${ptContracts}" th:if="${ptMem.status == null || ptMem.status == 'approved'}">
+                <td data-label="담당 선생님" th:text="${ptMem.coach}"></td>
+                <td data-label="피티 종류" th:text="${ptMem.ptmembership}"></td>
+                <td data-label="피티 시작일" th:text="${ptMem.ptstart}"></td>
+                <td data-label="남은 횟수" th:text="${ptMem.count}"></td>
+
+                <td data-label="결제 방법" th:text="${ptMem.credit}"></td>
+                <!-- 1회 차감 버튼과 POST 요청 -->
+                <td  data-label="차감">
+                    <form th:action="@{/contracts/{id}/decrement(id=${ptMem.id})}" method="post">
+                        <button type="submit">1회차감</button>
+                    </form>
+                </td>
+            </tr>
+
+            <!-- 락커 정보가 없을 때 메시지 표시 -->
+            <tr th:if="${ptContracts == null}">
+                <td colspan="5">PT는 진행하고 있지 않습니다.</td>
+            </tr>
+        </tbody>
+    </table><br><br>
+
+    <div><p>※ PT 신청은 회원권이 존재할때만 신청이 가능합니다!</p></div>
+    <div class="button-container">
+        <a th:href="@{/member/apply}">회원권 신청</a> <!--agreementuser에서 작성-->
+
+        <!-- PT 신청 버튼 -->
+        <form th:if="${memberships != null && memberships.size() > 0}" th:action="@{/member/PT_apply}" method="get">
+            <button type="submit">PT 신청</button>
+        </form>
+
+        <!-- 양도 신청 -->
+        <form th:if="${memberships != null && memberships.size() > 0}" th:action="@{/member/trans}" method="get">
+            <input type="hidden" name="name" th:value="${username}"/>
+            <input type="hidden" name="phone" th:value="${memberships[0].phone}"/>
+            <button type="submit">양도 신청</button>
+        </form>
+
+        <!-- 6개월권 또는 12개월권일 때만 휴회 신청을 보여줍니다. -->
+        <form th:if="${memberships != null && memberships.size() > 0 && (memberships[0].membership == '6개월권' or memberships[0].membership == '12개월권')}" th:action="@{/member/stop}" method="get">
+            <input type="hidden" name="name" th:value="${username}"/>
+            <input type="hidden" name="phone" th:value="${memberships[0].phone}"/>
+            <button type="submit">휴회 신청</button>
+        </form>
+
+        <!-- 회원권 환불 신청 -->
+        <form th:if="${memberships != null && memberships.size() > 0}" th:action="@{/member/cashback}" method="get">
+            <input type="hidden" name="name" th:value="${username}"/>
+            <input type="hidden" name="phone" th:value="${memberships[0].phone}"/>
+            <button type="submit">회원권 환불 신청</button>
+        </form>
+
+        <!-- PT 환불 신청 -->
+        <form th:if="${ptContracts != null && !ptContracts.isEmpty()}" th:action="@{/member/ptcashback}" method="get">
+            <input type="hidden" name="name" th:value="${ptContracts[0].name}"/>
+            <input type="hidden" name="phone" th:value="${ptContracts[0].phone}"/>
+            <button type="submit">PT 환불 신청</button>
+        </form>
+
+    </div>
+
+
+</div>
+<img src="/img/up.png" id="top_btn" alt="up"><i class="fa fa-arrow-up" aria-hidden="true"></i><span class="sound_only"></span>
+<script>
+    $(function() {
+        $("#top_btn").on("click", function() {
+            $("html, body").animate({scrollTop:0}, '500');
+            return false;
+        });
+    });
+</script>
+<div class="footer">
+    <h2>Want to partner with us?</h2>
+    <p>만리체육관은 항상 여러분과 함께입니다.</p>
+    <button class="join"><a th:href="@{/join}">회원가입</a></button>
+    <div class="login-driver"></div>
+    <div class="contact-info">
+        <div class="col">
+            <img src="/img/logo2.jpg" class="foot-img">
+            <ul>
+                <li class="top">CONTECT</li>
+                <li>CEO : 김재흥</li>
+                <li>Email : knhpallc@gamil.com</li>
+                <li>Tell : 02-714-8880</li>
+                <li>Address : 서울특별시 용산구 효창원로 270, 3층  </li>
+            </ul>
+        </div>
+        <div class="column">
+            <h3>OPEN</h3>
+            <p>평일 06:00 - 24:00</p>
+            <p>토요일,공휴일 09:00 - 18:00</p>
+            <p>※일요일, 설, 추석 휴관※</p>
+        </div>
+        <div class="column">
+            <h3><a th:href="@{/using}" style="text-decoration: none">이용 약관</a></h3>
+            <p><a th:href="@{/hwanbul}" style="text-decoration: none">환불 약관</a></p>
+            <p><a th:href="@{/stoppass}" style="text-decoration: none">휴회&양도 약관</a></p>
+            <p><a th:href="@{/PTagree}" style="text-decoration: none">PM 규정</a></p>
+            <p><a th:href="@{/gaein}" style="text-decoration: none"> 개인정보 수집 약관 </a></p>
+        </div>
+        <div class="column">
+            <h3>With Us!</h3>
+            <a href="http://blog.naver.com/knhpallc"><img src="/img/cafe.jpg" alt="cafe"></a>
+            <a href="http://manligym24.modoo.at"><img src="/img/blog.jpg" alt="blog"></a>
+            <a href="http://instagram.com/manli_gym10002"><img src="/img/insta.jpg" alt="insta"></a>
+            <a href="http://daangn.com/kr/business-profiles/793f009185a347c79cb449a884240c20/"><img src="/img/danggun.jpg" alt="danggun"></a>
+        </div>
+    </div>
+    <div class="social-icons">
+        <p> COPY RIGHT ⓒ2024 만리체육관, ALL RIGHT RESERVE</p>
+    </div>
+</div>
+</body>
+</html>
