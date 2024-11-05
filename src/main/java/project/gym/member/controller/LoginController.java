@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.gym.member.dto.*;
 import project.gym.member.entity.BoardEntity;
 import project.gym.member.entity.ConsultationEntity;
@@ -32,9 +34,7 @@ import project.gym.member.repository.UserRepository;
 import project.gym.member.service.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Controller
 @Slf4j
@@ -93,7 +93,8 @@ public class LoginController {
 
 
     @GetMapping("/resetPassword")
-    public String resetPasswordForm(@RequestParam String token, Model model) {
+    public String resetPasswordForm(@RequestParam("token") String token, Model model) {
+        System.out.println("Received token in GET: " + token);
         Optional<UserEntity> optionalUser = joinService.findByResetToken(token);
         if (optionalUser.isPresent()) {
             model.addAttribute("token", token);
@@ -103,46 +104,60 @@ public class LoginController {
             return "error"; // 에러 페이지로 이동
         }
     }
+
+    @CrossOrigin(origins = "https://www.priqma.com") // 특정 출처 허용
     @PostMapping("/resetPassword")
-    public String resetPassword(@RequestParam String username, @RequestParam String newPassword) {
-        UserEntity user = userRepository.findByUsername(username);
-        if (user != null) {
+    public String resetPassword(@RequestParam("token") String token,
+                                @RequestParam("newPassword") String newPassword,
+                                RedirectAttributes redirectAttributes,
+                                Model model) {
+        System.out.println("Received token: " + token);
+        Optional<UserEntity> optionalUser = joinService.findByResetToken(token);
+
+        if (optionalUser.isPresent()) {
+            UserEntity user = optionalUser.get();
+            System.out.println("User found: " + user.getUsername());
             String encodedPassword = passwordEncoder.encode(newPassword);
             user.setPassword(encodedPassword);
-
             userRepository.save(user);
-            return "비밀번호가 성공적으로 업데이트되었습니다.";
+
+            redirectAttributes.addFlashAttribute("message", "비밀번호가 성공적으로 재설정되었습니다.");
+            return "redirect:/login";
         } else {
-            return "사용자를 찾을 수 없습니다.";
+            System.out.println("Invalid token: " + token);
+            redirectAttributes.addFlashAttribute("error", "유효하지 않은 토큰입니다.");
+            return "redirect:/login";
         }
     }
 
     @PostMapping("/forgotPassword")
-    public String forgotPassword(@RequestParam String email, Model model) {
+    @ResponseBody // JSON 응답을 위해 추가
+    public ResponseEntity<Map<String, String>> forgotPassword(@RequestParam String email) {
+        Map<String, String> response = new HashMap<>();
         Optional<UserEntity> optionalUser = joinService.findByEmail(email); // 이메일로 사용자 검색
 
         if (optionalUser.isPresent()) {
             UserEntity user = optionalUser.get();
 
-            // 임시 토큰 생성
+            // 임시 토큰 생성 및 DB에 저장
             String resetToken = UUID.randomUUID().toString();
-            user.setResetToken(resetToken); // DB에 토큰 저장
+            user.setResetToken(resetToken);
             joinService.save(user);
 
             // 비밀번호 재설정 링크 생성
             String resetLink = "http://priqma.com/resetPassword?token=" + resetToken;
-            System.out.println("날라가나?");
 
             // 이메일 전송
-            joinService.sendPasswordResetEmail(email, resetLink); // 이메일 전송 메서드 구현 필요
-            model.addAttribute("message", "비밀번호 재설정 링크가 이메일로 전송되었습니다.");
+            joinService.sendPasswordResetEmail(email, resetLink);
+            response.put("success", "true");
+            response.put("message", "비밀번호 재설정 링크가 이메일로 전송되었습니다.");
         } else {
-            model.addAttribute("errorMessage", "해당 이메일로 가입된 계정이 없습니다.");
+            response.put("success", "false");
+            response.put("message", "해당 이메일로 가입된 계정이 없습니다.");
         }
 
-        return "forgotPassword"; // 비밀번호 찾기 페이지
+        return ResponseEntity.ok(response); // JSON 응답
     }
-
 
     @CrossOrigin(origins = "https://www.priqma.com") // 특정 출처 허용
     @PostMapping("/loginProc")
