@@ -144,7 +144,7 @@ public class CloserController {
         // 시간대별 출입 횟수 집계 추가
         Map<String, Long> entryCountsByHourSlot = closerService.getAttendanceCountsByHour();
         model.addAttribute("entryCountsByHourSlot", entryCountsByHourSlot);
-        // 템플릿에 시간대별 출입 횟수 전달하여 출입이 많은 시간대 확인 및 분석에 활용
+
 
 
         // 주간 일별 매출 합계 데이터 추가

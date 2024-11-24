@@ -18,6 +18,8 @@
     <link rel="manifest" href="/manifest.json">
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
+    <!-- Chart.js 라이브러리 추가 (이미 포함되지 않았다면 추가) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <meta name="theme-color" content="#ffffff">
     <title>마감 정산</title>
 <style>
@@ -170,10 +172,26 @@
     padding: 20px;
     z-index: 1000;
 }
+    .home-button {
+    display: inline-block;
+    padding:  8px 15px;       /* 버튼 내부 여백 */
+    color: white;             /* 텍스트 색상 */
+    background-color: orange; /* 버튼 배경색 */
+    border-radius: 5px;       /* 버튼 모서리 둥글게 */
+    text-decoration: none;    /* 밑줄 제거 */
+    font-weight: bold;        /* 굵은 텍스트 */
+    font-size:12px;
+    transition: background-color 0.3s ease; /* 호버 효과 전환 */
+}
 
+.home-button:hover {
+    background-color: #0056b3; /* 호버 시 배경색 변경 */
+    color: #e6e6e6;            /* 호버 시 텍스트 색상 */
+}
 </style>
 </head>
 <body>
+<a href="/adminPage" class="home-button">홈으로</a>
 <div class="container">
     <h1>월별 캘린더</h1>
     <!-- 달력 컨트롤 -->
@@ -246,20 +264,10 @@
         <div class="attendance-info">
             <h2>오늘 출입 현황</h2>
             <p th:text="'오늘 출입한 총 인원수: ' + ${todayAttendance.size()}"></p>
-            <table>
-                <thead>
-                <tr>
-                    <th>시간대</th>
-                    <th>출석 인원수</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="entry : ${entryCountsByHourSlot}">
-                    <td th:text="${entry.key}"></td>
-                    <td th:text="${entry.value} + '명'"></td>
-                </tr>
-                </tbody>
-            </table>
+            <div id="hourly-summary" th:if="${entryCountsByHourSlot != null}">
+                <h3>시간대별 출입자 수</h3>
+                <canvas id="hourlyChart"></canvas>
+            </div>
         </div>
 
         <div class="registration-info">
@@ -494,6 +502,45 @@
         document.getElementById('revenuePopup').style.display = 'none'; // 팝업 숨기기
     }
 </script>
+
+<script th:inline="javascript">
+    const entryCountsByHourSlot = /*[[${entryCountsByHourSlot}]]*/ {};
+
+    // 6시부터 23시까지의 시간대를 배열로 정의
+    const labels = ['6시', '7시', '8시', '9시', '10시', '11시', '12시', '13시', '14시', '15시', '16시', '17시', '18시', '19시', '20시', '21시', '22시', '23시'];
+
+    // 각 시간대에 대한 출입자 수를 순서대로 배열로 생성
+    const data = labels.map(hour => entryCountsByHourSlot[hour] || 0);
+
+    const ctx = document.getElementById('hourlyChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: '시간대별 출입자 수',
+                data: data,
+                backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    min: 0,
+                    max: 15,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+</script>
+
 
 </body>
 </html>

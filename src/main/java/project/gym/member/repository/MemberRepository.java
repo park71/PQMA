@@ -42,6 +42,8 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Integer> {
 
     Optional<MemberEntity> findByName(String name);
 
+    MemberEntity findOptionalByName(String name);
+
     List<MemberEntity> findAllByPhone(String phone);
     // 이름으로 검색
     List<MemberEntity> findByNameContaining(String name);
@@ -99,11 +101,16 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Integer> {
     List<MemberEntity> findByCoachAndStatus(String coach, String status, Sort sort);
     Optional<MemberEntity> findByNameAndPhone(String name, String phone);
 
+    MemberEntity findByNameAndBirth(String name, LocalDate birth);
+
     @Query("SELECT m FROM MemberEntity m WHERE m.name LIKE %:query% AND (m.status IS NULL OR m.status = 'approve')")
     List<MemberEntity> searchMembers(@Param("query") String query);
 
     // 전화번호와 상태로 회원 조회하는 메서드
     Optional<MemberEntity> findByPhoneAndStatus(String phone, String status);
+
+    // 전화번호로 회원이 존재하는지 확인하는 메서드
+    boolean existsByPhone(String phone);
 
 
     @Query("SELECT m FROM MemberEntity m WHERE m.remainDays > 0")

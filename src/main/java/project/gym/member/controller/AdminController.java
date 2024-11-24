@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,7 @@ import project.gym.member.repository.UserRepository;
 import project.gym.member.service.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
@@ -56,6 +58,7 @@ public class AdminController {
     @Autowired
     private LockerRepository lockerRepository;
 
+        @PreAuthorize("hasAuthority('ROLE_ADMIN')")
         @GetMapping("/adminPage")
         public String adminPage(Model model, HttpSession session) {
             String username = (String) session.getAttribute("loginUsername");
@@ -155,7 +158,10 @@ public class AdminController {
     }
 
     @GetMapping("/PTinfo")
-    public String PTListPage(@RequestParam(value = "searchName", required = false) String searchName, Model model) {
+    public String PTListPage(@RequestParam(value = "searchName", required = false) String searchName,
+                             @RequestParam(required = false) String gender,
+                             @RequestParam(required = false) String ptmembership,
+                             Model model) {
         System.out.println("look at the List");
 
         List<PTContractDTO> ptContractDTOList;
@@ -228,7 +234,7 @@ public class AdminController {
         boolean isRegistered = memberService.registerEntrys(phoneSuffix, birth);
         if (isRegistered) {
             System.out.println("출입 등록 성공");
-            return "entrySuccess"; // 등록 성공 페이지로 이동
+            return "entrySuccessful"; // 등록 성공 페이지로 이동
         } else {
             model.addAttribute("errorMessage", "존재하지 않는 회원권입니다.");
             return "entry"; // 등록 실패 페이지로 이동
@@ -262,22 +268,34 @@ public class AdminController {
                 // LocalDate를 다시 yyyyMMdd 형식으로 변환
                 String formattedBirthDate = birthDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 
+                // 출입 등록 시 회원 정보를 검증
                 boolean isRegistered = memberService.registerEntry(phone, formattedBirthDate); // 변환된 생년월일을 넘김
                 System.out.println("등록 결과: " + isRegistered);
+
                 if (isRegistered) {
-                    System.out.println("출입 등록 성공");
-                    return "entrySuccess"; // 등록 성공 페이지로 이동
+                    // 회원권이 등록되었지만 종료일이 지났는지 확인
+                    boolean isMembershipValid = memberService.isMembershipValid(phone); // 회원권 상태 확인 메소드 호출
+                    if (isMembershipValid) {
+                        System.out.println("출입 등록 성공");
+                        return "entrySuccess"; // 등록 성공 페이지로 이동
+                    } else {
+                        model.addAttribute("errorMessage", "회원권이 종료되었습니다.");
+                        model.addAttribute("playErrorSound", true); // 오류 시 음성 재생 트리거
+                        return "entryFailure"; // 등록 실패 페이지로 이동
+                    }
                 } else {
                     model.addAttribute("errorMessage", "존재하지 않는 회원권입니다.");
-                    return "entry"; // 등록 실패 페이지로 이동
+                    model.addAttribute("playErrorSound", true); // 오류 시 음성 재생 트리거
+                    return "entryFailure"; // 등록 실패 페이지로 이동
                 }
             } catch (DateTimeParseException e) {
                 model.addAttribute("errorMessage", "생년월일의 형식이 유효하지 않습니다.");
-                return "entry"; // 등록 실패 페이지로 이동
+                return "entryFailure"; // 등록 실패 페이지로 이동
             }
         } else {
             model.addAttribute("errorMessage", "QR 코드 데이터가 유효하지 않습니다.");
-            return "entry"; // 등록 실패 페이지로 이동
+            model.addAttribute("playErrorSound", true); // 오류 시 음성 재생 트리거
+            return "entryFailure"; // 등록 실패 페이지로 이동
         }
     }
 
@@ -319,39 +337,73 @@ public class AdminController {
 
 
 
+//    @CrossOrigin(origins = "https://www.priqma.com")
+//    @PostMapping("/entries")
+//    public String getEntriesByDate(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date, Model model) {
+//        List<EntryRecordDTO> entries = entryRecordService.getEntriesByDate(date);
+//
+//        // 시간대별 출입 기록을 분류
+//        // 시간대별 출입 기록을 분류
+//        // 시간대별 출입자 수 초기화
+//        Map<Integer, Long> entryCountsByHourSlot = new HashMap<>();
+//        for (int hour = 6; hour <= 23; hour++) {
+//            final int currentHour = hour; // final로 지정
+//            int count = (int) entries.stream()
+//                    .filter(entry -> entry.getEntryTime() != null && entry.getEntryTime().getHour() == currentHour)
+//                    .count();
+//            entryCountsByHourSlot.put(hour, (long) count);
+//            System.out.println("Hour: " + hour + ", Count: " + count);
+//        }
+//
+//
+//        System.out.println("entryCountsByHourSlot: " + entryCountsByHourSlot);
+//
+//<!-- 시간대별 출입자 수 표시 -->
+//<div id="hourly-summary" th:if="${entries != null}">
+//    <h3>시간대별 출입자 수</h3>
+//    <table>
+//        <tbody>
+//            <p th:text="${entryCountsByHourSlot}"></p>
+//
+//        </tbody>
+//    </table>
+//</div> 이건 html꺼
+//
+//        // 총 출입자 수 계산
+//        long totalEntries = entries.size();
+//
+//        // 모델에 데이터 추가
+//        model.addAttribute("entries", entries);
+//        model.addAttribute("entryCountsByHourSlot", entryCountsByHourSlot);
+//        model.addAttribute("totalEntries", totalEntries);
+//
+//        return "entrylist";  // entrylist.html로 전달
+//    }
     @CrossOrigin(origins = "https://www.priqma.com")
     @PostMapping("/entries")
     public String getEntriesByDate(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date, Model model) {
         List<EntryRecordDTO> entries = entryRecordService.getEntriesByDate(date);
 
         // 시간대별 출입 기록을 분류
-        // 시간대별 출입 기록을 분류
-        // 시간대별 출입자 수 초기화
         Map<Integer, Long> entryCountsByHourSlot = new HashMap<>();
         for (int hour = 6; hour <= 23; hour++) {
-            final int currentHour = hour; // final로 지정
+            final int currentHour = hour;
             int count = (int) entries.stream()
                     .filter(entry -> entry.getEntryTime() != null && entry.getEntryTime().getHour() == currentHour)
                     .count();
             entryCountsByHourSlot.put(hour, (long) count);
-            System.out.println("Hour: " + hour + ", Count: " + count);
+            System.out.println(entryCountsByHourSlot);  // 시간별 출입자 수가 제대로 출력되는지 확인
+
         }
-
-
-        System.out.println("entryCountsByHourSlot: " + entryCountsByHourSlot);
-
-
-
-        // 총 출입자 수 계산
-        long totalEntries = entries.size();
 
         // 모델에 데이터 추가
         model.addAttribute("entries", entries);
         model.addAttribute("entryCountsByHourSlot", entryCountsByHourSlot);
-        model.addAttribute("totalEntries", totalEntries);
+        model.addAttribute("totalEntries", entries.size());
 
         return "entrylist";  // entrylist.html로 전달
     }
+
     @GetMapping("/entrylist")
     public String entrylistPage(Model model){
         return "entrylist";
@@ -474,7 +526,7 @@ public class AdminController {
             ptuser.setPtstart(ptContractDTO.getPtstart());
             ptuser.setCount(Integer.valueOf(ptContractDTO.getCount()));
             ptuser.setStatus(ptContractDTO.getStatus());
-            ptuser.setApplicationDate(ptContractDTO.getApplicationDate());
+            ptuser.setApplicationDate(LocalDateTime.now());
             ptuser.setPrice(ptContractDTO.getPrice());
             ptuser.setSignature(ptContractDTO.getSignature());
             // 사용자 정보 저장

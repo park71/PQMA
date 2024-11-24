@@ -3,16 +3,15 @@ package project.gym.member.controller;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.gym.member.dto.EntryRecordDTO;
 import project.gym.member.dto.LockerDTO;
 import project.gym.member.dto.MemberDTO;
 import project.gym.member.dto.MembershipDTO;
-import project.gym.member.entity.InbodyEntity;
 import project.gym.member.entity.MemberEntity;
 import project.gym.member.entity.RestEntity;
 import project.gym.member.repository.MembershipRepository;
@@ -21,6 +20,8 @@ import project.gym.member.service.LockerService;
 import project.gym.member.service.MemberService;
 import project.gym.member.service.RestService;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -87,7 +88,6 @@ public class MemberListController {
 // Controller에서 LocalDate 값을 포맷하여 넘겨줍니다.
         // 날짜 필드가 null인지 확인하고 null이면 빈 문자열을 설정
         model.addAttribute("memstart", member.getMemstart() != null ? member.getMemstart().toString() : "");
-        model.addAttribute("birth", member.getBirth() != null ? member.getBirth().toString() : "");
         model.addAttribute("memend", member.getMemend() != null ? member.getMemend().toString() : "");
         model.addAttribute("lockstart", member.getLockstart() != null ? member.getLockstart().toString() : "");
         model.addAttribute("lockend", member.getLockend() != null ? member.getLockend().toString() : "");
@@ -101,27 +101,68 @@ public class MemberListController {
 
         return "editMember";  // editMember.html 템플릿으로 이동
     }
+//    @CrossOrigin(origins = "https://www.priqma.com")
+//    @PostMapping("/edit/{id}")
+//    public String updateMember(
+//            @PathVariable("id") Long id,
+//            @Valid @ModelAttribute MemberEntity member,
+//            @RequestPart(value = "profileImage") MultipartFile profileFile,
+//            BindingResult result) throws Exception {
+//
+//        if (result.hasErrors()) {
+//            return "error";  // 오류가 있을 경우 오류 화면으로
+//        }
+//
+//        System.out.println("업데이트 시작");
+//        // 프로필 이미지가 업로드 되면 처리
+//        if (!profileFile.isEmpty()) {
+//            String fileName = memberService.handleFileUpload(profileFile);  // 파일 업로드 처리
+//            member.setProfile(fileName); // 파일 이름을 profile에 설정
+//        }
+//
+//
+//
+//        System.out.println("정보업데이트");
+//        // 회원 정보 업데이트
+//        memberService.updateMember(id, member);
+//
+//
+//        return "redirect:/memberList";
+//    }
 
-    // 회원 수정 후 저장
-    @PostMapping("/edit/{id}")
-    public String updateMember(@PathVariable("id") Long id, MemberEntity member, Model model) {
-        memberService.updateMember(id, member);
-        return "redirect:/memberList";  // 수정 후 회원 목록 페이지로 리다이렉트
+        @PostMapping("/edit/{id}")
+        public String updateMember(@PathVariable("id") Long id, MemberEntity member, Model model) {
+            memberService.updateMember(id, member);
+            return "redirect:/memberList";  // 수정 후 회원 목록 페이지로 리다이렉트
+        }
+    @PostMapping("/edit/image/{id}")
+    public String updateMemberProfileImage(
+            @PathVariable("id") Long id,
+            @RequestParam("profileImage") MultipartFile profileFile) throws Exception {
+
+        if (!profileFile.isEmpty()) {
+            System.out.println("프로필 이미지 업데이트 시작");
+            String fileName = memberService.handleFileUpload(profileFile);
+            memberService.updateMemberProfileImage(id, fileName);
+        }
+
+        return "redirect:/memberList";
     }
 
-    // 인바디 기록 저장
-    @PostMapping("/inbody/{memberId}")
-    public ResponseEntity<String> addInbodyRecord(@PathVariable Long memberId) {
-        memberService.addInbodyRecord(memberId);
-        return ResponseEntity.ok("인바디 기록이 저장되었습니다.");
-    }
-
-    // 인바디 기록 조회
-    @GetMapping("/inbody/history/{memberId}")
-    public ResponseEntity<List<InbodyEntity>> getInbodyHistory(@PathVariable Long memberId) {
-        List<InbodyEntity> inbodyRecords = memberService .getInbodyRecordsByMemberId(memberId);
-        return ResponseEntity.ok(inbodyRecords);
-    }
+//
+//    // 인바디 기록 저장
+//    @PostMapping("/inbody/{memberId}")
+//    public ResponseEntity<String> addInbodyRecord(@PathVariable Long memberId) {
+//        memberService.addInbodyRecord(memberId);
+//        return ResponseEntity.ok("인바디 기록이 저장되었습니다.");
+//    }
+//
+//    // 인바디 기록 조회
+//    @GetMapping("/inbody/history/{memberId}")
+//    public ResponseEntity<List<InbodyEntity>> getInbodyHistory(@PathVariable Long memberId) {
+//        List<InbodyEntity> inbodyRecords = memberService .getInbodyRecordsByMemberId(memberId);
+//        return ResponseEntity.ok(inbodyRecords);
+//    }
 
     // 회원 삭제
     @GetMapping("/delete/{id}")
@@ -166,6 +207,20 @@ public class MemberListController {
     public String pauseMembership(@ModelAttribute("pauseForm") RestEntity restEntity,
                                   @RequestParam String phone, Model model) {
         try {
+            // 회원 정보 가져오기
+            MemberDTO memberDTO = memberService.findByPhoneNumber(phone);
+            if (memberDTO == null) {
+                throw new EntityNotFoundException("회원 정보를 찾을 수 없습니다.");
+            }
+
+            // 남은 연기 횟수가 있는 경우에만 -1 감소
+            int restCount = memberDTO.getRestcount();
+            if (restCount > 0) {
+                memberDTO.setRestcount(restCount - 1);
+                memberService.updateRestCount(phone, restCount - 1);
+            }
+
+
             // 회원권 종료일 변경
             memberService.updateMembershipEndDate(phone, restEntity.getDelayDays());
             // 락카 종료일 변경
@@ -186,6 +241,22 @@ public class MemberListController {
     public String handleMembershipNotFound(EntityNotFoundException ex, Model model) {
         model.addAttribute("error", ex.getMessage());
         return "error";
+    }
+    @GetMapping("/membershipList")
+    public String membershipListPage(@RequestParam(value="searchName", required = false) String searchName, Model model){
+       List<MembershipDTO> membershipDTOList = new ArrayList<>();
+
+        if (searchName != null && !searchName.trim().isEmpty()) {
+            membershipDTOList = memberService.findByNameship(searchName);  // 검색어가 있을 때만 검색
+       } else {
+           membershipDTOList = memberService.findAlls();
+       }
+       Collections.reverse(membershipDTOList); // This reverses the order of the list
+       model.addAttribute("memberships", membershipDTOList);
+
+
+
+       return "membershipList";
     }
 
 }

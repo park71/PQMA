@@ -94,6 +94,22 @@
             background-color: #c82333;
         }
 
+  .home-button {
+    display: inline-block;
+    padding:  8px 15px;       /* 버튼 내부 여백 */
+    color: white;             /* 텍스트 색상 */
+    background-color: orange; /* 버튼 배경색 */
+    border-radius: 5px;       /* 버튼 모서리 둥글게 */
+    text-decoration: none;    /* 밑줄 제거 */
+    font-weight: bold;        /* 굵은 텍스트 */
+    font-size:12px;
+    transition: background-color 0.3s ease; /* 호버 효과 전환 */
+}
+
+.home-button:hover {
+    background-color: #0056b3; /* 호버 시 배경색 변경 */
+    color: #e6e6e6;            /* 호버 시 텍스트 색상 */
+}
         .status-approved {
             color: #28a745;
             font-weight: bold;
@@ -212,6 +228,8 @@
     </style>
 </head>
 <body>
+
+<a href="/adminPage" class="home-button">홈으로</a>
 <h2>회원권 환불 신청 현황</h2>
 <table>
     <thead>

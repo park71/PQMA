@@ -72,13 +72,20 @@ public class CloserService {
 
         Map<String, Long> entryCountsByHour = new HashMap<>();
 
-        // 6시부터 11시까지의 출석 현황만 집계
+        // 6시부터 23시까지 시간대 초기화 (출석 기록이 없더라도 0으로 표시되도록)
+        for (int hour = 6; hour <= 23; hour++) {
+            String hourSlot = hour + "시";
+            entryCountsByHour.put(hourSlot, 0L); // 초기 값 0으로 설정
+        }
+
+        // 모든 시간대의 출석 현황 집계
         for (EntryRecordEntity entry : entries) {
             LocalDateTime entryTime = entry.getEntryTime();
             int hour = entryTime.getHour();
 
-            if (hour >= 5 && hour <= 23) { // 6시부터 11시까지 필터링
-                String hourSlot = hour + "시"; // 포맷 변경
+            // 6시부터 23시까지만 집계
+            if (hour >= 6 && hour <= 23) {
+                String hourSlot = hour + "시";
                 entryCountsByHour.put(hourSlot, entryCountsByHour.getOrDefault(hourSlot, 0L) + 1);
             }
         }

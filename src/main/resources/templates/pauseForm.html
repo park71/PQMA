@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>휴회 양식</title>
     <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
@@ -19,144 +20,252 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
+    <title>회원권 휴회</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
+    font-family: Arial, sans-serif;
+                background-color: #f8f9fa;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 1300px;
+            margin: auto;
+            margin-top:20px;
+            transition: transform 0.3s;
+}
+
+
+
+        .container:hover {
+            transform: scale(1.02);
         }
 
-        h1 {
-            text-align: center;
-            margin: 20px 0;
-            color: #333;
-        }
 
-        form {
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 20px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+.title {
+    text-align: center;
+    font-size: 1.8rem;
+    color: #007bff;
+    margin-bottom: 20px;
+}
 
-        p {
-            margin: 10px 0;
-            color: #555;
-        }
+.info-section, .locker-section, .shirt-section {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f1f1f1;
+    border-radius: 6px;
+     border: 2px solid #007bff;
 
-        label {
-            display: block;
-            margin: 10px 0 5px;
-            font-weight: bold;
-            color: #333;
-        }
+}
 
-        input[type="number"],
-        input[type="text"],
-        select,
-        textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
+.form-group {
+    margin-bottom: 15px;
 
-        textarea {
-            height: 100px;
-            resize: vertical;
-        }
+}
 
-        button {
-            background-color: #5cb85c;
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+input, select, textarea {
+    width:97%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+
+}
+
+textarea {
+    resize: vertical;
+}
+
+.submit-button {
+          background-color: #007bff;
             color: white;
             border: none;
-            border-radius: 4px;
-            padding: 10px 15px;
-            cursor: pointer;
+            padding: 12px 18px;
+            border-radius: 6px;
             font-size: 16px;
-            transition: background-color 0.3s;
-            width: 100%;
+            transition: background-color 0.3s, transform 0.2s;
+            font-weight: bold;
+            cursor: pointer;
+}
+
+.submit-button:hover {
+                background-color: #0056b3;
+            transform: translateY(-1px);
+}
+
+.form-actions {
+    text-align: center;
+}
+
+ #signature-pad {
+            border: 2px solid #007bff; /* 경계선 색상 */
+            border-radius: 6px; /* 둥근 모서리 */
+            background-color: #f8f9fa; /* 배경색 */
+            width: 250px; /* 고정 너비 */
+            height: 100px; /* 고정 높이 */
+            max-width: 100%; /* 화면 크기에 맞게 조정 */
+            box-sizing: border-box; /* 패딩 및 경계선 포함 */
         }
 
-        button:hover {
-            background-color: #4cae4c;
+        #clear-signature {
+            background-color: #dc3545; /* 버튼 배경색 */
+            color: white; /* 버튼 텍스트 색상 */
+            border: none; /* 경계선 없음 */
+            padding: 12px 18px; /* 패딩 */
+            border-radius: 6px; /* 둥근 모서리 */
+            max-width: 250px;
+            cursor: pointer; /* 커서 모양 */
+            transition: background-color 0.3s, transform 0.2s; /* 부드러운 전환 효과 */
         }
 
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 24px;
-            }
+        #clear-signature:hover {
+            background-color: #c82333;
+            transform: translateY(-1px);
+        }
+        .crossLine {
+        border-top: 1px solid black;
+        }
+                .agreement-container {
+    display: flex; /* Flexbox 사용 */
+    justify-content: space-between; /* 양쪽으로 분산 배치 */
+    align-items: flex-start; /* 상단 정렬 */
+    margin: 20px 0; /* 위 아래 여백 추가 */
+}
 
-            form {
-                padding: 15px;
-            }
+.refund-info {
+    flex: 1; /* 비율에 따라 크기 조정 */
+    margin-right: 20px; /* 오른쪽 여백 */
+}
 
-            button {
-                font-size: 14px;
-            }
+.signature-section {
+    flex: 0 0 250px; /* 고정 너비 설정 */
+    text-align: center; /* 중앙 정렬 */
+}
+.box {
+            margin: 15px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border: 2px dashed #007bff;
+            border-radius: 6px;
+        }
+
+        .box input[type="checkbox"] {
+            margin-right: 10px;
         }
     </style>
 </head>
+
 <body>
-<h1>Pause Membership for <span th:text="${member.name}"></span></h1>
-<form th:action="@{/member/memberList/pause}" th:object="${pauseForm}" method="post">
-    <input type="hidden" th:field="*{name}" th:value="${member.name}"/>
+<div class="container">
+    <h1 class="title">회원권 휴회 <span th:text="${member.name}"></span></h1>
+    <form th:action="@{/member/memberList/pause}" th:object="${pauseForm}" method="post" class="pause-form">
+        <input type="hidden" name="name" th:value="${member.name}" />
+        <div class="info-section">
+            <p><strong>전화번호:</strong> <span th:text="${member.phone}"></span></p>
+            <input type="hidden" name="phone" th:value="${member.phone}" />
+            <p><strong>회원권 시작일:</strong> <span th:text="${member.memstart}"></span></p>
+            <p><strong>회원권 종료일:</strong> <span th:text="${member.memend}"></span></p>
+            <p><strong>회원권 남은일수:</strong> <span th:text="${member.remainDays}"></span></p>
+            <p><strong>남은 연기 횟수:</strong> <span th:text="${member.restcount > 0 ? member.restcount : '없음'}"></span></p>
+        </div>
 
-    <p>전화번호 : <span th:text="${member.phone}"></span></p>
-    <input type="hidden" name="phone" th:value="${member.phone}" />
-    <p>회원권 시작일 : <span th:text="${member.memstart}"></span></p>
-    <p>회원권 종료일 : <span th:text="${member.memend}"></span></p>
-    <p>회원권 남은일수 : <span th:text="${member.remainDays}"></span></p>
-    <label for="delayDays">회원권 연기일수:</label>
-    <input type="number" id="delayDays" th:field="*{delayDays}" required/>
-    <br/>
+        <div class="form-group">
+            <label for="delayDays">회원권 연기일수:</label>
+            <input type="number" id="delayDays" th:field="*{delayDays}" required />
+        </div>
 
-    <p>락카 시작일 : <span th:text="${member.lockstart}"></span></p>
-    <p>락카 종료일 : <span th:text="${member.lockend}"></span></p>
+        <div class="locker-section">
+            <p><strong>락카 시작일:</strong> <span th:text="${member.lockstart}"></span></p>
+            <p><strong>락카 종료일:</strong> <span th:text="${member.lockend}"></span></p>
+            <label for="delayDaysForLocker">락카 연기일수:</label>
+            <select id="delayDaysForLocker" name="delayDaysForLocker" onchange="calculateLockerCost()">
+                <option value="0">해당없음</option>
+                <option value="7">1주</option>
+                <option value="14">2주</option>
+                <option value="21">3주</option>
+                <option value="28">1달</option>
+                <option value="35">5주</option>
+                <option value="42">6주</option>
+                <option value="49">7주</option>
+                <option value="56">2달</option>
+            </select>
+            <span id="extraCostLabel" style="color: red;"></span>
 
-    <label for="delayDaysForLocker">락카 연기일수:</label>
-    <select id="delayDaysForLocker" name="delayDaysForLocker" onchange="calculateLockerCost()">
-        <option value="0">해당없음</option>
-        <option value="7">1주</option>
-        <option value="14">2주</option>
-        <option value="21">3주</option>
-        <option value="28">1달</option>
-        <option value="35">5주</option>
-        <option value="42">6주</option>
-        <option value="49">7주</option>
-        <option value="56">2달</option>
-    </select>
-    <span id="extraCostLabel" style="color: red;"></span>
+            <label for="lockprice">락카 연기 비용:</label>
+            <input type="text" id="lockprice" th:field="*{lockprice}" readonly />
+        </div>
 
-    <label for="lockprice">락카 연기 비용: </label>
-    <input type="text" id="lockprice" th:field="*{lockprice}" readonly/>
+        <div class="form-group">
+            <label for="credit">결제 방법:</label>
+            <select id="credit" name="credit">
+                <option value="카드">카드</option>
+                <option value="계좌이체">계좌이체</option>
+                <option value="현금">현금</option>
+                <option value="제로페이">제로 페이</option>
+                <option value="카카오페이">카카오페이</option>
+            </select>
+        </div>
 
-    <label for="credit">결제 방법 : </label>
-    <select id="credit" name="credit">
-        <option value="카드">카드</option>
-        <option value="계좌이체">계좌이체</option>
-        <option value="현금">현금</option>
-        <option value="제로페이">제로 페이</option>
-        <option value="카카오페이">카카오페이</option>
-    </select><br>
+        <div class="shirt-section">
+            <p><strong>운동복 시작일:</strong> <span th:text="${member.shirtstart}"></span></p>
+            <p><strong>운동복 종료일:</strong> <span th:text="${member.shirtend}"></span></p>
+            <label for="delayDaysForShirt">운동복 연기일수:</label>
+            <input type="number" id="delayDaysForShirt" th:field="*{delayDaysForShirt}" />
+        </div>
 
-    <p>운동복 시작일 : <span th:text="${member.shirtstart}"></span></p>
-    <p>운동복 종료일 : <span th:text="${member.shirtend}"></span></p>
-    <label for="delayDaysForShirt">운동복 연기일수:</label>
-    <input type="number" id="delayDaysForShirt" th:field="*{delayDaysForShirt}" />
-    <br/>
+        <div class="form-group">
+            <label for="reason">연기사유:</label>
+            <textarea id="reason" th:field="*{reason}" required></textarea>
+        </div>
 
-    <label for="reason">연기사유:</label><br>
-    <textarea id="reason" th:field="*{reason}" required></textarea>
-    <br/>
 
-    <button type="submit">연기하기</button>
-</form>
+
+        <div class="box">
+            <div class="agreement-container">
+                <div class="refund-info">
+                    <div class="crossLine"></div><br>
+                    <p><strong>* 락카가격 7일 - 2,500원 / 14일 - 5,000원 / 21일 - 7,500원 / 30일 - 1만원</strong></p>
+                    <p>    상기 회원은 당사의 규정에 의거 회원권에 관한 만료일에 관해 다음과 같이 연기를 신청하고자 합니다.</p>
+                    <p>    연기가능횟수 : 6개월권(1회), 12개월권(3회) </p>
+                    <p>     휴회 가능기간 : 최소 7일 ~ 최장 30일 </p>
+                    <p>   *휴회된 기간은 환불시 적용되지 않습니다. </p>
+                    <p>    * 휴회된 기간은 양도시 적용되지 않습니다. </p>
+                </div>
+                <div class="signature-section"><br><br><br>
+                    <p>[약관 동의 서명란]</p>
+                    <canvas id="signature-pad" width="250" height="100" style="border:none;"></canvas>
+                    <br>
+                    <button type="button" id="clear-signature">서명 지우기</button>
+                    <input type="hidden" name="signature" id="signature">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="submit-button">연기하기</button>
+        </div>
+
+
+
+
+
+    </form>
+</div>
+
+
 
 <script type="text/javascript">
     function calculateLockerCost() {
@@ -203,6 +312,55 @@
         // 비용 정보를 라벨에도 표시
         document.getElementById("extraCostLabel").textContent = `연기 비용: ${cost}원`;
     }
+</script>
+
+<script>
+    // Canvas 초기화
+ const canvas = document.getElementById('signature-pad');
+ const ctx = canvas.getContext('2d');
+ let isDrawing = false;
+
+ // 초기 텍스트 그리기
+ function drawPlaceholderText() {
+     ctx.font = '20px Arial'; // 글꼴과 크기 설정
+     ctx.fillStyle = 'gray'; // 텍스트 색상 설정
+     ctx.textAlign = 'center';
+     ctx.textBaseline = 'middle';
+     ctx.fillText('(서명)', canvas.width / 2, canvas.height / 2);
+ }
+
+ // 서명 시작
+ canvas.addEventListener('mousedown', () => {
+     isDrawing = true;
+     ctx.beginPath();
+ });
+
+ // 서명 그리기
+ canvas.addEventListener('mousemove', (event) => {
+     if (isDrawing) {
+         ctx.lineTo(event.offsetX, event.offsetY);
+         ctx.stroke();
+     }
+ });
+
+ // 서명 끝
+ canvas.addEventListener('mouseup', () => {
+     isDrawing = false;
+ });
+
+ // 서명 지우기 기능
+ document.getElementById('clear-signature').addEventListener('click', function() {
+     ctx.clearRect(0, 0, canvas.width, canvas.height);
+     drawPlaceholderText(); // 서명 지우기 후 텍스트 다시 그리기
+ });
+
+
+
+ // 페이지 로드 시 텍스트 그리기
+ window.onload = function() {
+     drawPlaceholderText();
+ };
+
 </script>
 </body>
 </html>

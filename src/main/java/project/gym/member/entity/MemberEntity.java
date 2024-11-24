@@ -73,10 +73,20 @@ public class MemberEntity { //회원권 DB
 
 
     private String longTime;
+
+    // 프로필 이미지 파일
+    private String profileImage;
+
+    // 파일 이름을 저장하는 필드 (데이터베이스에 저장)
+    private String profile;
+
+
+    private Integer restcount; // 휴회 카운트
     // 추가: 인바디 기록
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<InbodyEntity> inbodyRecords;
+//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JsonManagedReference
+//    private List<InbodyEntity> inbodyRecords;
+    private String inbody;
 
 
     @OneToMany(mappedBy = "fromMember")

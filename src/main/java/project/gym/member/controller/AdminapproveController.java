@@ -18,6 +18,7 @@ import project.gym.member.service.TransferService;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -108,6 +109,7 @@ public class AdminapproveController {
             existingMember.setShirtstart(member.getShirtstart());
             existingMember.setShirtend(member.getShirtend());
             existingMember.setSignature(member.getSignature());
+            existingMember.setApplicationDate(LocalDateTime.now());
 
             // 업데이트한 기존 회원 정보 저장
             memberService.save(existingMember);
@@ -138,6 +140,7 @@ public class AdminapproveController {
             newMember.setShirtstart(member.getShirtstart());
             newMember.setShirtend(member.getShirtend());
             newMember.setSignature(member.getSignature());
+            newMember.setApplicationDate(LocalDateTime.now());
             // 새로운 회원 정보 저장
             memberService.save(newMember);
         }
@@ -165,6 +168,7 @@ public class AdminapproveController {
         membership.setShirt(member.getShirt());
         membership.setShirtstart(member.getShirtstart());
         membership.setShirtend(member.getShirtend());
+
 
 
 
@@ -214,6 +218,7 @@ public class AdminapproveController {
     public String approveMembers(@PathVariable Long id, Model model) {
         PTContractEntity members = memberService.findByIds(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid member ID"));
+        members.setApplicationDate(LocalDateTime.now());
         members.setStatus("approved");  // 승인 상태로 설정
         memberService.saves(members);
 
@@ -248,6 +253,7 @@ public class AdminapproveController {
 
         TransferEntity membar = memberService.findByIa(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid member ID"));
+        membar.setApplicationDate(LocalDateTime.now());
         membar.setStatus("approved");  // 승인 상태로 설정
         membar.setPrice("55000");
         transferService.transferMemberships(transferDTO.getFromMemberId(), transferDTO.getToMemberId(), transferDTO.getDaysToTransfer());
@@ -300,9 +306,27 @@ public class AdminapproveController {
 // 운동복 종료일 변경
             memberService.updateShirtEndDate(membera.getPhone(), membera.getDelayDaysForShirt());
 
+
+            // 남은 연기 횟수 업데이트 로직
+            int restCount = memberService.getRestCount(membera.getPhone());
+            if (restCount > 0) {
+                // delayDays 값이 31일 이상인 경우 -2 차감
+                if (membera.getDelayDays() >= 32) {
+                    memberService.updateRestCount(membera.getPhone(), restCount - 2);
+                    System.out.println("남은 연기 횟수 감소 (31일 이상): " + (restCount - 2));
+                } else {
+                    // delayDays 값이 31일 미만인 경우 -1 차감
+                    memberService.updateRestCount(membera.getPhone(), restCount - 1);
+                    System.out.println("남은 연기 횟수 감소: " + (restCount - 1));
+                }
+            } else {
+                System.out.println("남은 연기 횟수가 없습니다.");
+            }
+
             System.out.println("여긴가는거야?");
             // 상태 업데이트
             membera.setStatus("approved");
+            membera.setApplicationDate(LocalDateTime.now());
 
             // 휴지 신청 저장
             RestService.savePauseRequest(membera);
@@ -323,6 +347,7 @@ public class AdminapproveController {
         RestEntity membering = memberService.findByIam(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid member ID"));
         membering.setStatus("rejected");  // 거절
+
         memberService.saveing(membering);
 
         return "redirect:/admin/restApplication"; // 신청 목록 페이지로 리다이렉트
@@ -381,10 +406,11 @@ public class AdminapproveController {
                 membership.setPrice(refundAmount);
                 membership.setCredit(newCreditAccount);
                 membership.setCoach("환불처리완료");
+
             }
 
 
-
+            member.setApplicationDate(LocalDateTime.now());
             // 예상 환불 금액 및 새 계좌번호 설정
             member.setCoach("환불처리완료");
             member.setPrice(refundAmount);
@@ -442,6 +468,7 @@ public class AdminapproveController {
             member.setPrice(String.valueOf(refundAmount));
             member.setCoach("환불처리완료");
             member.setStatus("approved");
+            member.setApplicationDate(LocalDateTime.now());
 
             memberService.saves(member);
 

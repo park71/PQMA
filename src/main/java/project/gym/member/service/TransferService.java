@@ -42,11 +42,17 @@ public class TransferService {
             throw new RuntimeException("Insufficient remaining days to transfer");
         }
 
-        // Update fromMember
+// Update fromMember
         fromMember.setMemend(fromMember.getMemend().minusDays(daysToTransfer));
+        toMember.setRestcount(toMember.getRestcount() + fromMember.getRestcount());
 
-        // Update toMember
+
+// Update toMember
         toMember.setMemend(toMember.getMemend().plusDays(daysToTransfer));
+        fromMember.setRestcount(0);  // Reset fromMember's restcount to 0
+// Transfer restcount from fromMember to toMember (Add restcount)
+
+
 
         // Save TransferEntity
         TransferEntity transfer = new TransferEntity();
@@ -57,6 +63,7 @@ public class TransferService {
         transfer.setFromMemberMemstart(fromMember.getMemstart());
         transfer.setFromMemberMemend(fromMember.getMemend());
         transfer.setFromMemberRemaindays(fromMember.getRemainDays());
+
 
         transfer.setToMember(toMember);
         transfer.setToMemberName(toMember.getName());
@@ -85,6 +92,7 @@ public class TransferService {
 
 
         System.out.println("양도일수"+ daysToTransfer);
+
         fromMember.calculateRemainDays();  // Ensure remainDays is calculated
         toMember.calculateRemainDays();  // Ensure remainDays is calculated
 
@@ -93,8 +101,19 @@ public class TransferService {
         }
         // Update fromMember's RemainDays
         fromMember.setRemainDays(fromMember.getRemainDays() - daysToTransfer);
+
         System.out.println("fromMember RemainDays after update: " + fromMember.getRemainDays());
 
+
+// Update fromMember
+        fromMember.setMemend(fromMember.getMemend().minusDays(daysToTransfer));
+        toMember.setRestcount(toMember.getRestcount() + fromMember.getRestcount());
+
+
+// Update toMember
+        toMember.setMemend(toMember.getMemend().plusDays(daysToTransfer));
+// Transfer restcount from fromMember to toMember (Add restcount)
+        fromMember.setRestcount(0);  // Reset fromMember's restcount to 0
 
         // Update toMember's RemainDays
         toMember.setRemainDays(toMember.getRemainDays() + daysToTransfer);
@@ -107,37 +126,66 @@ public class TransferService {
 
         }
 
-        if (fromMember.getShirtend() != null) {
-            fromMember.setShirtend(fromMember.getShirtend().minusDays(daysToTransfer));
-            System.out.println("fromMember Shirtend after update: " + fromMember.getShirtend());
-        }
-
-// Locker transfer logic
+// 락커 양도 로직
         if (fromMember.getLocker() != null && fromMember.getLockend() != null) {
-            fromMember.setLockend(fromMember.getLockend().minusDays(daysToTransfer));
-            // Transfer locker and locknum from fromMember to toMember
+            // 락커 정보 전체 양도
             toMember.setLocker(fromMember.getLocker());
             toMember.setLocknum(fromMember.getLocknum());
             toMember.setLockstart(fromMember.getLockstart());
             toMember.setLockend(fromMember.getLockend());
 
-            // Clear locker and locknum from fromMember
+            // fromMember의 락커 정보 초기화
             fromMember.setLocker(null);
             fromMember.setLocknum(null);
+            fromMember.setLockstart(null);
+            fromMember.setLockend(null);
         }
+
+        // 운동복 양도 로직
+        if (fromMember.getShirt() != null && fromMember.getShirtend() != null) {
+            // 운동복 정보 전체 양도
+            toMember.setShirt(fromMember.getShirt());
+            toMember.setShirtstart(fromMember.getShirtstart());
+            toMember.setShirtend(fromMember.getShirtend());
+
+            // fromMember의 운동복 정보 초기화
+            fromMember.setShirt(null);
+            fromMember.setShirtstart(null);
+            fromMember.setShirtend(null);
+        }
+
+
+//        if (fromMember.getShirtend() != null) {
+//            fromMember.setShirtend(fromMember.getShirtend().minusDays(daysToTransfer));
+//            System.out.println("fromMember Shirtend after update: " + fromMember.getShirtend());
+//        }
+//
+//// Locker transfer logic
+//        if (fromMember.getLocker() != null && fromMember.getLockend() != null) {
+//            fromMember.setLockend(fromMember.getLockend().minusDays(daysToTransfer));
+//            // Transfer locker and locknum from fromMember to toMember
+//            toMember.setLocker(fromMember.getLocker());
+//            toMember.setLocknum(fromMember.getLocknum());
+//            toMember.setLockstart(fromMember.getLockstart());
+//            toMember.setLockend(fromMember.getLockend());
+//
+//            // Clear locker and locknum from fromMember
+//            fromMember.setLocker(null);
+//            fromMember.setLocknum(null);
+//        }
 
 // Update toMember
         if (toMember.getMemend() != null) {
             toMember.setMemend(toMember.getMemend().plusDays(daysToTransfer));
         }
-
-        if (toMember.getLockend() != null) {
-            toMember.setLockend(toMember.getLockend().plusDays(daysToTransfer));
-        }
-
-        if (toMember.getShirtend() != null) {
-            toMember.setShirtend(toMember.getShirtend().plusDays(daysToTransfer));
-        }
+//
+//        if (toMember.getLockend() != null) {
+//            toMember.setLockend(toMember.getLockend().plusDays(daysToTransfer));
+//        }
+//
+//        if (toMember.getShirtend() != null) {
+//            toMember.setShirtend(toMember.getShirtend().plusDays(daysToTransfer));
+//        }
 
 
 

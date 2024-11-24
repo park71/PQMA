@@ -703,7 +703,21 @@ html {
 <div class="containers">
     <h1><span th:text="${memberName}"></span>님의 휴회 신청서입니다.</h1>
 
-    <form th:action="@{/member/stop}" method="post" th:object="${stop}">
+    <!-- restcount가 null인 경우 (Bootstrap 경고 메시지) -->
+    <div th:if="${membership != null and membership.restcount == null}" class="alert alert-warning" role="alert">
+        회원권 휴회 대상이 아니십니다.
+        <a href="/userdashboard" class="btn btn-primary">돌아가기</a>
+    </div>
+
+    <!-- Bootstrap 경고 메시지 -->
+    <div th:if="${membership != null and membership.restcount == 0}" class="alert alert-danger" role="alert">
+        회원권의 휴회를 다 사용하셨습니다.
+        <a href="/userdashboard" class="btn btn-primary">돌아가기</a>
+    </div>
+
+
+
+    <form th:action="@{/member/stop}" method="post" th:object="${stop}" onsubmit="sumDelayDays()">
         <input type="hidden" name="name" th:value="${memberName}" />
 
         <!-- Membership details display with null check -->
@@ -711,10 +725,16 @@ html {
             <p>회원이름 : <span th:text="${membership.name}"></span></p>
             <p>전화 번호: <span th:text="${membership.phone}"></span></p>
             <input type="hidden" name="phone" th:value="${membership.phone}" />
+            <p>회원권 종류 : <span th:text="${membership.membership}"></span></p>
             <p>회원권 시작일 : <span th:text="${membership.memstart}"></span></p>
             <p>회원권 종료일 : <span th:text="${membership.memend}"></span></p>
+            <p>남은 연기 횟수: <span th:text="${membership.restcount > 0 ? membership.restcount : '없음'}"></span></p>
+
             <label for="delayDays">회원권 연기일수:</label>
-            <input type="number" id="delayDays" th:field="*{delayDays}" required />
+            <input type="number" id="delayDays" th:field="*{delayDays}" required max="30" oninput="validateDelayDays(this)" />
+            <!-- 추가 버튼을 눌러 연기일수 항목을 추가 -->
+            <button type="button" id="addDelayInput">추가</button>
+            <div id="additionalDelays"></div>
             <p>※ 회원권 연기는 최대 30일까지만 가능합니다. ※</p>
             <br/>
 
@@ -740,7 +760,7 @@ html {
             <p>운동복 시작일 : <span th:text="${membership.shirtstart}"></span></p>
             <p>운동복 종료일 : <span th:text="${membership.shirtend}"></span></p>
             <label for="delayDaysForShirt">운동복 연기일수:</label>
-            <input type="number" id="delayDaysForShirt" th:field="*{delayDaysForShirt}" />
+            <input type="number" id="delayDaysForShirt" th:field="*{delayDaysForShirt}" max="30" oninput="validateDelayDays(this)"/>
             <br/><br/>
 
             <label for="reason">연기사유:</label><br>
@@ -758,52 +778,129 @@ html {
 
 
 <script type="text/javascript">
-    function calculateLockerCost() {
-        const selectElement = document.getElementById("delayDaysForLocker");
-        const selectedValue = selectElement.value;
 
-        let cost = 0;
-        switch (selectedValue) {
-            case"0":
-                cost=0;
-                break;
-            case "7": // 1주
-                cost = 2500;
-                break;
-            case "14": // 2주
-                cost = 5000;
-                break;
-            case "21": // 3주
-                cost = 7500;
-                break;
-            case "28": // 1달
-                cost = 10000;
-                break;
-            case "35": // 5주
-                cost = 12500;
-                break;
-            case "42": // 6주
-                cost = 15000;
-                break;
-            case "49": // 7주
-                cost = 17500;
-                break;
-            case "56": // 2달
-                cost = 20000;
-                break;
-            default:
-                cost = 0;
-                break;
-        }
+    // 연기일수를 30일로 제한하는 함수
+   function validateDelayDays(input) {
+       if (input.value > 30) {
+           input.value = 30;
+       }
+   }
 
-        // 락카 연기 비용을 입력 필드에 표시
-        document.getElementById("lockprice").value = cost;
+   function calculateLockerCost() {
+       const selectElement = document.getElementById("delayDaysForLocker");
+       const selectedValue = selectElement.value;
 
-        // 비용 정보를 라벨에도 표시
-        document.getElementById("extraCostLabel").textContent = `연기 비용: ${cost}원`;
+       let cost = 0;
+       switch (selectedValue) {
+           case"0":
+               cost=0;
+               break;
+           case "7": // 1주
+               cost = 2500;
+               break;
+           case "14": // 2주
+               cost = 5000;
+               break;
+           case "21": // 3주
+               cost = 7500;
+               break;
+           case "28": // 1달
+               cost = 10000;
+               break;
+           case "35": // 5주
+               cost = 12500;
+               break;
+           case "42": // 6주
+               cost = 15000;
+               break;
+           case "49": // 7주
+               cost = 17500;
+               break;
+           case "56": // 2달
+               cost = 20000;
+               break;
+           default:
+               cost = 0;
+               break;
+       }
+
+       // 락카 연기 비용을 입력 필드에 표시
+       document.getElementById("lockprice").value = cost;
+
+       // 비용 정보를 라벨에도 표시
+       document.getElementById("extraCostLabel").textContent = `연기 비용: ${cost}원`;
+
+
+   }
+
+     // 연기일수 추가 버튼 클릭 이벤트
+    document.getElementById('addDelayInput').addEventListener('click', function () {
+        // 추가 입력 필드 생성
+        const container = document.getElementById('additionalDelays');
+        const delayInput = document.createElement('div');
+        delayInput.classList.add('additional-delay');
+        delayInput.innerHTML = `
+            <label for="delayDays">추가 연기일수:</label>
+            <input type="number" name="delayDays[]" required max="30" oninput="validateDelayDays(this)" />
+            <button type="button" class="removeDelayInput">삭제</button>
+        `;
+        container.appendChild(delayInput);
+
+        // 삭제 버튼 클릭 이벤트
+        delayInput.querySelector('.removeDelayInput').addEventListener('click', function () {
+            container.removeChild(delayInput);
+        });
+    });
+
+   // 제출 전에 연기일수 합산
+    function sumDelayDays() {
+        const delayInputs = document.querySelectorAll('input[name="delayDays[]"]');
+        let totalDelayDays = 0;
+
+        // 각 입력값을 개별로 제한하고, 총합을 계산
+        delayInputs.forEach(input => {
+            const value = parseInt(input.value) || 0;
+            totalDelayDays += value > 30 ? 30 : value; // 개별 입력값은 최대 30일로 제한
+        });
+
+        // 첫 번째 연기일수 입력 필드에도 총합을 반영
+        const firstDelayInput = document.getElementById('delayDays');
+        firstDelayInput.value = totalDelayDays;
+
+        console.log(`합산된 연기일수: ${totalDelayDays}`); // 디버깅용 출력
     }
 
 
+
 </script>
+<!-- SweetAlert 경고창 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script th:if="${membership != null and membership.restcount == 0}">
+    Swal.fire({
+        icon: 'error',
+        title: '알림',
+        text: '회원권의 휴회를 다 사용하셨습니다.',
+        confirmButtonText: '돌아가기'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = '/userdashboard';
+        }
+    });
+</script>
+
+<script th:if="${membership != null and membership.restcount == null}">
+    Swal.fire({
+        icon: 'error',
+        title: '알림',
+        text: '회원권 휴회 대상이 아니십니다.',
+        confirmButtonText: '돌아가기'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = '/userdashboard';
+        }
+    });
+</script>
+
+
 </body>
 </html>

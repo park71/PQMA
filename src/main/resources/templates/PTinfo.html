@@ -59,6 +59,22 @@
                         text-align: left;
         }
 
+    .home-button {
+    display: inline-block;
+    padding:  8px 15px;       /* 버튼 내부 여백 */
+    color: white;             /* 텍스트 색상 */
+    background-color: orange; /* 버튼 배경색 */
+    border-radius: 5px;       /* 버튼 모서리 둥글게 */
+    text-decoration: none;    /* 밑줄 제거 */
+    font-weight: bold;        /* 굵은 텍스트 */
+    font-size:12px;
+    transition: background-color 0.3s ease; /* 호버 효과 전환 */
+}
+
+.home-button:hover {
+    background-color: #0056b3; /* 호버 시 배경색 변경 */
+    color: #e6e6e6;            /* 호버 시 텍스트 색상 */
+}
         /* 반응형 디자인 */
         @media screen and (max-width: 767px) {
             table {
@@ -121,13 +137,49 @@
     </style>
 </head>
 <body>
+
+<a href="/adminPage" class="home-button">홈으로</a>
 <h1>PT, PM 리스트</h1>
 <form action="/PTinfo" method="get">
     <label for="searchName">이름으로 검색:</label>
     <input type="text" id="searchName" name="searchName">
     <button type="submit">검색</button>
+
+    <label for="genderFilter">성별:</label>
+    <select id="genderFilter" onchange="filterTable()">
+        <option value="">전체</option>
+        <option value="남자">남</option>
+        <option value="여자">여</option>
+    </select>
+
+    <label for="ptMembershipFilter">피티 종류:</label>
+    <select id="ptMembershipFilter" onchange="filterTable()">
+        <option value="">전체</option>
+        <option value="PT 1회">PT 1회</option>
+        <option value="PT 3회">PT 3회</option>
+        <option value="PT 5회">PT 5회</option>
+        <option value="PT 10회">PT 10회</option>
+        <option value="PT 1개월">PT 1개월</option>
+    </select>
+    <label for ="remainDaysFilter">남은 횟수: </label>
+    <select id="remainDaysFilter" onchange="filterTable()">
+        <option value="">전체</option>
+        <option value="0">0회</option>
+        <option value="1">1회</option>
+        <option value="2">2회</option>
+        <option value="3">3회</option>
+        <option value="4">4회</option>
+        <option value="5">5회</option>
+        <option value="6">6회</option>
+        <option value="7">7회</option>
+        <option value="8">8회</option>
+        <option value="9">9회</option>
+        <option value="10">10회</option>
+
+    </select>
 </form>
-<table>
+
+<table id="ptTable">
     <tr>
         <th>번호</th>
         <th>담당 선생님</th>
@@ -175,5 +227,45 @@
         </td>
     </tr>
 </table>
+<script>
+    function filterTable() {
+
+        const genderFilter = document.getElementById("genderFilter").value;
+        const ptMembershipFilter = document.getElementById("ptMembershipFilter").value;
+        const remainDaysFilter = document.getElementById("remainDaysFilter").value;
+
+        const table = document.getElementById("ptTable");
+        const rows = table.getElementsByTagName("tr");
+
+        // 헤더를 제외한 모든 행을 순회
+        for (let i = 1; i < rows.length; i++) {
+            const row = rows[i];
+             const remainCell = row.cells[11].textContent.trim(); // 남은 횟수 셀
+            const genderCell = row.cells[3].textContent;
+            const ptMembershipCell = row.cells[9].textContent;
+
+            let showRow = true;
+
+
+            // 성별 필터
+            if (genderFilter && genderCell !== genderFilter) {
+                showRow = false;
+            }
+
+            // 피티 종류 필터
+            if (ptMembershipFilter && ptMembershipCell !== ptMembershipFilter) {
+                showRow = false;
+            }
+            // 남은 횟수 필터
+            if (remainDaysFilter && remainCell !== remainDaysFilter) {
+                showRow = false;
+            }
+
+            // 행 표시 여부 설정
+            row.style.display = showRow ? "" : "none";
+        }
+    }
+</script>
+
 </body>
 </html>

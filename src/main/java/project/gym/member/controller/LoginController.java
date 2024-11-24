@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -159,12 +160,55 @@ public class LoginController {
         return ResponseEntity.ok(response); // JSON 응답
     }
 
+//    @PostMapping("/forgotPassword")
+//    @ResponseBody
+//    public ResponseEntity<Map<String, String>> forgotPassword(@RequestBody Map<String, String> request) {
+//        String email = request.get("email");  // 요청에서 이메일 값 추출
+//        Map<String, String> response = new HashMap<>();
+//
+//        // 이메일 서비스 구분
+//        String emailDomain = email.substring(email.indexOf('@') + 1); // 도메인 추출 (ex: gmail.com, naver.com)
+//
+//        Optional<UserEntity> optionalUser = joinService.findByEmail(email);
+//
+//        if (optionalUser.isPresent()) {
+//            UserEntity user = optionalUser.get();
+//            String resetToken = UUID.randomUUID().toString();
+//            user.setResetToken(resetToken);
+//            joinService.save(user);
+//
+//            // 비밀번호 재설정 링크 생성
+//            String resetLink = "http://priqma.com/resetPassword?token=" + resetToken;
+//
+//            // 이메일 도메인에 맞는 이메일 전송
+//            if (emailDomain.equals("gmail.com")) {
+//                // Gmail 관련 이메일 전송
+//                joinService.sendPasswordResetEmailWithGmail(email, resetLink);
+//            } else if (emailDomain.equals("naver.com")) {
+//                // Naver 관련 이메일 전송
+//                joinService.sendPasswordResetEmailWithNaver(email, resetLink);
+//            } else {
+//                // 기타 이메일 서비스에 대한 처리 (옵션)
+//                joinService.sendPasswordResetEmail(email, resetLink);
+//            }
+//
+//            response.put("success", "true");
+//            response.put("message", "비밀번호 재설정 링크가 이메일로 전송되었습니다.");
+//        } else {
+//            response.put("success", "false");
+//            response.put("message", "해당 이메일로 가입된 계정이 없습니다.");
+//        }
+//
+//        return ResponseEntity.ok(response);
+//    }
+
+
     @CrossOrigin(origins = "https://www.priqma.com") // 특정 출처 허용
     @PostMapping("/loginProc")
     public String loginProc(@RequestParam String useryd, @RequestParam String password,
                             HttpSession session, HttpServletResponse response, Model model) {
         JoinDTO joinDTO = new JoinDTO();
-        joinDTO.setUsername(useryd);
+        joinDTO.setUseryd(useryd);
         joinDTO.setPassword(password);
         System.out.println("login 진입");
 
@@ -681,6 +725,46 @@ public class LoginController {
         }
         return "PT";
     }
+
+
+    @CrossOrigin(origins = "https://www.priqma.com")
+    @PostMapping("/member/resetPassword")
+    public ResponseEntity<Map<String, Object>> resetPassword(@RequestBody Map<String, Object> request) {
+        Long memberId = Long.valueOf(request.get("id").toString());
+        String newPassword = request.get("password").toString();
+
+        try {
+            // 회원 정보 조회
+            UserEntity user = userRepository.findById(Math.toIntExact(memberId))
+                    .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
+
+            // 비밀번호 Bcrypt 암호화
+            String encodedPassword = passwordEncoder.encode(newPassword);
+
+            // 비밀번호 업데이트
+            user.setPassword(encodedPassword);
+            userRepository.save(user);
+
+            // 응답 데이터 생성
+            // 응답 데이터 생성
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            // 회원 정보를 찾을 수 없는 경우
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "회원 정보를 찾을 수 없습니다.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (Exception e) {
+            // 기타 오류 처리
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "비밀번호 변경 중 오류가 발생했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
 
 
 }

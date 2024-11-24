@@ -64,8 +64,13 @@ public class MemberDTO {
     private String ring; //전화 유무
     private String inbody; //인바디
 
+    private String profile;  // 파일 경로를 저장할 필드
+    private String profileImage;  // 파일 업로드를 위한 필드
+    private Integer restcount; // 휴회 카운트
     // 인자를 받는 생성자
-    public MemberDTO(Integer id, String name, String phone, String kakao,String membership, LocalDate memstart, LocalDate memend, long remainDays, String locker, Integer locknum, LocalDate lockstart, LocalDate lockend, String shirt, LocalDate shirtstart, LocalDate shirtend, String signature) {
+    public MemberDTO(String name, String phone, String kakao, String membership, LocalDate memstart, LocalDate memend, long remainDays,
+                     String locker, Integer locknum, LocalDate lockstart, LocalDate lockend, String shirt,
+                     LocalDate shirtstart, LocalDate shirtend, String signature, Integer restcount) {
         this.id = id;
         this.name = name;
         this.phone = phone;
@@ -82,6 +87,7 @@ public class MemberDTO {
         this.shirtstart=shirtstart;
         this.shirtend=shirtend;
         this.signature=signature;
+        this.restcount=restcount;
 
     }
 
@@ -101,6 +107,7 @@ public class MemberDTO {
         this.shirt = member.getShirt();
         this.shirtstart = member.getShirtstart();
         this.shirtend = member.getShirtend();
+        this.restcount=member.getRestcount();
     }
 
     // Optional을 이용한 DTO 생성 메서드
@@ -140,6 +147,10 @@ public class MemberDTO {
         memberDTO.setStatus(memberEntity.getStatus());
         memberDTO.setApplicationDate(memberEntity.getApplicationDate());
         memberDTO.setQrCodePath(memberEntity.getQrCodePath());
+        memberDTO.setContent(memberEntity.getContent());
+        memberDTO.setProfile(String.valueOf(memberEntity.getProfile()));
+        memberDTO.setRestcount(memberEntity.getRestcount());
+        memberDTO.setProfileImage(memberEntity.getProfileImage());
 
         return  memberDTO;
     }

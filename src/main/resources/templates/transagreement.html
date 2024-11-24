@@ -713,18 +713,17 @@
         <h2>양도하실 회원님 </h2>
         <div class="form-group">
             <input type="hidden" id="fromMemberId">
-            <div id="fromMemberDetails">
-                <p>이름: <span id="fromName" th:text="${fromMember.name}"></span></p>
-                <p>전화번호: <span id="fromPhone" th:text="${fromMember.phone}"></span></p>
-                <p>카카오톡 ID: <span id="fromKakao" th:text="${fromMember.kakao}"></span></p>
-                <p>회원권 시작일: <span id="fromMemstart" th:text="${fromMember.memstart}"></span></p>
-                <p>회원권 종료일: <span id="fromMemend" th:text="${fromMember.memend}"></span></p>
-                <p>남은일수: <span id="fromRemainDays" th:text="${fromMember.remainDays}"></span></p>
-                <!-- Locker와 Shirt 정보를 표시할 부분 -->
-                <div id="fromLockerDetails" th:text="${fromMember.lockend}"></div>
-                <div id="fromShirtDetails" th:text="${fromMember.shirtend}"></div>
-            </div>
+            <p>이름: <span id="fromName"></span></p>
+            <p>전화번호: <span id="fromPhone"></span></p>
+            <p>카카오톡 ID: <span id="fromKakao"></span></p>
+            <p>회원권 시작일: <span id="fromMemstart"></span></p>
+            <p>회원권 종료일: <span id="fromMemend"></span></p>
+            <p>남은일수: <span id="fromRemainDays"></span></p>
+            <p>남은 휴회 횟수: <span id="fromRestcount"></span></p>
+            <div id="fromLockerDetails"></div>
+            <div id="fromShirtDetails"></div>
         </div>
+
         <h2>양도받으실 회원님</h2>
         <div class="form-group">
             <label for="toMemberSearch">양도받으실 회원 검색:</label>
@@ -738,6 +737,7 @@
                 <p>회원권 시작일: <span id="toMemstart"></span></p>
                 <p>회원권 종료일: <span id="toMemend"></span></p>
                 <p>남은일수: <span id="toRemainDays"></span></p>
+                <p>남은 휴회 횟수 : <span id="toRestcount"></span></p>
                 <!-- Locker와 Shirt 정보를 표시할 부분 -->
                 <div id="toLockerDetails"></div>
                 <div id="toShirtDetails"></div>
@@ -812,148 +812,153 @@
 
 
     function loadLoggedInMember() {
+     $.ajax({
+         url: '/api/members/loggedin',
+         method: 'GET',
+         success: function(response) {
+             console.log(response); // 응답 데이터를 확인합니다.
 
-        $.ajax({
-          url: '/api/members/loggedin',
-          method: 'GET',
-          success: function(response) {
-              // 로그인한 회원의 정보를 화면에 표시
-              $('#fromMemberId').val(response.id);
-              $('#fromName').text(response.name);
-              $('#fromPhone').text(response.phone);
-              $('#fromKakao').text(response.kakao);
-              $('#fromMemstart').text(response.memstart);
-              $('#fromMemend').text(response.memend);
-              $('#fromRemainDays').text(response.remainDays);
+             // HTML 요소에 데이터 표시
+             $('#fromMemberId').val(response.id || '');
+             $('#fromName').text(response.name || '정보 없음');
+             $('#fromPhone').text(response.phone || '정보 없음');
+             $('#fromKakao').text(response.kakao || '정보 없음');
+             $('#fromMemstart').text(response.memstart || '정보 없음');
+             $('#fromMemend').text(response.memend || '정보 없음');
+             $('#fromRemainDays').text(response.remainDays != null ? response.remainDays : '0');
+             $('#fromRestcount').text(response.restcount != null ? response.restcount : '0');
 
-              // Locker 정보 표시
-              if (response.locker && response.locker !== 'null') {
-                  $('#fromLockerDetails').html(`<b>락커:</b> ${response.locker} (Number: ${response.locknum}, Start: ${response.lockstart}, End: ${response.lockend})`);
-
-              } else {
-                  $('#fromLockerDetails').empty();
-              }
-
-              // Shirt 정보 표시
-              if (response.shirt && response.shirt !== 'null') {
-                  $('#fromShirtDetails').html(`<b>운동복:</b> ${response.shirt} (Start: ${response.shirtstart}, End: ${response.shirtend})`);
-
-              } else {
-                  $('#fromShirtDetails').empty();
-              }
-          },
-          error: function(xhr) {
-
-           console.error('Error fetching logged-in member details:', xhr.responseText);
-              alert('로그인한 회원 정보를 가져오는 데 실패했습니다. 서버 응답: ' + xhr.responseText);
-          }
-      });
-  }
-     // 양도받을 회원 검색 함수
-     function searchMember() {
-         const query = $('#toMemberSearch').val();
-
-         if (!query) {
-             alert('회원 이름을 입력하세요.');
-             return;
-         }
-
-         console.log('Search query:', query);
-
-         $.ajax({
-             url: '/api/members/search',
-             method: 'GET',
-             data: { query: query },
-             success: function(response) {
-                 console.log('Search response:', response);
-                 $('#toMemberResults').empty();
-                 if (response.length === 0) {
-                     $('#toMemberResults').append('<li class="list-group-item">No results found</li>');
-                 } else {
-                     response.forEach(member => {
-                         $('#toMemberResults').append(`
-                             <li class="list-group-item" onclick="selectToMember(${member.id}, '${member.name}', '${member.phone}', '${member.kakao}', '${member.memstart}', '${member.memend}', ${member.remainDays}, '${member.locker}', ${member.locknum}, '${member.lockstart}', '${member.lockend}', '${member.shirt}', '${member.shirtstart}', '${member.shirtend}')">
-                                 ${member.name} - ${member.kakao}
-                             </li>
-                         `);
-                     });
-                 }
-             },
-             error: function(xhr) {
-                 console.error('Search error:', xhr.responseText);
-                 alert('회원 검색에 실패했습니다. 다시 시도하세요.');
+             // Locker 정보 표시
+             if (response.locker && response.lockend) {
+                 $('#fromLockerDetails').html(
+                     `<b>락커:</b> ${response.locker || '정보 없음'} (락카번호: ${response.locknum || '정보 없음'}, 시작일: ${response.lockstart || '정보 없음'}, 종료일: ${response.lockend || '정보 없음'})`
+                 );
+             } else {
+                 $('#fromLockerDetails').html('<b>락커 정보 없음</b>');
              }
-         });
-     }
 
-     // 양도받을 회원 선택 함수
-     function selectToMember(id, name, phone, kakao, memstart, memend, remainDays, locker, locknum, lockstart, lockend, shirt, shirtstart, shirtend) {
-         $('#toMemberId').val(id);
-         $('#toName').text(name);
-         $('#toPhone').text(phone);
-         $('#toKakao').text(kakao);
-         $('#toMemstart').text(memstart);
-         $('#toMemend').text(memend);
-         $('#toRemainDays').text(remainDays);
-
-         // Locker 정보 표시
-         if (locker && locker !== 'null') {
-             $('#toLockerDetails').html(`<b>Locker:</b> ${locker} (Number: ${locknum}, Start: ${lockstart}, End: ${lockend})`);
-         } else {
-             $('#toLockerDetails').empty();
-         }
-
-         // Shirt 정보 표시
-         if (shirt && shirt !== 'null') {
-             $('#toShirtDetails').html(`<b>Shirt:</b> ${shirt} (Start: ${shirtstart}, End: ${shirtend})`);
-         } else {
-             $('#toShirtDetails').empty();
-         }
-     }
-
-     // 회원권 양도 함수
-     function transferMembership() {
-         const fromMemberId = $('#fromMemberId').val();
-         const toMemberId = $('#toMemberId').val();
-         const daysToTransfer = $('#daysToTransfer').val(    );
-         const price = $('#price').val();
-
-         if (!fromMemberId || !toMemberId || !daysToTransfer) {
-             alert("모든 필드를 입력하세요.");
-             return;
-         }
-
-         console.log('Transfer request:', {
-             fromMemberId: fromMemberId,
-             toMemberId: toMemberId,
-             daysToTransfer: daysToTransfer
-         });
-
-         $.ajax({
-             url: '/api/transfers/trans',
-             method: 'POST',
-             contentType: 'application/json',
-             data: JSON.stringify({
-                 fromMemberId: fromMemberId,
-                 toMemberId: toMemberId,
-                 daysToTransfer: daysToTransfer,
-                 price: price
-             }),
-             success: function(response) {
-                 alert('회원권 양도신청 되었습니다.');
-                 console.log('Transfer success response:', response);
-             },
-             error: function(xhr) {
-                 alert('Error: ' + xhr.responseText);
-                 console.error('Transfer error response:', xhr.responseText);
+             // Shirt 정보 표시
+             if (response.shirt && response.shirtend) {
+                 $('#fromShirtDetails').html(
+                     `<b>운동복:</b> ${response.shirt || '정보 없음'} (시작일: ${response.shirtstart || '정보 없음'}, 종료일: ${response.shirtend || '정보 없음'})`
+                 );
+             } else {
+                 $('#fromShirtDetails').html('<b>운동복 정보 없음</b>');
              }
-         });
-     }
-
-     // 페이지 로드 시 로그인한 회원의 정보를 불러옴
-     $(document).ready(function() {
-         loadLoggedInMember();
+         },
+         error: function(xhr) {
+             console.error('Error fetching logged-in member details:', xhr.responseText);
+             alert('로그인한 회원 정보를 가져오는 데 실패했습니다. 서버 응답: ' + xhr.responseText);
+         }
      });
+ }
+
+      // 양도받을 회원 검색 함수
+      function searchMember() {
+          const query = $('#toMemberSearch').val();
+
+          if (!query) {
+              alert('회원 이름을 입력하세요.');
+              return;
+          }
+
+          console.log('Search query:', query);
+
+          $.ajax({
+              url: '/api/members/search',
+              method: 'GET',
+              data: { query: query },
+              success: function(response) {
+                  console.log('Search response:', response);
+                  $('#toMemberResults').empty();
+                  if (response.length === 0) {
+                      $('#toMemberResults').append('<li class="list-group-item">No results found</li>');
+                  } else {
+                      response.forEach(member => {
+                          $('#toMemberResults').append(`
+                              <li class="list-group-item" onclick="selectToMember(${member.id}, '${member.name}', '${member.phone}', '${member.kakao}', '${member.memstart}', '${member.memend}', ${member.remainDays}, '${member.locker}', ${member.locknum}, '${member.lockstart}', '${member.lockend}', '${member.restcount}', '${member.shirt}', '${member.shirtstart}', '${member.shirtend}')">
+                                  ${member.name} - ${member.kakao}
+                              </li>
+                          `);
+                      });
+                  }
+              },
+              error: function(xhr) {
+                  console.error('Search error:', xhr.responseText);
+                  alert('회원 검색에 실패했습니다. 다시 시도하세요.');
+              }
+          });
+      }
+
+      // 양도받을 회원 선택 함수
+      function selectToMember(id, name, phone, kakao, memstart, memend, remainDays, locker, locknum, lockstart, lockend, restcount, shirt, shirtstart, shirtend) {
+          $('#toMemberId').val(id);
+          $('#toName').text(name);
+          $('#toPhone').text(phone);
+          $('#toKakao').text(kakao);
+          $('#toMemstart').text(memstart);
+          $('#toMemend').text(memend);
+          $('#toRemainDays').text(remainDays);
+          $('#toRestcount').text(restcount != null ? restcount : '0');
+
+          // Locker 정보 표시
+          if (locker && locker !== 'null') {
+              $('#toLockerDetails').html(`<b>락커:</b> ${locker} (락커번호: ${locknum}, 시작일: ${lockstart}, 종료일: ${lockend})`);
+          } else {
+              $('#toLockerDetails').empty();
+          }
+
+          // Shirt 정보 표시
+          if (shirt && shirt !== 'null') {
+              $('#toShirtDetails').html(`<b>운동복:</b> ${shirt} (시작일: ${shirtstart}, 종료일: ${shirtend})`);
+          } else {
+              $('#toShirtDetails').empty();
+          }
+      }
+
+      // 회원권 양도 함수
+      function transferMembership() {
+          const fromMemberId = $('#fromMemberId').val();
+          const toMemberId = $('#toMemberId').val();
+          const daysToTransfer = $('#daysToTransfer').val(    );
+          const price = $('#price').val();
+
+          if (!fromMemberId || !toMemberId || !daysToTransfer) {
+              alert("모든 필드를 입력하세요.");
+              return;
+          }
+
+          console.log('Transfer request:', {
+              fromMemberId: fromMemberId,
+              toMemberId: toMemberId,
+              daysToTransfer: daysToTransfer
+          });
+
+          $.ajax({
+              url: '/api/transfers/trans',
+              method: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify({
+                  fromMemberId: fromMemberId,
+                  toMemberId: toMemberId,
+                  daysToTransfer: daysToTransfer,
+                  price: price
+              }),
+              success: function(response) {
+                  alert('회원권 양도신청 되었습니다.');
+                  console.log('Transfer success response:', response);
+              },
+              error: function(xhr) {
+                  alert('Error: ' + xhr.responseText);
+                  console.error('Transfer error response:', xhr.responseText);
+              }
+          });
+      }
+
+      // 페이지 로드 시 로그인한 회원의 정보를 불러옴
+      $(document).ready(function() {
+          loadLoggedInMember();
+      });
 </script>
 </body>
 </html>

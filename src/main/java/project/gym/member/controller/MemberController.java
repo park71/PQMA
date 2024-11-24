@@ -60,7 +60,6 @@ public class MemberController { //양도전용
 
         return result.stream()
                 .map(member -> new MemberDTO(
-                        member.getId(),
                         member.getName(),
                         member.getPhone(),
                         member.getKakao(),
@@ -75,7 +74,9 @@ public class MemberController { //양도전용
                         member.getShirt(),
                         member.getShirtstart(),
                         member.getShirtend(),
-                        member.getSignature()
+                        member.getSignature(),
+                        member.getRestcount()
+
                 ))
                 .collect(Collectors.toList());
     }
@@ -85,20 +86,33 @@ public class MemberController { //양도전용
         System.out.println("회원 찾아오자");
 
         String useryd = (String) session.getAttribute("loginUseryd");
+        if (useryd == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
 
         // 로그인한 사용자의 UserEntity 가져오기
         UserEntity user = userRepository.findByUseryd(useryd);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        System.out.println("User phone number: " + user.getPhnum());
 
         // 전화번호로 회원을 조회합니다.
         Optional<MemberEntity> member = memberService.findByPhoneing(user.getPhnum());
 
         if (member.isPresent()) {
+            System.out.println("Found member: " + member.get());
+            System.out.println("Member ID: " + member.get().getName());
+            System.out.println("Member Name: " + member.get().getPhone());
             MemberDTO memberDTO = new MemberDTO(member.get());
             return ResponseEntity.ok(memberDTO);
         } else {
+            System.out.println("Member not found for phone: " + user.getPhnum());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
 
 
 

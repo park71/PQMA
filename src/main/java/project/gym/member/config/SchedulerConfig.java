@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import project.gym.member.service.GoogleSheetsService;
 import project.gym.member.service.MemberService;
 
 @Configuration
@@ -12,6 +13,8 @@ public class SchedulerConfig {
 
     @Autowired
     private MemberService memberService;
+    @Autowired
+    private GoogleSheetsService googleSheetsService;
 
     // 매일 오전 1시에 장기미출석자 업데이트
     @Scheduled(cron = "0 0 1 * * *")
@@ -35,6 +38,10 @@ public class SchedulerConfig {
     @Scheduled(cron = "0 30 1 * * *")
     public void scheduleQrcodeSetup(){
         memberService.generateQRCodeForMembersWithActiveMemberships();
+    }
+    @Scheduled(cron = "0 0 2 * * *") // 남은일수가 30이리상지난사람들 구글로 보내버리기
+    public void schedulegoogleSet(){
+        googleSheetsService.syncDataToSheets();
     }
 
 }

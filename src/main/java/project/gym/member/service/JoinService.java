@@ -163,13 +163,34 @@ public class JoinService {
 
     public void sendPasswordResetEmail(String toEmail, String resetLink) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("glaehekd312@naver.com");  // 발신자 이메일 주소 설정
+        message.setFrom("knhpallc@naver.com");  // 발신자 이메일 주소 설정
         message.setTo(toEmail);
         message.setSubject("비밀번호 재설정 요청");
+        message.setText("안녕하세요 만리체육관 비밀번호 재설정 링크입니다.");
         message.setText("비밀번호를 재설정하려면 아래 링크를 클릭하세요:\n" + resetLink);
 
         mailSender.send(message);
     }
+//    public void sendPasswordResetEmailWithGmail(String toEmail, String resetLink) {
+//        SimpleMailMessage message = new SimpleMailMessage();
+//        message.setFrom("your_gmail_account@gmail.com");  // 발신자 이메일(Gmail)
+//        message.setTo(toEmail);
+//        message.setSubject("비밀번호 재설정 요청");
+//        message.setText("안녕하세요, 비밀번호를 재설정하려면 아래 링크를 클릭하세요:\n" + resetLink);
+//
+//        mailSender.send(message);
+//    }
+//
+//    public void sendPasswordResetEmailWithNaver(String toEmail, String resetLink) {
+//        SimpleMailMessage message = new SimpleMailMessage();
+//        message.setFrom("your_naver_account@naver.com");  // 발신자 이메일(Naver)
+//        message.setTo(toEmail);
+//        message.setSubject("비밀번호 재설정 요청");
+//        message.setText("안녕하세요, 비밀번호를 재설정하려면 아래 링크를 클릭하세요:\n" + resetLink);
+//
+//        mailSender.send(message);
+//    }
+
 
     public Optional<UserEntity> findByUseryd(String useryd){
         return userRepository.findOptionalByUseryd(useryd);

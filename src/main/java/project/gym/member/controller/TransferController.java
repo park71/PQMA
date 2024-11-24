@@ -11,6 +11,8 @@ import project.gym.member.repository.TrasnferRepository;
 import project.gym.member.repository.UserRepository;
 import project.gym.member.service.TransferService;
 
+import java.time.LocalDateTime;
+
 @RestController
 @RequestMapping("/api/transfers")
 @CrossOrigin(origins = "https://www.priqma.com")
@@ -30,7 +32,7 @@ public class TransferController {
     @PostMapping("/transfer")
     public String transferMembership(@RequestBody TransferDTO transferDTO, Model model) {
         System.out.println("hi");
-        transferService.transferMembership(transferDTO.getFromMemberId(), transferDTO.getToMemberId(), transferDTO.getDaysToTransfer());
+        transferService.transferMemberships(transferDTO.getFromMemberId(), transferDTO.getToMemberId(), transferDTO.getDaysToTransfer());
         System.out.println("next Level");
         return "redirect:/adminPage";
     }
@@ -80,6 +82,7 @@ public class TransferController {
         transfer.setToMembershirtend(toMember.getShirtend());
 
         transfer.setDaysToTransfer(transferDTO.getDaysToTransfer());
+        transfer.setApplicationDate(LocalDateTime.now());
         transfer.setPrice(transferDTO.getPrice());
         transfer.setStatus("pending"); // 상태 설정
 

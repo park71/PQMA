@@ -77,6 +77,10 @@
             background-color: #fff3cd; /* 연노란색 배경 */
             color: #664d03; /* 어두운 노란색 텍스트 */
         }
+        option[value="재등록"] {
+            background-color: #cce5ff; /* 연노란색 배경 */
+            color: #004085; /* 어두운 노란색 텍스트 */
+        }
 
         button {
             background-color: #6c757d; /* 버튼 배경색 - 회색 */
@@ -91,10 +95,39 @@
         button:hover {
             background-color: #5a6268; /* 마우스 오버 시 배경색 변경 */
         }
+            .home-button {
+    display: inline-block;
+    padding:  8px 15px;       /* 버튼 내부 여백 */
+    color: white;             /* 텍스트 색상 */
+    background-color: orange; /* 버튼 배경색 */
+    border-radius: 5px;       /* 버튼 모서리 둥글게 */
+    text-decoration: none;    /* 밑줄 제거 */
+    font-weight: bold;        /* 굵은 텍스트 */
+    font-size:12px;
+    transition: background-color 0.3s ease; /* 호버 효과 전환 */
+}
+
+.home-button:hover {
+    background-color: #0056b3; /* 호버 시 배경색 변경 */
+    color: #e6e6e6;            /* 호버 시 텍스트 색상 */
+}
     </style>
 </head>
 <body>
-<table>
+<a href="/adminPage" class="home-button">홈으로</a>
+<br><br><br><br><br>
+<label for="lockFilter">락카 상태:</label>
+<select id="lockFilter" onchange="filterTable()">
+    <option value="">전체</option>
+    <option value="보관중">보관중</option>
+    <option value="폐기">폐기</option>
+    <option value="가져감">가져감</option>
+    <option value="재등록">재등록</option>
+</select>
+
+<br><br><br>
+
+<table id="lockout">
     <thead>
     <tr>
         <th>회원번호</th>
@@ -127,6 +160,7 @@
                         <option value="보관중" th:selected="${locker.status == '보관중'}">보관중</option>
                         <option value="폐기" th:selected="${locker.status == '폐기'}">폐기</option>
                         <option value="가져감" th:selected="${locker.status == '가져감'}">가져감</option>
+                        <option value="재등록" th:selected="${locker.status == '재등록'}">재등록</option>
                     </select>
                 </label>
                 <button type="submit">상태 저장</button>
@@ -153,6 +187,9 @@
         } else if (select.value === "가져감") {
             select.options[select.selectedIndex].style.backgroundColor = '#fff3cd'; // 연노란색 배경
             select.options[select.selectedIndex].style.color = '#664d03'; // 어두운 노란색 텍스트
+        } else if (select.value == "재등록") {
+            select.options[select.selectedIndex].style.backgroundColor = '#cce5ff'; // 연파랑색 배경
+            select.options[select.selectedIndex].style.color = '#004085'; // 어두운 파랑색 텍스트
         }
     }
 
@@ -161,5 +198,58 @@
         updateSelectColor(select);
     });
 </script>
+<script>
+    function filterTable() {
+        const lockFilter = document.getElementById("lockFilter").value;
+
+        const table = document.getElementById("lockout");
+        const rows = table.getElementsByTagName("tr");
+
+        // 헤더를 제외한 모든 행을 순회
+        for (let i = 1; i < rows.length; i++) {
+            const row = rows[i];
+            const statusCell = row.cells[7].querySelector('select').value; // status가 있는 셀의 select 값으로 필터링
+
+            let showRow = true;
+
+            // 락커 상태 필터
+            if (lockFilter && statusCell !== lockFilter) {
+                showRow = false;
+            }
+
+            // 행 표시 여부 설정
+            row.style.display = showRow ? "" : "none";
+        }
+    }
+
+    function sortTableByDate() {
+        const table = document.getElementById("lockout");
+        const rows = Array.from(table.getElementsByTagName("tr")).slice(1); // 첫 번째 헤더 제외
+
+        // 경과일수 컬럼 (7번째 열) 기준으로 오름차순 정렬
+        rows.sort((rowA, rowB) => {
+            const daysA = parseInt(rowA.cells[6].textContent); // 경과일수 (7번째 열)
+            const daysB = parseInt(rowB.cells[6].textContent);
+
+            return daysA - daysB; // 오름차순 정렬
+        });
+
+        // 정렬된 행을 테이블에 다시 추가
+        rows.forEach(row => table.appendChild(row));
+    }
+
+    // 페이지 로드 시 색상 유지 및 경과일수 오름차순 정렬
+    document.querySelectorAll('select').forEach(select => {
+        updateSelectColor(select);
+    });
+    window.onload = function() {
+        sortTableByDate(); // 페이지 로드 시 경과일수 오름차순 정렬
+        filterTable(); // 페이지 로드 시 필터링도 적용
+    };
+</script>
+
+
+
+
 </body>
 </html>

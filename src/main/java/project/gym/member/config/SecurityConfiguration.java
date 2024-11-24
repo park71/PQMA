@@ -62,9 +62,9 @@ public class SecurityConfiguration  {
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/favicon.ico", "/home", "/", "/login", "/loginProc", "/join", "/joinProc","/qr/members","/qrcode",
+                        .requestMatchers("/stat/reset","/favicon.ico", "/home","/inbodys/**", "/", "/sync-sheets","/login", "/loginProc", "/join", "/joinProc","/qr/members","/qrcode",
                                 "/info","/event","/css/**", "/img/**", "/js/**", "/images/**","/lock-check","/resetPassword","/qrcode/**","/entry/from-qr",
-                                "/login?error", "/list", "/consultationForm", "/consultation","/PT","/agreementuser","userdashboard","/contracts/**",
+                                "/login?error", "/list", "/consultationForm", "/consultation","/PT","/agreementuser","userdashboard","/contracts/**","/sheets/read",
                                 "/introduce","/resetPassword","/forgotPassword","/resetPassword/**", "/come", "/using", "/promotion", "/program", "/gong", "/hwanbul", "/stoppass", "/PTagree", "/gaein","/member/apply","/apply",
                                 "/becon", "/beconsult", "/dashboard", "/board/**", "/board/list", "/boardlist","/PTagreementuser","/member/PT_apply","/member/trans","/member/stop","/member/cashback","/api/members/search",
                                 "/api/transfers/trans","/api/**","/api/lockers/collect","/check-duplicate-id","/member/gaepop.html","/member/usepop.html","/member/yangpop.html","/member/hwanpop.html","/member/pmpop.html",
@@ -73,7 +73,7 @@ public class SecurityConfiguration  {
                         .requestMatchers("/adminPage", "/board/writepro", "/boardwrite", "/consultationList", "/transfer", "/search","/admin/PT_apply","/admin/**","/admin/PTMembershipApplication",
                                 "/agreement","/closer","/cost","/getCalendarData","/getRevenueByDate","/coster","/finalize","/lockout","/updateStatus", "/longabsent","/inbody/**", "/memberList","/boardmodify","/PTinfo","/PTagreement","/admin/restApplication","/admin/transApplication","/admin/cashbackApplication","/admin/memberships-apply/**",
                                 "/memberList/**", "/lockers", "/entry","/entries","/entrylist","/decrement","/membershipApplication","/member/memo","/memo","/member/**","/PTinfofix",
-                                "/entrySuccess", "/longtime","/lastday","/entryFailure", "/pauseForm", "/pauseList", "/member/**","/PTList").hasRole("ADMIN")
+                                "/entrySuccess","/entrySuccessful", "/membershipList","/longtime","/lastday","/entryFailure", "/pauseForm", "/pauseList", "/member/**","/PTList").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin
@@ -113,5 +113,6 @@ public class SecurityConfiguration  {
    public PasswordEncoder passwordEncoder() {
        return new BCryptPasswordEncoder(); // PasswordEncoder로 BCryptPasswordEncoder 사용
    }
+
 
 }

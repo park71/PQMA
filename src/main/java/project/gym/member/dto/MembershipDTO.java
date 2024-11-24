@@ -61,6 +61,8 @@ public class MembershipDTO {
         membershipDTO.setMemend(membership.getMemend());
         membershipDTO.setCoach(membership.getCoach());
         membershipDTO.setPhone(membership.getPhone());
+        membershipDTO.setPurpose(membershipDTO.getPurpose());
+        membershipDTO.setComein(membershipDTO.getComein());
         membershipDTO.setAddress(membership.getAddress());
         membershipDTO.setGender(membership.getGender());
         membershipDTO.setShirt(membership.getShirt());

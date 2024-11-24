@@ -29,59 +29,124 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100%;
+
+            flex-direction: column; /* 폼들을 위에서 아래로 배치 */
         }
 
         h2 {
             color: #333;
             margin-bottom: 20px;
-            text-align: left; /* 왼쪽 정렬 */
+            text-align: left;
+            font-size: 24px;
         }
 
         form {
             background-color: #fff;
-            padding: 15px; /* 패딩 조정 */
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 500px; /* 최대 너비 조정 */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
             width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px; /* 폼 간에 간격 추가 */
         }
 
         label {
             display: block;
-            margin: 8px 0 4px; /* 여백 조정 */
+            margin-bottom: 8px;
             color: #555;
+            font-weight: bold;
         }
 
         input[type="text"],
-        input[type="date"] {
-            width: calc(100% - 18px); /* To account for padding and border */
-            padding: 8px; /* 패딩 조정 */
+        input[type="date"],
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
             border: 1px solid #ccc;
-            border-radius: 4px;
-            margin-bottom: 12px; /* 여백 조정 */
-            font-size: 14px; /* 폰트 크기 조정 */
+            border-radius: 6px;
+            font-size: 14px;
+            box-sizing: border-box;
+            background-color: #f9f9f9;
+        }
+
+        input[type="text"]:focus,
+        input[type="date"]:focus {
+            border-color: #007bff;
+            outline: none;
         }
 
         button {
             background-color: #007bff;
-            color: #fff;
+            color: white;
             border: none;
-            padding: 8px 16px; /* 패딩 조정 */
-            border-radius: 4px;
-            font-size: 14px; /* 폰트 크기 조정 */
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-size: 16px;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            width: 100%;
         }
 
         button:hover {
             background-color: #0056b3;
         }
+
+        button[type="submit"] {
+            margin-top: 10px;
+        }
+
+        form input[type="file"] {
+            padding: 5px;
+            background-color: #fff;
+        }
+
+        form input[type="file"]:hover {
+            cursor: pointer;
+        }
+
+        form input[type="file"]::-webkit-file-upload-button {
+            background-color: #007bff;
+            color: white;
+            border-radius: 6px;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+
+        form input[type="file"]::-webkit-file-upload-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* 화면 크기가 작은 경우 스타일 */
+        @media (max-width: 600px) {
+            form {
+                width: 90%;
+                padding: 15px;
+            }
+
+            button {
+                font-size: 14px;
+                padding: 10px 15px;
+            }
+
+            input[type="text"],
+            input[type="date"],
+            input[type="file"] {
+                padding: 8px;
+            }
+        }
     </style>
 </head>
 <body>
+<!-- 파일 업로드 폼 -->
+<form action="#" th:action="@{/member/edit/image/{id}(id=${member.id})}" method="post" enctype="multipart/form-data">
+    <label for="profileImage">프로필 이미지:</label>
+    <input type="file" id="profileImage" name="profileImage" />
+    <button type="submit">이미지 수정</button>
+</form>
+<form action="#" th:action="@{/member/edit/{id}(id=${member.id})}" th:object="${member}" method="post"  >
+    <!-- 나머지 필드들 -->
 
-<form action="#" th:action="@{/member/edit/{id}(id=${member.id})}" th:object="${member}" method="post">
     <label for="name">이름:</label>
     <input type="text" id="name" th:field="*{name}" />
 

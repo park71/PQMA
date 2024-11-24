@@ -58,5 +58,10 @@ public class MainController {
         // 성공적으로 생성되었음을 반환
         return ResponseEntity.ok("QR 코드가 성공적으로 생성되었습니다.");
     }
+    @GetMapping("/stat/reset")
+    public ResponseEntity<String> resetStat(){
+        memberService.updateLongTermAbsentMembersStatus();
+        return  ResponseEntity.ok("성공적으로 리셋");
+    }
 }
 

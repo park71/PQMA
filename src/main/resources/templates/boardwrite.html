@@ -35,6 +35,23 @@
             height: 100vh;
         }
 
+    .home-button {
+    display: inline-block;
+    padding:  8px 15px;       /* 버튼 내부 여백 */
+    color: white;             /* 텍스트 색상 */
+    background-color: orange; /* 버튼 배경색 */
+    border-radius: 5px;       /* 버튼 모서리 둥글게 */
+    text-decoration: none;    /* 밑줄 제거 */
+    font-weight: bold;        /* 굵은 텍스트 */
+    font-size:12px;
+    transition: background-color 0.3s ease; /* 호버 효과 전환 */
+}
+
+.home-button:hover {
+    background-color: #0056b3; /* 호버 시 배경색 변경 */
+    color: #e6e6e6;            /* 호버 시 텍스트 색상 */
+}
+
         .layout {
             width: 100%;
             max-width: 600px;
@@ -124,7 +141,9 @@
     </style>
 </head>
 <body>
+
 <div class="layout">
+    <a href="/adminPage" class="home-button">홈으로</a>
     <form action="/board/writepro" method="post" enctype="multipart/form-data">
         <input name="title" type="text" placeholder="제목을 입력하세요" required>
         <textarea name="content" placeholder="내용을 입력하세요" required></textarea>
@@ -136,6 +155,7 @@
         <div id="fileList"></div>
 
         <button type="submit">작성</button>
+
     </form>
 </div>
 

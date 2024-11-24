@@ -33,7 +33,7 @@
         h2 {
             text-align: center;
             font-size: 24px;
-            color: #333;
+            color: #007bff;
             margin-bottom: 20px;
         }
 
@@ -45,17 +45,22 @@
             padding: 20px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
+            transition: transform 0.3s;
+            border: 2px solid #007bff;
         }
 
         .left-panel {
             width: 30%;
-            border-right: 2px solid #ccc;
+            border-right: 2px solid #007bff;
             padding-right: 20px;
         }
 
         .right-panel {
             width: 90%;
             padding-left: 20px;
+             position: sticky; /* 스크롤 시 고정 위치 설정 */
+
+
         }
 
         .member-list {
@@ -90,6 +95,8 @@
         .member-details h3 {
             font-size: 20px;
             margin-bottom: 18px;
+            border-bottom: 1.3px solid #007bff;
+            border-bottom: 5px;
         }
 
         .member-details p {
@@ -147,15 +154,26 @@
 .search-form label {
     margin-right: 10px; /* 라벨과 입력창 사이의 여백 */
     font-weight: bold;
+
+
 }
 
 .search-form input {
     margin-right: 10px; /* 입력창과 버튼 사이의 여백 */
+     border: 2px solid #007bff;
 }
 
 .search-form button {
     padding: 2px 20px; /* 버튼 패딩 조정 */
     font-weight:bold;
+     border: 2px solid #007bff;
+     background-color: white;
+}
+.form-container {
+    display: flex; /* Flexbox 사용 */
+    justify-content: center; /* 수평 중앙 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+    gap: 380px; /* 두 폼 사이의 간격 */
 }
 
  .under-panel {
@@ -164,7 +182,22 @@
         width: 100%;
             padding-left: 20px;
     }
+    .home-button {
+    display: inline-block;
+    padding:  8px 15px;       /* 버튼 내부 여백 */
+    color: white;             /* 텍스트 색상 */
+    background-color: orange; /* 버튼 배경색 */
+    border-radius: 5px;       /* 버튼 모서리 둥글게 */
+    text-decoration: none;    /* 밑줄 제거 */
+    font-weight: bold;        /* 굵은 텍스트 */
+    font-size:12px;
+    transition: background-color 0.3s ease; /* 호버 효과 전환 */
+}
 
+.home-button:hover {
+    background-color: #0056b3; /* 호버 시 배경색 변경 */
+    color: #e6e6e6;            /* 호버 시 텍스트 색상 */
+}
 
 
 
@@ -179,18 +212,70 @@
     display: table-row;
 }
 
+         #popup {
+            display: none;
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, 0);
+            width: 80%;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            padding: 20px;
+            z-index: 1000;
+        }
+        .member-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.form-column {
+    flex: 1;
+    margin: 10px; /* 열 사이의 간격 */
+    min-width: 250px; /* 최소 너비 설정 */
+    border-right: 1.5px solid #007bff; /* 오른쪽 경계선 추가 */
+    padding-right: 2px; /* 경계선과 내용 간격 */
+}
+
+/* 마지막 열의 경계선을 없애기 위한 스타일 */
+.form-column:last-child {
+    border-right: none;
+}
+
 
     </style>
 </head>
 <body>
+<a href="/adminPage" class="home-button">홈으로</a>
+<h2>회원 리스트 및 상세정보</h2><br>
 
-<h2>회원 리스트 및 상세정보</h2>
+<div class="form-container">
+    <form action="/memberList" method="get" class="search-form">
+        <label for="searchName">회원 검색:</label>
+        <input type="text" id="searchName" name="searchName">
+        <button type="submit">검색</button>
+    </form>
 
-<form action="/memberList" method="get" class="search-form">
-    <label for="searchName">회원 검색:</label>
-    <input type="text" id="searchName" name="searchName">
-    <button type="submit">검색</button>
-</form>
+    <form id="searchForm" class="search-form">
+        <label for="name">구글 검색:</label>
+        <input type="text" id="name" name="name" placeholder="이름 입력">
+        <button type="button" onclick="searchMember()">검색</button>
+    </form>
+</div><br>
+
+
+<div id="popup" >
+    <h3>검색 결과</h3>
+    <div id="results"></div>
+    <button onclick="closePopup()">닫기</button>
+</div>
 
 <div class="container">
     <!-- 왼쪽 패널: 회원 리스트 -->
@@ -211,92 +296,66 @@
     <!-- 오른쪽 패널: 회원 상세 정보 -->
     <div class="right-panel">
         <table>
+            <!-- 각 회원의 상세 정보를 출력하는 div -->
+            <div th:each="member : ${memberPage}" th:if="${member.status == null || member.status == 'approved'}" th:id="'member-' + ${member.id}" class="member-details">
+                <h3 th:text="${member.name} + '님의 상세 정보'"></h3>
+                <div th:if="${member.profileImage != null}">
+                    <img th:src="${member.profileImage}" alt="Profile Image" width="50" height="50"/>
+                </div>
+                <div class="form-row">
+                    <div class="form-column">
+                        <div th:if="${member.profileImage == null}">
+                            <span>프로필 없음</span>
+                        </div>
+                        <p>메모: <span th:text="${member.content}"></span></p>
+                <p><strong>회원 번호: <span th:text="${member.id}"></span></strong></p>
+                <p>성별: <span th:text="${member.gender}"></span></p>
+                <p><strong>전화 번호: </strong><span th:text="${member.phone}"></span></p>
+                 <p><strong>생년 월일: </strong><span th:text="${member.birth}"></span></p>
+                <p>주소: <span th:text="${member.address}"></span></p>
+                <p>카카오톡 ID : <span th:text="${member.kakao}"></span></p>
+                <p>운동 목적: <span th:text="${member.purpose}"></span></p>
+                <p>방문 경로: <span th:text="${member.comein}"></span></p>
+                 <p>QR cord:</p>
+                 <a th:href="@{'/qrcode/' + ${member.phone} + '.png'}" download>
+                      <img th:src="@{'/qrcode/' + ${member.phone} + '.png'}" alt="QR Code" style="width: 200px; height: 200px;" />
+                 </a>
+                    </div>
+                    <div class="form-column">
+                <p><strong>회원권: <span th:text="${member.membership}"></span></strong></p>
+                <p>회원권 시작일: <span th:text="${member.memstart}"></span></p>
+                <p>회원권 종료일: <span th:text="${member.memend}"></span></p>
+                <p>남은 일수: <span th:text="${member.remainDays}"></span></p>
+                <p>남은 연기 횟수: <span th:text="${member.restcount}"></span></p>
+                    </div>
+                        <div class="form-column">
+                <p><strong>락카: <span th:text="${member.locker}"></span></strong></p>
+                <p>락카 번호: <span th:text="${member.locknum}"></span></p>
+                <p>락카 시작일: <span th:text="${member.lockstart}"></span></p>
+                <p>락카 종료일: <span th:text="${member.lockend}"></span></p>
+                <p><strong>운동복: <span th:text="${member.shirt}"></span></strong></p>
+                <p>운동복 시작일: <span th:text="${member.shirtstart}"></span></p>
+                <p>운동복 종료일: <span th:text="${member.shirtend}"></span></p>
+                <p>결제 수단: <span th:text="${member.credit}"></span></p>
+                <p>결제 금액: <span th:text="${member.price}"></span></p>
+
+                        </div>
+                    </div>
 
 
-        </table>
-        <!-- 각 회원의 상세 정보를 출력하는 div -->
-        <div th:each="member : ${memberPage}" th:if="${member.status == null || member.status == 'approved'}" th:id="'member-' + ${member.id}" class="member-details">
-            <h3 th:text="${member.name} + '님의 상세 정보'"></h3>
-            <p><strong>회원 번호: <span th:text="${member.id}"></span></strong></p>
-            <p>성별: <span th:text="${member.gender}"></span></p>
-            <p>전화 번호: <span th:text="${member.phone}"></span></p>
-            <p>생년 월일: <span th:text="${member.birth}"></span></p>
-            <p>주소: <span th:text="${member.address}"></span></p>
-            <p>카카오톡 ID : <span th:text="${member.kakao}"></span></p>
-            <p>운동 목적: <span th:text="${member.purpose}"></span></p>
-            <p>방문 경로: <span th:text="${member.comein}"></span></p>
-            <p><strong>회원권: <span th:text="${member.membership}"></span></strong></p>
-            <p>회원권 시작일: <span th:text="${member.memstart}"></span></p>
-            <p>회원권 종료일: <span th:text="${member.memend}"></span></p>
-            <p>남은 일수: <span th:text="${member.remainDays}"></span></p>
-            <p><strong>락카: <span th:text="${member.locker}"></span></strong></p>
-            <p>락카 번호: <span th:text="${member.locknum}"></span></p>
-            <p>락카 시작일: <span th:text="${member.lockstart}"></span></p>
-            <p>락카 종료일: <span th:text="${member.lockend}"></span></p>
-            <p><strong>운동복: <span th:text="${member.shirt}"></span></strong></p>
-            <p>운동복 시작일: <span th:text="${member.shirtstart}"></span></p>
-            <p>운동복 종료일: <span th:text="${member.shirtend}"></span></p>
-            <p>결제 수단: <span th:text="${member.credit}"></span></p>
-            <p>결제 금액: <span th:text="${member.price}"></span></p>
-            <p>QR cord:</p>
-            <a th:href="@{'/qrcode/' + ${member.phone} + '.png'}" download>
-                <img th:src="@{'/qrcode/' + ${member.phone} + '.png'}" alt="QR Code" style="width: 200px; height: 200px;" />
-            </a>
 
-
-            <div class="action-buttons">
-                <a th:href="@{|/member/${member.id}|}">상세보기</a>
-                <a th:href="@{|/member/edit/${member.id}|}">수정</a>
-                <a th:href="@{|/member/delete/${member.id}|}" th:onclick="return confirm('정말로 삭제하시겠습니까?');">삭제</a>
-                <a th:href="@{|/member/memberList/${member.id}|}">휴회</a>
-                <button type="button" th:onclick="addInbodyRecord([[${member.id}]]);">인바디</button>
-                <button type="button" th:onclick="showInbodyDates([[${member.id}]]);">인바디 기록</button>
+                <div class="action-buttons">
+                    <a th:href="@{|/member/${member.id}|}">상세보기</a>
+                    <a th:href="@{|/member/edit/${member.id}|}">수정</a>
+                    <a th:href="@{|/member/delete/${member.id}|}" th:onclick="return confirm('정말로 삭제하시겠습니까?');">삭제</a>
+                    <a th:href="@{|/member/memberList/${member.id}|}">휴회</a>
+                    <!-- 인바디 기록 보기 팝업 버튼 -->
+                    <button onclick="openInbodyPopup([[${member.id}]])">인바디 기록 보기</button>
+                </div>
             </div>
-        </div>
-        <div class="under-panel">
-            <table class="membership-details">
-                <thead>
-                <tr>
-                    <th>회원 이름</th>
-                    <th>회원 번호</th>
-                    <th>회원권 종류</th>
-                    <th>회원권 시작일</th>
-                    <th>회원권 종료일</th>
-                    <th>락카 종류</th>
-                    <th>락카 번호</th>
-                    <th>락카 시작일</th>
-                    <th>락카 종료일</th>
-                    <th>운동복 종류</th>
-                    <th>운동복 시작일</th>
-                    <th>운동복 종료일</th>
-                    <th>지불 가격</th>
-                    <th>총 지불한 가격</th>
-                    <th>메모</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="membership : ${memberships}" th:id="'membership-' + ${membership.member_id}">
-                    <td th:text="${#strings.defaultString(membership.name, '')}"></td>
-                    <td th:text="${#strings.defaultString(membership.member_id, '')}"></td>
-                    <td th:text="${#strings.defaultString(membership.membership, '')}"></td>
-                    <td th:text="${#strings.defaultString(membership.memstart, '')}"></td>
-                    <td th:text="${#strings.defaultString(membership.memend, '')}"></td>
-                    <td th:text="${#strings.defaultString(membership.locker, '')}"></td>
-                    <td th:text="${#strings.defaultString(membership.locknum, '')}"></td>
-                    <td th:text="${#strings.defaultString(membership.lockstart, '')}"></td>
-                    <td th:text="${#strings.defaultString(membership.lockend, '')}"></td>
-                    <td th:text="${#strings.defaultString(membership.shirt, '')}"></td>
-                    <td th:text="${#strings.defaultString(membership.shirtstart, '')}"></td>
-                    <td th:text="${#strings.defaultString(membership.shirtend, '')}"></td>
-                    <td th:text="${#strings.defaultString(membership.price, '')}"></td>
-                    <td th:text="${#strings.defaultString(membership.totalprice, '')}"></td>
-                    <td th:text="${#strings.defaultString(membership.content, '')}"></td>
-                </tr>
-                </tbody>
-            </table>
-
-        </div>
+        </table>
     </div>
+
 
 
 </div>
@@ -379,6 +438,76 @@
         .catch(error => console.error("Error:", error));
     }
 </script>
+
+<script>
+    // 팝업 열기
+    function openPopup() {
+        document.getElementById('popup').style.display = 'block';
+    }
+
+    // 팝업 닫기
+    function closePopup() {
+        document.getElementById('popup').style.display = 'none';
+    }
+
+    // 회원 검색 함수
+    async function searchMember() {
+        const name = document.getElementById('name').value;
+        const response = await fetch('/searchMember?name=' + encodeURIComponent(name));
+
+        if (response.ok) {
+            const text = await response.text();  // 응답을 텍스트 형식으로 받음
+            console.log(text);  // 반환된 응답을 로깅하여 확인
+
+            try {
+                const members = JSON.parse(text);  // 텍스트를 JSON으로 변환 시도
+                // 변환이 성공하면 계속 처리
+                const resultsDiv = document.getElementById('results');
+                resultsDiv.innerHTML = '';  // 기존 결과 초기화
+                members.forEach(member => {
+                    const memberDiv = document.createElement('div');
+                    memberDiv.classList.add('member-row');
+                    memberDiv.innerHTML = `
+                        <span>${member.name} (${member.phone})</span>
+                        <button onclick="importMember('${member.phone}', '${member.name}')">가져오기</button>
+                    `;
+                    resultsDiv.appendChild(memberDiv);
+                });
+
+                openPopup();
+            } catch (e) {
+                console.error('JSON 파싱 오류:', e);  // JSON 파싱 실패 시 오류 로그
+                alert('서버 응답에 오류가 발생했습니다.');
+            }
+        } else {
+
+            alert('회원 정보를 찾을 수 없습니다.');
+        }
+    }
+
+    // 회원 가져오기 함수
+    async function importMember(phone, name) {
+        const response = await fetch('/importMember', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ phone, name })  // 이름과 전화번호 함께 전달
+        });
+
+        const result = await response.text();
+        alert(result);
+    }
+
+</script>
+<script>
+    function openInbodyPopup(memberId) {
+        const popupUrl = `/member/inbody/${memberId}`;
+        const popupOptions = "width=600,height=600,scrollbars=yes,resizable=yes";
+        window.open(popupUrl, "InbodyRecordsPopup", popupOptions);
+    }
+</script>
+
 
 </body>
 </html>

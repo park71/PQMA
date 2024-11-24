@@ -81,8 +81,9 @@
     <form id="qr-form" action="/entry/from-qr" method="post">
         <input type="hidden" id="qrData" name="qrData">
     </form>
-    <p class="text-muted">카톡으로 전송해드린 QR 코드를 사용해주세요.</p>
+    <p class="text-muted">카톡으로 전송해드린 QR 코드를 사용해주세요.</p><br><br>
 </div>
+
 
 <!-- ZXing 라이브러리를 사용한 QR 코드 리더 -->
 <script src="https://unpkg.com/@zxing/library@0.18.6/umd/index.js"></script>
@@ -92,8 +93,19 @@
     const qrDataInput = document.getElementById('qrData');
     const qrForm = document.getElementById('qr-form');
 
-    // 카메라 피드에서 QR 코드 읽기 시작
-    codeReader.decodeFromVideoDevice(null, 'preview', (result, err) => {
+codeReader.listVideoInputDevices().then((videoInputDevices) => {
+    // 카메라 목록 출력
+    console.log("Available video input devices:", videoInputDevices);
+
+    // 전면 카메라 필터링
+    const frontCamera = videoInputDevices.find((device) =>
+        device.label.toLowerCase().includes("front")
+    );
+
+    // 전면 카메라가 있으면 사용, 없으면 첫 번째 카메라 사용
+    const selectedDeviceId = frontCamera ? frontCamera.deviceId : videoInputDevices[0].deviceId;
+
+    codeReader.decodeFromVideoDevice(selectedDeviceId, 'preview', (result, err) => {
         if (result) {
             console.log(result.text);
             qrDataInput.value = result.text;  // QR 코드 데이터를 폼에 추가
@@ -105,6 +117,28 @@
             console.error(err);  // QR 코드 인식 오류가 발생할 경우 로
         }
     });
+    }).catch((err) => {
+    console.error("Error listing video input devices:", err);
+});
+</script>
+
+<script>
+    // 서버에서 전달된 'playErrorSound' 값이 true일 경우 음성 재생
+    var playErrorSound = [[${playErrorSound}]]; // 서버에서 전달한 변수
+
+    if (playErrorSound) {
+        var audio = new Audio('/sound/error-sound.mp3'); // 오류 사운드 파일 경로
+        audio.play(); // 음성 재생
+    }
+</script>
+<script>
+    // 서버에서 전달된 'playErrorSound' 값이 true일 경우 음성 재생
+    var playErrorSound = [[${playErrorSounds}]]; // 서버에서 전달한 변수
+
+    if (playErrorSound) {
+        var audio = new Audio('/sound/errors-sound.mp3'); // 오류 사운드 파일 경로
+        audio.play(); // 음성 재생
+    }
 </script>
 </body>
 </html>

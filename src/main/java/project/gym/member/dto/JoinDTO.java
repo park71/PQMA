@@ -32,6 +32,7 @@ public class JoinDTO {
         JoinDTO joinDTO = new JoinDTO();
         joinDTO.setId(userEntity.getId());
         joinDTO.setUsername(userEntity.getUsername());
+        joinDTO.setUseryd(userEntity.getUseryd());
         joinDTO.setPassword(userEntity.getPassword());
         joinDTO.setBir(userEntity.getBir());
         joinDTO.setSex(userEntity.getSex());

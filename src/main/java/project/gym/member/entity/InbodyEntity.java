@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -17,7 +18,10 @@ public class InbodyEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer counter; //회차
+    private String name;
+    private String file_path;
+    private LocalDateTime upload_time;
+    private LocalDate births;
 
     @ManyToOne
     @JoinColumn(name = "member_id")

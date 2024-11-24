@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class MariaTest {
     public static void main(String[] args) throws SQLException {
         String driver="org.mariadb.jdbc.Driver";
-        String dbUrl="jdbc:mysql://43.201.35.16:3306/gymdb";
+        String dbUrl="jdbc:mysql://3.38.25.45:3306/gymdb";
         try {
             //1.데이터베이스 드라이버 로딩
             Class.forName(driver);
