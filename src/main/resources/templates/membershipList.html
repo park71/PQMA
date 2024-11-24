@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/img/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>결제 리스트</title>
+
+
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* Form Style */
+        .search-form {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .search-form label {
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        .search-form input {
+            padding: 8px;
+            font-size: 16px;
+            width: 250px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .search-form button {
+            padding: 8px 16px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .search-form button:hover {
+            background-color: #45a049;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            table-layout: fixed; /* Ensures consistent column width */
+        }
+
+        th, td {
+            padding: 8px 12px; /* Reduced padding */
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            font-size: 12px; /* Smaller font size */
+            word-wrap: break-word; /* Prevent text from overflowing */
+        }
+
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+            text-align: center;
+
+            position: sticky;
+            top: 0;
+            z-index: 1; /* Ensures the header is above the table rows */
+            border-bottom: 2px solid black; /* Add black line at the bottom */
+        }
+
+        }
+
+        td {
+            background-color: #f9f9f9;
+        }
+
+        td:nth-child(odd) {
+            background-color: #f1f1f1;
+        }
+
+        tr:hover td {
+            background-color: #e9f7f3;
+        }
+
+        /* Responsive Styles */
+        @media screen and (max-width: 768px) {
+            .search-form {
+                margin-bottom: 15px;
+            }
+
+            table {
+                font-size: 10px; /* Further reduce font size for small screens */
+            }
+
+            th, td {
+                padding: 6px 10px; /* Further reduce padding */
+            }
+
+            td:nth-child(1), td:nth-child(2), td:nth-child(3) {
+                width: 100px; /* Adjust column width to fit content */
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            table {
+                font-size: 10px; /* Adjust for smaller screens */
+            }
+
+            .search-form input {
+                width: 100%;
+                font-size: 14px; /* Ensure the input is readable on small screens */
+            }
+
+            th, td {
+                padding: 5px 8px;
+            }
+        }
+    </style>
+
+</head>
+<body>
+
+<form action="/member/membershipList" method="get" class="search-form">
+    <label for="searchName">회원 검색:</label>
+    <input type="text" id="searchName" name="searchName">
+    <button type="submit">검색</button>
+</form>
+<table>
+    <thead>
+    <tr>
+        <th>회원번호</th>
+        <th>이름</th>
+        <th>담당 선생님</th>
+        <th>전화번호</th>
+        <th>생년월일</th>
+        <th>성별</th>
+        <th>주소</th>
+        <th>카카오톡 ID</th>
+        <th>운동목적</th>
+        <th>방문경로</th>
+        <th>회원권 종류</th>
+        <th>회원권 시작일</th>
+        <th>회원권 종료일</th>
+        <th>락카 종류</th>
+        <th>락카 번호</th>
+        <th>락카 시작일</th>
+        <th>락카 종료일</th>
+        <th>운동복 종류</th>
+        <th>운동복 시작일</th>
+        <th>운동복 종료일</th>
+        <th>결제 방법</th>
+        <th>금액</th>
+
+    </tr>
+    </thead>
+    <tbody>
+        <tr th:each="membership: ${memberships}">
+            <td th:text="${#strings.defaultString(membership.member_id, '')}"></td>
+            <td th:text="${#strings.defaultString(membership.name, '')}"></td>
+            <td th:text="${#strings.defaultString(membership.coach, '')}"></td>
+            <td th:text="${#strings.defaultString(membership.phone, '')}"></td>
+            <td th:text="${#strings.defaultString(membership.birth, '')}"></td>
+            <td th:text="${#strings.defaultString(membership.gender, '')}"></td>
+            <td th:text="${#strings.defaultString(membership.address, '')}"></td>
+            <td th:text="${#strings.defaultString(membership.kakao, '')}"></td>
+            <td th:text="${#strings.defaultString(membership.purpose, '')}"></td>
+            <td th:text="${#strings.defaultString(membership.comein, '')}"></td>
+            <td th:text="${#strings.defaultString(membership.membership, '')}"></td>
+            <td th:text="${#strings.defaultString(membership.memstart, '')}"></td>
+            <td th:text="${#strings.defaultString(membership.memend, '')}"></td>
+            <td th:text="${#strings.defaultString(membership.locker, '')}"></td>
+            <td th:text="${#strings.defaultString(membership.locknum, '')}"></td>
+            <td th:text="${#strings.defaultString(membership.lockstart, '')}"></td>
+            <td th:text="${#strings.defaultString(membership.lockend, '')}"></td>
+            <td th:text="${#strings.defaultString(membership.shirt, '')}"></td>
+            <td th:text="${#strings.defaultString(membership.shirtstart, '')}"></td>
+            <td th:text="${#strings.defaultString(membership.shirtend, '')}"></td>
+            <td th:text="${#strings.defaultString(membership.credit, '')}"></td>
+            <td th:text="${#strings.defaultString(membership.price, '')}"></td>
+        </tr>
+    <!-- Example of more rows can be added dynamically here -->
+    </tbody>
+</table>
+</body>
+</html>
